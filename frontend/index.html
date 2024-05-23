@@ -1,0 +1,23 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FindColor</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+    <div id="app">{{ message }}</div>
+    <script>
+        const app = Vue.createApp({
+            data() {
+                return {
+                    message: 'Hello, FindColor!'
+                }
+            }
+        })
+        app.mount('#app')
+    </script>
+</body>
+</html>

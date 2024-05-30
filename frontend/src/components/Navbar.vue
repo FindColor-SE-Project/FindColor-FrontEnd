@@ -15,7 +15,7 @@ import { RouterLink } from "vue-router";
                         <RouterLink to="/product" class="nav__link josefin-sans-font">Product</RouterLink>
                     </li>
                     <li class="nav__item">
-                        <RouterLink to="#" class="nav__link josefin-sans-font">Match Color</RouterLink>
+                        <RouterLink to="/getseasons" class="nav__link josefin-sans-font">Get Seasons</RouterLink>
                     </li>
                 </ul>
             </div>

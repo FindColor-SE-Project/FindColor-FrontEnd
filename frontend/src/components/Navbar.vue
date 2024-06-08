@@ -1,4 +1,4 @@
-<script setup>
+<!-- <script setup>
 import { ref } from 'vue'
 import { RouterLink } from "vue-router";
 </script>
@@ -85,4 +85,4 @@ nav ul li a:focus {
     border-radius: 20px;
 }
 </style>
-
+ -->

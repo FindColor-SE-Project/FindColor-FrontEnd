@@ -34,7 +34,7 @@ import { ref } from 'vue'
 
 <style>
 .main {
-    background-image: url(https://lexlovescouture.files.wordpress.com/2016/03/perfect-everyday-makeup1.jpg?w=2000&h=1000&crop=1);
+    background-image: url(@/assets/pic.jpeg);
     width: 100%;
     height: 800px;
     /* object-fit: cover;

@@ -1,10 +1,10 @@
 <script>
 import { ref } from 'vue'
 
-import Product from '@/view/Product.vue';
+import BrandListView from '@/view/BrandListView.vue';
 export default {
   components: {
-    Product
+    BrandListView
   }
 }
 
@@ -21,7 +21,7 @@ export default {
                         <RouterLink to="/" class="nav__link josefin-sans-font">Home</RouterLink>
                     </li>
                     <li class="nav__item">
-                        <RouterLink to="/product" class="nav__link josefin-sans-font">Product</RouterLink>
+                        <RouterLink to="/brandListView" class="nav__link josefin-sans-font">Product</RouterLink>
                     </li>
                     <li class="nav__item">
                         <RouterLink to="/getseasons" class="nav__link josefin-sans-font">Get Seasons</RouterLink>

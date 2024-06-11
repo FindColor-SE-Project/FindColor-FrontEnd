@@ -1,7 +1,9 @@
 <template>
   <div>
-    <h2 class="title cardo-regular">Brands</h2>
-    <BrandCard v-for="product in limitedProducts" :key="product.productID" :product="product" />
+    <h2 class="card-title cardo-regular">Brands</h2>
+    <div class="card-container">
+      <BrandCard v-for="product in limitedProducts" :key="product.productID" :product="product" />  
+    </div>
   </div>
 </template>
 
@@ -46,3 +48,22 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.card-title {
+  text-align: center;
+    margin-top: 5%;
+    margin-bottom: 2%;
+    font-size: 72px;
+    font-style: italic;
+    font-weight: bold;
+}
+
+.card-container {
+  grid-template-columns: repeat(3, 2fr);
+  /* padding-block: 2rem; */
+  display: grid;
+  justify-items: center;
+  align-items: center;
+}
+</style>

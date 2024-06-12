@@ -1,7 +1,7 @@
 <script>
 import { ref } from 'vue'
 
-import BrandListView from '@/view/BrandListView.vue';
+import BrandListView from '@/views/BrandListView.vue';
 export default {
   components: {
     BrandListView

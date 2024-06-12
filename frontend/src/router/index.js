@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Homepage from '@/view/Home.vue'
-import BrandListView from '@/view/BrandListView.vue'
-import GetSeasonsPage from '@/view/GetSeasons.vue'
-import ProductListView from '@/view/ProductListView.vue'
+import Homepage from '@/views/Home.vue'
+import BrandListView from '@/views/BrandListView.vue'
+import GetSeasonsPage from '@/views/GetSeasons.vue'
+import ProductListView from '@/views/ProductListView.vue'
 
 const routes = [
     {
@@ -23,14 +23,22 @@ const routes = [
     {
         path: '/brandListView/:brandName',
         name: 'productListView',
-        component: ProductListView
+        component: ProductListView,
+        props: true,
+        beforeEnter: (to, from, next) => {
+            const brandName = to.params.brandName;
+            if (brandName && typeof brandName === 'string' && brandName.trim() !== '') {
+                next();
+            } else {
+                next({ name: 'brandListView' }); // Redirect to brand list if brandName is not valid
+            }
+        }
     }
 ]
 
 const router = createRouter({
-    history:createWebHistory(),
+    history: createWebHistory(),
     routes,
-}
-)
+})
 
 export default router;

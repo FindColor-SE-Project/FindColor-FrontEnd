@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2 class="card-title cardo-regular">Brands</h2>
+    <h1 class="card-title cardo-regular">Brands</h1>
     <div class="card-container">
       <BrandCard v-for="product in limitedProducts" :key="product.productID" :product="product" />  
     </div>

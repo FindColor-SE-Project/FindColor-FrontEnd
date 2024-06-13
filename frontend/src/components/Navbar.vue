@@ -1,21 +1,20 @@
-<!-- <script setup>
+<script setup>
 import { ref } from 'vue'
-import { RouterLink } from "vue-router";
 </script>
 
 <template>
     <nav class="nav container">
-            <RouterLink to="/" class="nav__logo lora-font">FindColor</RouterLink>
+            <router-link class="nav__logo lora-font" :to="{ name: 'home'}">FindColor</router-link>
             <div class="nav__list" id="nav-list">
                 <ul>
                     <li class="nav__item">
-                        <RouterLink to="/" class="nav__link josefin-sans-font">Home</RouterLink>
+                        <router-link class="nav__link josefin-sans-font" :to="{ name: 'home'}">Home</router-link>
                     </li>
                     <li class="nav__item">
-                        <RouterLink to="/product" class="nav__link josefin-sans-font">Product</RouterLink>
+                        <router-link class="nav__link josefin-sans-font" :to="{ name: 'brandListView'}">Product</router-link>
                     </li>
                     <li class="nav__item">
-                        <RouterLink to="/getseasons" class="nav__link josefin-sans-font">Get Seasons</RouterLink>
+                        <router-link class="nav__link josefin-sans-font" :to="{ name: 'getseasonsPage'}">Get Seasons</router-link>
                     </li>
                 </ul>
             </div>
@@ -78,11 +77,11 @@ nav ul li a:hover {
     border-radius: 20px;
 }
 
-nav ul li a:focus {
+/* nav ul li a:focus {
     border: black solid 1px;
     background-color: #EDC2D8;
     padding: 7px;
     border-radius: 20px;
-}
+} */
 </style>
- -->
+

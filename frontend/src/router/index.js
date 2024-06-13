@@ -24,15 +24,6 @@ const routes = [
         path: '/brandListView/:brandName',
         name: 'productListView',
         component: ProductListView,
-        props: true,
-        beforeEnter: (to, from, next) => {
-            const brandName = to.params.brandName;
-            if (brandName && typeof brandName === 'string' && brandName.trim() !== '') {
-                next();
-            } else {
-                next({ name: 'brandListView' }); // Redirect to brand list if brandName is not valid
-            }
-        }
     }
 ]
 

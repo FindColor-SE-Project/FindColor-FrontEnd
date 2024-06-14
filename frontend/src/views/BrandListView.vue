@@ -16,37 +16,6 @@ export default {
   components: {
     BrandCard
   },
-  // data() {
-  //   return {
-  //     products: []  // ดึงข้อมูลผลิตภัณฑ์จาก API มาที่นี่
-  //   };
-  // },
-  // computed: {
-  //   limitedProducts() {
-  //     const brandSet = new Set();
-  //     const limitedProducts = [];
-      
-  //     for (const product of this.products) {
-  //       if (!brandSet.has(product.brandName)) {
-  //         brandSet.add(product.brandName);
-  //         limitedProducts.push(product);
-  //       }
-        
-  //       if (limitedProducts.length === 5) break;  // หยุดเมื่อได้ครบ 5 การ์ด
-  //     }
-      
-  //     return limitedProducts;
-  //   }
-  // },
-  // mounted() {
-  //   axios.get('http://localhost:8000/data')
-  //     .then(response => {
-  //       this.products = response.data;
-  //     })
-  //     .catch(error => {
-  //       console.log(error);
-  //     });
-  // }
 
   setup() {
     const products = ref([]);

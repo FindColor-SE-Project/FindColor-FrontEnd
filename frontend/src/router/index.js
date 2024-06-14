@@ -7,6 +7,7 @@ import LipsView from '@/views/Category/LipsView.vue'
 import EyeshadowView from '@/views/Category/EyeshadowView.vue'
 import BlushView from '@/views/Category/BlushView.vue'
 import ProductLayout from '@/views/Category/ProductLayout.vue'
+import ProductDetailView from '@/views/Category/ProductDetailView.vue'
 
 const routes = [
     {
@@ -34,7 +35,7 @@ const routes = [
                 path: '',
                 name: 'productListView',
                 component: ProductListView,
-                props: true
+                props: true,
             },
             {
                 path: 'Lips',
@@ -53,6 +54,12 @@ const routes = [
                 props: true
             }, 
         ]
+    }, 
+    {
+        path: '/brandListView/:brandName/:productName',
+        name: 'productDetailView',
+        component: ProductDetailView,
+        props: true
     }
 ]
 

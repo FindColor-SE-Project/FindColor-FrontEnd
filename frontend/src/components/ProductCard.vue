@@ -1,6 +1,7 @@
 <template>
   <div class="card">
-    <router-link :to="{ name: 'productListView', params:{brandName: product.brandName} }">
+    <router-link :to="{ name: 'productDetailView', params:{brandName: product.brandName,
+      productName: product.productName} }">
       <img :src="product.productImage" alt="ProductImage" class="card-img">
     </router-link>    
     <div class="card-body">

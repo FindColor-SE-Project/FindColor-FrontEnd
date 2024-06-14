@@ -8,6 +8,7 @@
 </template>
 
 <script>
+import { ref, computed, onMounted } from 'vue';
 import BrandCard from '@/components/BrandCard.vue';
 import axios from 'axios';
 
@@ -15,38 +16,74 @@ export default {
   components: {
     BrandCard
   },
-  data() {
-    return {
-      products: []  // ดึงข้อมูลผลิตภัณฑ์จาก API มาที่นี่
-    };
-  },
-  computed: {
-    limitedProducts() {
-      const brandSet = new Set();
-      const limitedProducts = [];
+  // data() {
+  //   return {
+  //     products: []  // ดึงข้อมูลผลิตภัณฑ์จาก API มาที่นี่
+  //   };
+  // },
+  // computed: {
+  //   limitedProducts() {
+  //     const brandSet = new Set();
+  //     const limitedProducts = [];
       
-      for (const product of this.products) {
+  //     for (const product of this.products) {
+  //       if (!brandSet.has(product.brandName)) {
+  //         brandSet.add(product.brandName);
+  //         limitedProducts.push(product);
+  //       }
+        
+  //       if (limitedProducts.length === 5) break;  // หยุดเมื่อได้ครบ 5 การ์ด
+  //     }
+      
+  //     return limitedProducts;
+  //   }
+  // },
+  // mounted() {
+  //   axios.get('http://localhost:8000/data')
+  //     .then(response => {
+  //       this.products = response.data;
+  //     })
+  //     .catch(error => {
+  //       console.log(error);
+  //     });
+  // }
+
+  setup() {
+    const products = ref([]);
+    const limitedProducts = computed(() => {
+      const brandSet = new Set();
+      const limitedProductArray = [];
+
+      products.value.forEach(product => {
         if (!brandSet.has(product.brandName)) {
           brandSet.add(product.brandName);
-          limitedProducts.push(product);
+          limitedProductArray.push(product);
         }
         
-        if (limitedProducts.length === 5) break;  // หยุดเมื่อได้ครบ 5 การ์ด
-      }
-      
-      return limitedProducts;
-    }
-  },
-  mounted() {
-    axios.get('http://localhost:8000/data')
-      .then(response => {
-        this.products = response.data;
-      })
-      .catch(error => {
-        console.log(error);
+        if (limitedProductArray.length === 5) return limitedProductArray;  // หยุดเมื่อได้ครบ 5 การ์ด
       });
+
+      return limitedProductArray;
+    });
+  
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/data');
+        products.value = response.data;
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    onMounted(fetchData);
+
+    return {
+      products,
+      limitedProducts
+    };
   }
 }
+
 </script>
 
 <style scoped>

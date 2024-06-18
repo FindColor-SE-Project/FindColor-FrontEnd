@@ -15,18 +15,22 @@ import { ref } from 'vue'
 
     <div class="home__category">
         <h2 class="title cardo-regular">Seasons Color Tone</h2>
-        <div class="category__row">
-            <div class="category__card">
-                <img src="https://i.pinimg.com/736x/e9/c0/3b/e9c03b3ff958ec23633d6d73446f7f39.jpg" width="400" height="400" alt="category">
-                <h2>Lips</h2>
+        <div class="season_row">
+            <div class="season_card">
+                <img width="96" height="96" src="https://img.icons8.com/color/96/spring.png" alt="spring"/>
+                <h2>Spring</h2>
             </div>
-            <div class="category__card">
-                <img src="https://i.pinimg.com/564x/bb/6c/4e/bb6c4ee1b969e837fa6d6d74adce8805.jpg" width="400" height="400" alt="category">
-                <h2>Blush</h2>
+            <div class="season_card">
+                <img width="96" height="96" src="https://img.icons8.com/color/96/summer--v1.png" alt="summer--v1"/>
+                <h2>Summer</h2>
             </div>
-            <div class="category__card">
-                <img src="https://i.pinimg.com/564x/b8/04/ff/b804fff6f29cb24926e0bcd1a2f2ebc6.jpg" width="400" height="400" alt="category">
-                <h2>Eyeshadow</h2>
+            <div class="season_card">
+                <img width="96" height="96" src="https://img.icons8.com/color/96/autumn.png" alt="autumn"/>
+                <h2>Autumn</h2>
+            </div>
+            <div class="season_card">
+                <img width="96" height="96" src="https://img.icons8.com/color/96/winter--v1.png" alt="winter--v1"/>
+                <h2>Winter</h2>
             </div>
         </div>
     </div>
@@ -74,9 +78,6 @@ import { ref } from 'vue'
         grid-column: 2/3;
     }
 
-    .category__row {
-        grid-template-columns: repeat(3, 2fr);
-    }
 }
 
 .title {
@@ -87,19 +88,22 @@ import { ref } from 'vue'
     font-weight: bold;
 }
 
-.category__row {
+.season_card {
     margin-top: 4rem;
     display: grid;
     gap: 1rem;
-    text-align: center;
+    justify-items: center;
 }
 
-.category__card img {
+.season_card img {
     margin-bottom: 1rem;
     border: 2px solid black;
+    justify-content: space-around;
+    display: flex;
+    flex-direction: column;
 }
 
-.category__card h2 {
+.season_card h2 {
     font-size: 32px;
     font-weight: 500;
 }

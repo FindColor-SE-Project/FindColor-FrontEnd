@@ -13,7 +13,7 @@ import { ref } from 'vue'
         </div>
     </div>
 
-    <div class="home__category">
+    <div class="home_season">
         <h2 class="title cardo-regular">Seasons Color Tone</h2>
         <div class="season_row">
             <div class="season_card">
@@ -88,19 +88,25 @@ import { ref } from 'vue'
     font-weight: bold;
 }
 
-.season_card {
-    margin-top: 4rem;
+.home_season {
     display: grid;
     gap: 1rem;
     justify-items: center;
+    padding: 4rem;
+    margin: 4rem;
+}
+
+.season_card {
+    padding: 4rem;
+    margin: 4rem;
+    text-align: center;
+    border: 2px solid black;
+    float: left;
 }
 
 .season_card img {
     margin-bottom: 1rem;
-    border: 2px solid black;
     justify-content: space-around;
-    display: flex;
-    flex-direction: column;
 }
 
 .season_card h2 {

@@ -4,11 +4,9 @@
             <img :src="product.productImage" class="img_product">
         </div>
         <div class="product-right">
-            <h2 class="cardo-regular">{{ product.brandName }}</h2>
-            <h1 class="lora-font">{{ product.productName }}</h1>
+            <h1 class="cardo-regular">{{ product.productName }}</h1>
             <p>{{ product.productDescription }}</p>
-            <h3>Color: #01 Sweet Pea</h3>
-            <label class="season_color">{{ product.colorTone }}</label>
+            <label class="season_color cardo-regular">{{ product.colorTone }}</label>
             <div class="color_select flex">
                 <span :style="{ backgroundColor: product.colorShade }"></span>
             </div>
@@ -65,7 +63,7 @@ export default {
     padding: 50px 20px;
 }
 
-.product-right h1,h2,h3,p  {
+.product-right h1,p  {
     margin: 10px 0;
 }
 
@@ -83,11 +81,17 @@ export default {
     margin: 20px 0;
 }
 
+.product-right h1  {
+    font-size: 50px;
+}
+
 .season_color {
-    padding: 5px;
+    padding: 5px 10px;
     border: pink 2px solid;
-    border-radius: 20px;
-    font-size: 18px;
+    border-radius: 30px;
+    font-size: 32px;
+    font-style: italic;
+    font-weight: bold;
 }
 
 .color_select span {

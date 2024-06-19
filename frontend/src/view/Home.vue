@@ -16,21 +16,25 @@ import { ref } from 'vue'
     <div class="home_season">
         <h2 class="title cardo-regular">Seasons Color Tone</h2>
         <div class="season_row">
-            <div class="season_card">
+            <div class="season_card spring">
                 <img width="96" height="96" src="https://img.icons8.com/color/96/spring.png" alt="spring"/>
                 <h2>Spring</h2>
+                <p>The makeup tone is Coral, Orange, Milk Tea, Peach Pink, Salmon Pink, and Peach</p>
             </div>
-            <div class="season_card">
+            <div class="season_card summer">
                 <img width="96" height="96" src="https://img.icons8.com/color/96/summer--v1.png" alt="summer--v1"/>
                 <h2>Summer</h2>
+                <p>The makeup tone is Pink, Pink nude, Rosy, Pastel color including, Light Blue, Larvender except Orange</p>
             </div>
-            <div class="season_card">
+            <div class="season_card autumn">
                 <img width="96" height="96" src="https://img.icons8.com/color/96/autumn.png" alt="autumn"/>
                 <h2>Autumn</h2>
+                <p>The makeup tone is Orange-Red, Dark Peach, Red, Brown, Red Brick, Orange Brick, Warm Red, and Warm Orange</p>
             </div>
-            <div class="season_card">
+            <div class="season_card winter">
                 <img width="96" height="96" src="https://img.icons8.com/color/96/winter--v1.png" alt="winter--v1"/>
                 <h2>Winter</h2>
+                <p>The makeup tone is Berry, True Red, Burgundy, Plum, Dark Pink, and Fuchsia</p>
             </div>
         </div>
     </div>
@@ -97,10 +101,10 @@ import { ref } from 'vue'
 }
 
 .season_card {
+    width: 18%;
     padding: 4rem;
     margin: 4rem;
     text-align: center;
-    border: 2px solid black;
     float: left;
 }
 
@@ -112,6 +116,26 @@ import { ref } from 'vue'
 .season_card h2 {
     font-size: 32px;
     font-weight: 500;
+}
+
+.season_card p {
+
+}
+
+.spring {
+    border: 2px solid #FFC7EA;
+}
+
+.summer {
+    border: 2px solid #CAEDFF;
+}
+
+.autumn {
+    border: 2px solid #FBF0B2;
+}
+
+.winter {
+    border: 2px solid #D8B4F8;
 }
 
 </style>

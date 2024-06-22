@@ -53,6 +53,8 @@ export default {
       }
     );
 
+    
+
     return {
       products,
       brandName,
@@ -88,10 +90,13 @@ export default {
   font-style: #000;
   margin: 0 10px;
   border: 1px solid #EDC2D8;
-  /* background-color: #EDC2D8; */
   text-decoration: none; 
   color: inherit;
   padding: 5px 10px;
+}
+
+.router-link-exact-active {
+  background-color: #EDC2D8;
 }
 
 </style>

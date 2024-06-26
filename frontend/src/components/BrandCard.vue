@@ -44,4 +44,9 @@ export default {
 .card:hover {
   box-shadow: 2px 2px 5px #ccc;
 }
+
+.card-body p {
+  font-size: 22px;
+  margin: 5px;
+}
 </style>

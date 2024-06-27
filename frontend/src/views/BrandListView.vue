@@ -40,7 +40,7 @@ export default {
         const response = await axios.get('http://localhost:8000/data');
         products.value = response.data;
       } catch (error) {
-        console.error(error);
+        console.error(error, "Error, You didn't connect with the database ");
       }
     };
 
@@ -58,11 +58,11 @@ export default {
 <style scoped>
 .card-title {
   text-align: center;
-    margin-top: 5%;
-    margin-bottom: 2%;
-    font-size: 72px;
-    font-style: italic;
-    font-weight: bold;
+  margin-top: 5%;
+  margin-bottom: 2%;
+  font-size: 72px;
+  font-style: italic;
+  font-weight: bold;
 }
 
 .card-container {

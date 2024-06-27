@@ -8,6 +8,7 @@ import EyeshadowView from '@/views/Category/EyeshadowView.vue'
 import BlushView from '@/views/Category/BlushView.vue'
 import ProductLayout from '@/views/Category/ProductLayout.vue'
 import ProductDetailView from '@/views/Category/ProductDetailView.vue'
+import SeasonProductView from '@/views/Season/SeasonProductView.vue'
 
 const routes = [
     {
@@ -23,7 +24,7 @@ const routes = [
     {
         path: '/getseasons',
         name: 'getseasonsPage',
-        component: GetSeasonsPage  
+        component: GetSeasonsPage,
     },
     {
         path: '/brandListView/:brandName',
@@ -60,6 +61,11 @@ const routes = [
         name: 'productDetailView',
         component: ProductDetailView,
         props: true
+    },
+    {
+        path: '/getseasons/:colorTone',
+        name: 'seasonProductView',
+        component: SeasonProductView
     }
 ]
 

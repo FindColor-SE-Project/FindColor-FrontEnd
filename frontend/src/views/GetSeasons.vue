@@ -24,21 +24,22 @@
                     <p class="cardo-regular">No season selected</p>
                 </div>
             </div>
-            <router-link :to="{ name: 'brandListView' }"><button class="next-button">Next</button></router-link>
+            <router-link v-if="selectedOption" :to="{ name: 'seasonProductView', params: { colorTone: selectedOption.value } }">
+                <button class="next-button">Next</button>
+            </router-link>
         </div>
     </div>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue';
-import SelectButton from 'primevue/selectbutton';
 
 const selectedValue = ref(null);
 const options = ref([
-    { name: 'Spring', value: 1, detail: 'The makeup tone is Coral, Orange, Milk Tea, Peach Pink, Salmon Pink, and Peach' },
-    { name: 'Summer', value: 2, detail: 'The makeup tone is Pink, Pink nude, Rosy, Pastel color including, Light Blue, Lavender except Orange' },
-    { name: 'Autumn', value: 3, detail: 'The makeup tone is Orange-Red, Dark Peach, Red, Brown, Red Brick, Orange Brick, Warm Red, and Warm Orange' },
-    { name: 'Winter', value: 4, detail: 'The makeup tone is Berry, True Red, Burgundy, Plum, Dark Pink, and Fuchsia' },
+    { name: 'Spring', value: 'Spring', detail: 'The makeup tone is Coral, Orange, Milk Tea, Peach Pink, Salmon Pink, and Peach' },
+    { name: 'Summer', value: 'Summer', detail: 'The makeup tone is Pink, Pink nude, Rosy, Pastel color including, Light Blue, Lavender except Orange' },
+    { name: 'Autumn', value: 'Autumn', detail: 'The makeup tone is Orange-Red, Dark Peach, Red, Brown, Red Brick, Orange Brick, Warm Red, and Warm Orange' },
+    { name: 'Winter', value: 'Winter', detail: 'The makeup tone is Berry, True Red, Burgundy, Plum, Dark Pink, and Fuchsia' },
 ]);
 
 const selectedOption = computed(() => {

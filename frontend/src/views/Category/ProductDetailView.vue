@@ -10,7 +10,9 @@
                 {{ displayProduct.colorTone }}
             </label>
             <div class="color_select flex">
-                <span v-for="(color, index) in getColorShade" :key="index" :style="{ backgroundColor: color }"></span>
+                <span>
+                    <img :src="displayProduct.colorShadeImage" class="color-image">
+                </span>
             </div>
         </div>
     </div>
@@ -25,7 +27,7 @@ export default {
     setup() {
         const route = useRoute();
         const products = ref([]);
-        
+
         const fetchData = async () => {
             try {
                 const response = await axios.get('http://localhost:8000/data');
@@ -37,8 +39,7 @@ export default {
 
         const displayProduct = computed(() => {
             return products.value.find(p =>
-                p.brandName === route.params.brandName &&
-                p.productName === route.params.productName
+                p.productName.includes(route.params.productName)
             );
         });
 
@@ -60,22 +61,8 @@ export default {
             };
             
             if (seasonColor && seasonStyle[seasonColor]) {
-                return seasonStyle[seasonColor]        
+                return seasonStyle[seasonColor];
             }
-        });
-
-        const getColorShade = computed(() => {
-            const colorShade = displayProduct.value?.colorShade;
-            if (colorShade) {
-                const matches = colorShade.match(/\((\d+),\s*(\d+),\s*(\d+)\)/g);
-                if (matches) {
-                    return matches.map(match => {
-                        const [_, r, g, b] = match.match(/\((\d+),\s*(\d+),\s*(\d+)\)/).map(Number);
-                        return `rgb(${r}, ${g}, ${b})`;
-                    });
-                }
-            }
-            return ['rgb(0, 0, 0)']; // Default color if colorShade is not valid or no matches found
         });
 
         onMounted(fetchData);
@@ -83,8 +70,7 @@ export default {
         return {
             products,
             displayProduct,
-            seasonColorLabel,
-            getColorShade
+            seasonColorLabel
         };
     }
 };
@@ -139,9 +125,13 @@ p {
 }
 
 .color_select span {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    margin-right: 10px;
+    margin-right: 10px; /* Adjust spacing between images */
+}
+
+.color-image {
+    max-width: 50px; /* Adjust image size */
+    max-height: 50px;
+    object-fit: contain;
+    border-radius: 50%; /* Apply border-radius if needed */
 }
 </style>

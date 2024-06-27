@@ -5,10 +5,6 @@ import router from './router/index'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fas } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import PrimeVue from 'primevue/config';
-import 'primevue/resources/themes/saga-blue/theme.css';     
-import 'primevue/resources/primevue.min.css';              
-import 'primeicons/primeicons.css';                         
 
 library.add(fas);
 

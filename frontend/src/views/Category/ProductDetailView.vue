@@ -9,12 +9,24 @@
             <label class="season_color cardo-regular" :style="{ borderColor: seasonColorLabel.borderColor }">
                 {{ displayProduct.colorTone }}
             </label>
-            <div class="color_select flex">
-                <span>
-                    <img :src="displayProduct.colorShadeImage" class="color-image">
-                </span>
-            </div>
+            <!-- <div class="product-detail">
+                <div class="color_select flex">
+                    <span>
+                        <img :src="displayProduct.colorShadeImage" class="color-image">
+                    </span>
+                    <router-link v-for="product in similarProducts" :key="product.id"
+                        :to="{ name: 'productDetailView', params: { brandName: product.brandName, productName: product.productName } }">
+                        <span>
+                            <img :src="product.colorShadeImage" class="color-image">
+                        </span>
+                    </router-link>
+                </div>
+            </div> -->
         </div>
+    </div>
+    <div v-else>
+        <!-- Handle loading state or show an error message -->
+        <p>Loading...</p>
     </div>
 </template>
 
@@ -27,21 +39,35 @@ export default {
     setup() {
         const route = useRoute();
         const products = ref([]);
+        const displayProduct = ref(null); // Initialize displayProduct as null or undefined initially
 
         const fetchData = async () => {
             try {
                 const response = await axios.get('http://localhost:8000/data');
                 products.value = response.data;
+                console.log('Products fetched:', products.value);
+
+                // Set displayProduct based on route params after data is fetched
+                displayProduct.value = products.value.find(p =>
+                    p.productName.includes(route.params.productName)
+                );
+
+                console.log('Display product:', displayProduct.value);
             } catch (error) {
-                console.error(error);
+                console.error('Error fetching data:', error);
             }
         };
 
-        const displayProduct = computed(() => {
-            return products.value.find(p =>
-                p.productName.includes(route.params.productName)
-            );
+        const similarProducts = computed(() => {
+            if (displayProduct.value) {
+                return products.value.filter(product =>
+                    product.collectionName === displayProduct.value.collectionName &&
+                    product.id !== displayProduct.value.id
+                );
+            }
+            return [];
         });
+
 
         const seasonColorLabel = computed(() => {
             const seasonColor = displayProduct.value?.colorTone;
@@ -59,7 +85,7 @@ export default {
                     borderColor: '#D8B4F8'
                 }
             };
-            
+
             if (seasonColor && seasonStyle[seasonColor]) {
                 return seasonStyle[seasonColor];
             }
@@ -70,6 +96,7 @@ export default {
         return {
             products,
             displayProduct,
+            similarProducts,
             seasonColorLabel
         };
     }
@@ -125,13 +152,16 @@ p {
 }
 
 .color_select span {
-    margin-right: 10px; /* Adjust spacing between images */
+    margin-right: 10px;
+    /* Adjust spacing between images */
 }
 
 .color-image {
-    max-width: 50px; /* Adjust image size */
+    max-width: 50px;
+    /* Adjust image size */
     max-height: 50px;
     object-fit: contain;
-    border-radius: 50%; /* Apply border-radius if needed */
+    border-radius: 50%;
+    /* Apply border-radius if needed */
 }
 </style>

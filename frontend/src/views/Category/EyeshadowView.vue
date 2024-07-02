@@ -1,6 +1,6 @@
 <template>
-    <div class="product-list">
-      <ProductCard v-for="product in filteredCategory" :key="product.productID" :product="product" />
+  <div class="product-list">
+    <ProductCard v-for="product in filteredCategory" :key="product.productID" :product="product" />
   </div>
 
 </template>
@@ -15,13 +15,18 @@ export default {
   components: {
     ProductCard
   },
-  setup () {
+  setup() {
     const route = useRoute();
     const products = ref([]);
     const brandName = computed(() => route.params.brandName);
 
     const filteredCategory = computed(() => {
-      return products.value.filter(product => product.brandName === brandName.value && product.productCategory === 'Eyeshadow');
+      try {
+        return products.value.filter(product => product.brandName === brandName.value && product.productCategory === 'Eyeshadow');
+      } catch (error) {
+        console.error('Error filtering products by category:', error);
+        return []; // คืนค่าอาร์เรย์ว่างหากเกิดข้อผิดพลาด
+      }
     });
 
     const fetchData = async () => {
@@ -62,11 +67,11 @@ export default {
 
 .card-title {
   text-align: center;
-    margin-top: 5%;
-    margin-bottom: 2%;
-    font-size: 72px;
-    font-style: italic;
-    font-weight: bold;
+  margin-top: 5%;
+  margin-bottom: 2%;
+  font-size: 72px;
+  font-style: italic;
+  font-weight: bold;
 }
 
 .category-select {
@@ -80,9 +85,8 @@ export default {
   margin: 0 10px;
   border: 1px solid #EDC2D8;
   /* background-color: #EDC2D8; */
-  text-decoration: none; 
+  text-decoration: none;
   color: inherit;
   padding: 5px 10px;
 }
-
 </style>

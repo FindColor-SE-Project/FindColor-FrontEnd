@@ -30,7 +30,12 @@ export default {
     const brandName = computed(() => route.params.brandName);
 
     const filteredProducts = computed(() => {
-      return products.value.filter(product => product.brandName === brandName.value);
+      try {
+        return products.value.filter(product => product.brandName === brandName.value);
+      } catch (error) {
+        console.error('Error filtering products:', error);
+        return [];
+      }
     });
 
     const fetchData = async () => {
@@ -38,7 +43,7 @@ export default {
         const response = await axios.get('http://localhost:8000/data');
         products.value = response.data;
       } catch (error) {
-        console.error(error);
+        console.error('Network Error to fetch the database.',error);
       }
     };
 

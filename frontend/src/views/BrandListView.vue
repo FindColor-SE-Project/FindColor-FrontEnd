@@ -40,7 +40,7 @@ export default {
         const response = await axios.get('http://localhost:8000/data');
         products.value = response.data;
       } catch (error) {
-        console.error(error, "Error, You didn't connect with the database ");
+        console.error(error, "Error, You didn't connect with the database.");
       }
     };
 

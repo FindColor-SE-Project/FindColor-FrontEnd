@@ -8,7 +8,6 @@
 </template>
 
 <script>
-import { ref, computed, onMounted } from 'vue';
 import BrandCard from '@/components/BrandCard.vue';
 import axios from 'axios';
 
@@ -17,39 +16,43 @@ export default {
     BrandCard
   },
 
-  setup() {
-    const products = ref([]);
-    const limitedProducts = computed(() => {
+  data() {
+    return {
+      products: []
+    }
+  },
+
+  computed: {
+    limitedProducts() {
       const brandSet = new Set();
       const limitedProductArray = [];
 
-      products.value.forEach(product => {
+      this.products.forEach(product => {
         if (!brandSet.has(product.brandName)) {
           brandSet.add(product.brandName);
           limitedProductArray.push(product);
         }
         
-        if (limitedProductArray.length === 5) return limitedProductArray;  // หยุดเมื่อได้ครบ 5 การ์ด
+        if (limitedProductArray.length === 5) return limitedProductArray;
       });
 
       return limitedProductArray;
-    });
-  
-    const fetchData = async () => {
+    }
+  },
+
+  methods: {
+    async fetchData() {
       try {
         const response = await axios.get('http://localhost:8000/data');
-        products.value = response.data;
+        this.products = response.data;
       } catch (error) {
         console.error(error, "Error, You didn't connect with the database.");
       }
-    };
+    }
+  },
 
-    onMounted(fetchData);
-
-    return {
-      products,
-      limitedProducts
-    };
+  mounted() {
+    this.fetchData();
   }
 }
 

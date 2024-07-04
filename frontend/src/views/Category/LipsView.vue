@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { ref, computed, onMounted, watch } from 'vue';
+// import { ref, computed, onMounted, watch } from 'vue';
 import ProductCard from '@/components/ProductCard.vue';
 import axios from 'axios';
 import { useRoute } from 'vue-router'
@@ -14,40 +14,69 @@ export default {
   components: {
     ProductCard
   },
-  setup () {
-    const route = useRoute();
-    const products = ref([]);
-    const brandName = computed(() => route.params.brandName);
+  // setup () {
+  //   const route = useRoute();
+  //   const products = ref([]);
+  //   const brandName = computed(() => route.params.brandName);
 
-    const filteredCategory = computed(() => {
-      return products.value.filter(product => product.brandName === brandName.value && product.productCategory === 'Lips');
-    });
+  //   const filteredCategory = computed(() => {
+  //     return products.value.filter(product => product.brandName === brandName.value && product.productCategory === 'Lips');
+  //   });
 
-    const fetchData = async () => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await axios.get('http://localhost:8000/data');
+  //       products.value = response.data;
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   };
+
+  //   onMounted(fetchData);
+
+  //   watch(
+  //     () => route.params.brandName,
+  //     async (newBrandName, oldBrandName) => {
+  //       if (newBrandName !== oldBrandName) {
+  //         await fetchData();
+  //       }
+  //     }
+  //   );
+
+  //   return {
+  //     products,
+  //     brandName,
+  //     filteredCategory
+  //   };
+  // }
+  data() {
+    return {
+      products: [],
+      brandName: null // มาจากที่เรากำหนด path: '/brandListView/:brandName'
+    }
+  },
+
+  computed: {
+    filteredCategory() {
+      return this.products.filter(product => product.brandName === this.brandName && product.productCategory === 'Lips')
+    }
+  },
+
+  methods: {
+    async fetchData() {
       try {
         const response = await axios.get('http://localhost:8000/data');
-        products.value = response.data;
+        this.products = response.data;
       } catch (error) {
-        console.error(error);
+        console.error(error, "Error, You didn't connect with the database.");
       }
-    };
+    }
+  },
 
-    onMounted(fetchData);
-
-    watch(
-      () => route.params.brandName,
-      async (newBrandName, oldBrandName) => {
-        if (newBrandName !== oldBrandName) {
-          await fetchData();
-        }
-      }
-    );
-
-    return {
-      products,
-      brandName,
-      filteredCategory
-    };
+  mounted() {
+    this.fetchData();
+    const route = useRoute();
+    this.brandName = route.params.brandName;
   }
 }
 </script>

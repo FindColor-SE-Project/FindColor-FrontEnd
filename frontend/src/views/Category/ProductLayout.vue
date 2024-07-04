@@ -24,45 +24,80 @@ export default {
   components: {
     ProductCard
   },
-  setup () {
-    const route = useRoute();
-    const products = ref([]);
-    const brandName = computed(() => route.params.brandName);
+  // setup () {
+  //   const route = useRoute();
+  //   const products = ref([]);
+  //   const brandName = computed(() => route.params.brandName);
 
-    const filteredProducts = computed(() => {
+  //   const filteredProducts = computed(() => {
+  //     try {
+  //       return products.value.filter(product => product.brandName === brandName.value);
+  //     } catch (error) {
+  //       console.error('Error filtering products:', error);
+  //       return [];
+  //     }
+  //   });
+
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await axios.get('http://localhost:8000/data');
+  //       products.value = response.data;
+  //     } catch (error) {
+  //       console.error('Network Error to fetch the database.',error);
+  //     }
+  //   };
+
+  //   onMounted(fetchData);
+
+  //   watch(
+  //     () => route.params.brandName,
+  //     async (newBrandName, oldBrandName) => {
+  //       if (newBrandName !== oldBrandName) {
+  //         await fetchData();
+  //       }
+  //     }
+  //   );
+
+  //   return {
+  //     products,
+  //     brandName,
+  //     filteredProducts
+  //   };
+  // }
+
+  data() {
+    return {
+      products: [],
+      brandName: null // มาจากที่เรากำหนด path: '/brandListView/:brandName'
+    }
+  },
+
+  computed: {
+    filteredProducts() {
       try {
-        return products.value.filter(product => product.brandName === brandName.value);
+        return this.products.filter(product => product.brandName === this.brandName);
       } catch (error) {
         console.error('Error filtering products:', error);
         return [];
       }
-    });
+    }
+  },
 
-    const fetchData = async () => {
+  methods: {
+    async fetchData() {
       try {
         const response = await axios.get('http://localhost:8000/data');
-        products.value = response.data;
+        this.products = response.data;
       } catch (error) {
-        console.error('Network Error to fetch the database.',error);
+        console.error(error, "Error, You didn't connect with the database.");
       }
-    };
+    }
+  },
 
-    onMounted(fetchData);
-
-    watch(
-      () => route.params.brandName,
-      async (newBrandName, oldBrandName) => {
-        if (newBrandName !== oldBrandName) {
-          await fetchData();
-        }
-      }
-    );
-
-    return {
-      products,
-      brandName,
-      filteredProducts
-    };
+  mounted() {
+    this.fetchData();
+    const route = useRoute();
+    this.brandName = route.params.brandName;
   }
 }
 </script>

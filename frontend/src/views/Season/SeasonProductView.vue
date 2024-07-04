@@ -2,9 +2,9 @@
   <div>
     <h2 class="cardo-regular">Your season color tone is</h2>
     <h1 class="cardo-regular">{{ colorTone }}</h1>
-    <router-link class="josefin-sans-font category-layout" :to="{ name: 'seasonLips' }">Lips</router-link>
-    <router-link class="josefin-sans-font category-layout" :to="{ name: 'seasonBlush' }">Blush</router-link>
-    <router-link class="josefin-sans-font category-layout" :to="{ name: 'seasonEyeshadow' }">Eyeshadow</router-link>
+<!--    <router-link class="josefin-sans-font category-layout" :to="{ name: 'seasonLips' }">Lips</router-link>-->
+<!--    <router-link class="josefin-sans-font category-layout" :to="{ name: 'seasonBlush' }">Blush</router-link>-->
+<!--    <router-link class="josefin-sans-font category-layout" :to="{ name: 'seasonEyeshadow' }">Eyeshadow</router-link>-->
     <div>
       <!-- <div v-for="color in filteredProducts" :key="color.id" class="color-option" :style="{ backgroundImage: `url(${color.colorShadeImage})` }" @click="selectColor(color)">
         {{ color.name }}

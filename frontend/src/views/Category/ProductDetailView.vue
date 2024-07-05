@@ -9,7 +9,7 @@
       <label class="season_color cardo-regular" :style="{ borderColor: seasonColorLabel.borderColor }">
         {{ displayProduct.colorTone }}
       </label>
-      <div class="color_select flex">
+      <div class="color_select">
         <span v-for="(gradient, index) in combinedColorShades" :key="index" :style="{ background: gradient }" class="color-circle"></span>
       </div>
     </div>
@@ -106,15 +106,15 @@ export default {
       } else if (colors.length === 2) {
         return `linear-gradient(to right, ${colors[0]} 50%, ${colors[1]} 50%)`;
       } else if (colors.length === 3) {
-        return `linear-gradient(to right, ${colors[0]} 33.33%, ${colors[1]} 33.33%, ${colors[2]} 33.34%)`;
+        return `conic-gradient(${colors[0]} 0% 33.33%, ${colors[1]} 33.33% 66.66%, ${colors[2]} 66.66% 100%)`;
       } else if (colors.length === 4) {
-        return `radial-gradient(circle at center, ${colors[0]} 50%, ${colors[1]} 50%, ${colors[2]} 50%, ${colors[3]} 50%)`;
+        return `conic-gradient(${colors[0]} 0% 25%, ${colors[1]} 25% 50%, ${colors[2]} 50% 75%, ${colors[3]} 75% 100%)`;
       }
     };
 
     const extractCollectionName = (productName) => {
-      const lastSpaceIndex = productName.lastIndexOf(' ');
-      return productName.substring(0, lastSpaceIndex).trim();
+      const match = productName.match(/^(.*?)(?=\s+#|$)/);
+      return match ? match[0].trim() : productName;
     };
 
     onMounted(fetchData);

@@ -8,7 +8,7 @@ import EyeshadowView from '@/views/Category/EyeshadowView.vue';
 import BlushView from '@/views/Category/BlushView.vue';
 import ProductLayout from '@/views/Category/ProductLayout.vue';
 import ProductDetailView from '@/views/Category/ProductDetailView.vue';
-import SeasonProductView from '@/views/Season/SeasonProductView.vue';
+import SeasonLayout from '@/views/Season/SeasonLayout.vue';
 import SeasonLips from '@/views/Season/SeasonLips.vue';
 import SeasonBlush from '@/views/Season/SeasonBlush.vue';
 import SeasonEyeshadow from '@/views/Season/SeasonEyeshadow.vue';
@@ -69,8 +69,8 @@ const routes = [
     },
     {
         path: '/getseasons/:colorTone',
-        name: 'seasonProductView',
-        component: SeasonProductView,
+        name: 'seasonLayout',
+        component: SeasonLayout,
         props: true,
         children: [
             {

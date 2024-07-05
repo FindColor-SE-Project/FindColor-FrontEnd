@@ -9,7 +9,7 @@
       <label class="season_color cardo-regular" :style="{ borderColor: seasonColorLabel.borderColor }">
         {{ displayProduct.colorTone }}
       </label>
-      <div class="color_select flex">
+      <div class="color_select">
         <span v-for="(gradient, index) in combinedColorShades" :key="index" :style="{ background: gradient }" class="color-circle"></span>
       </div>
     </div>
@@ -151,7 +151,6 @@ p {
 .flex {
   display: flex;
   justify-content: space-between;
-  gap: 5px; /* Adjusted spacing between circles */
 }
 
 .product-left img {
@@ -180,6 +179,7 @@ p {
 }
 
 .color_select span {
+  margin-right: 10px;
   width: 50px;
   height: 50px;
   border: 1px solid #000;

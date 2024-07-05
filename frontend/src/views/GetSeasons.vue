@@ -1,30 +1,26 @@
 <template>
-    <div class="product-container flex">
+    <div class="product-container">
         <div class="season-left">
-
+            <!-- Left -->
         </div>
+
         <div class="season-right">
-            <div class="flex">
-                <div class="card button-group">
-                    <button
-                    v-for="option in options"
-                    :key="option.value"
-                    :class="{ 'active': option.value === selectedValue }"
-                    @click="selectOption(option.value)"
-                    >
+            <div class="card button-group">
+                <button v-for="option in options" :key="option.value"
+                    :class="{ 'active': option.value === selectedValue }" @click="selectOption(option.value)">
                     {{ option.name }}
-                    </button>
-                </div>
-                <div v-if="selectedOption" class="detail cardo-regular">
-                    <h2 class="cardo-regular">{{ selectedOption.name }}</h2>
-                    <p class="cardo-regular">{{ selectedOption.detail }}</p>
-                </div>
-                <div v-else class="detail">
-                    <h2 class="cardo-regular">Select a season</h2>
-                    <p class="cardo-regular">No season selected</p>
-                </div>
+                </button>
             </div>
-            <router-link v-if="selectedOption" :to="{ name: 'seasonProductView', params: { colorTone: selectedOption.value } }">
+            <div v-if="selectedOption" class="detail cardo-regular">
+                <h2 class="cardo-regular">{{ selectedOption.name }}</h2>
+                <p class="cardo-regular">{{ selectedOption.detail }}</p>
+            </div>
+            <div v-else class="detail">
+                <h2 class="cardo-regular">Select a season</h2>
+                <p class="cardo-regular">No season selected</p>
+            </div>
+            <router-link v-if="selectedOption"
+                :to="{ name: 'seasonProductView', params: { colorTone: selectedOption.value } }">
                 <button class="next-button">Next</button>
             </router-link>
         </div>
@@ -43,11 +39,11 @@ const options = ref([
 ]);
 
 const selectedOption = computed(() => {
-  return options.value.find(option => option.value === selectedValue.value) || null;
+    return options.value.find(option => option.value === selectedValue.value) || null;
 });
 
 function selectOption(value) {
-  selectedValue.value = value;
+    selectedValue.value = value;
 }
 
 </script>
@@ -60,7 +56,8 @@ function selectOption(value) {
     justify-content: space-between;
 }
 
-.season-left, .season-right {
+.season-left,
+.season-right {
     width: 50%;
     display: flex;
     flex-direction: column;
@@ -104,8 +101,10 @@ function selectOption(value) {
 
 .large-button {
     width: 100%;
-    font-size: 18px; /* Adjust font size as needed */
-    padding: 10px; /* Adjust padding as needed */
+    font-size: 18px;
+    /* Adjust font size as needed */
+    padding: 10px;
+    /* Adjust padding as needed */
 }
 
 .next-button {

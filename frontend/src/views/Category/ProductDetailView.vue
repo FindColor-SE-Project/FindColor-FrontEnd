@@ -106,15 +106,15 @@ export default {
       } else if (colors.length === 2) {
         return `linear-gradient(to right, ${colors[0]} 50%, ${colors[1]} 50%)`;
       } else if (colors.length === 3) {
-        return `linear-gradient(to right, ${colors[0]} 33.33%, ${colors[1]} 33.33%, ${colors[2]} 33.34%)`;
+        return `conic-gradient(${colors[0]} 0% 33.33%, ${colors[1]} 33.33% 66.66%, ${colors[2]} 66.66% 100%)`;
       } else if (colors.length === 4) {
-        return `radial-gradient(circle at center, ${colors[0]} 50%, ${colors[1]} 50%, ${colors[2]} 50%, ${colors[3]} 50%)`;
+        return `conic-gradient(${colors[0]} 0% 25%, ${colors[1]} 25% 50%, ${colors[2]} 50% 75%, ${colors[3]} 75% 100%)`;
       }
     };
 
     const extractCollectionName = (productName) => {
-      const lastSpaceIndex = productName.lastIndexOf(' ');
-      return productName.substring(0, lastSpaceIndex).trim();
+      const match = productName.match(/^(.*?)(?=\s+#|$)/);
+      return match ? match[0].trim() : productName;
     };
 
     onMounted(fetchData);
@@ -151,6 +151,7 @@ p {
 .flex {
   display: flex;
   justify-content: space-between;
+  gap: 5px; /* Adjusted spacing between circles */
 }
 
 .product-left img {
@@ -179,7 +180,6 @@ p {
 }
 
 .color_select span {
-  margin-right: 10px;
   width: 50px;
   height: 50px;
   border: 1px solid #000;

@@ -1,15 +1,15 @@
 <template>
-  <div>
-    <h2>Lips Products</h2>
-    <div class="color_select">
-      <span v-for="(gradient, index) in combinedColorShades" :key="index" :style="{ background: gradient }" class="color-circle"></span>
+    <div class="color_select" v-if="filteredColorShades.length">
+      <span v-for="(gradient, index) in filteredColorShades" :key="index" :style="{ background: gradient }"
+        class="color-circle">
+      </span>
     </div>
-  </div>
 </template>
 
 <script>
-import axios from 'axios';
+import ProductCard from '@/components/ProductCard.vue';
 import { useRoute } from 'vue-router';
+import axios from 'axios';
 
 export default {
   data() {
@@ -37,6 +37,21 @@ export default {
         });
       }
       return allColorShades;
+    },
+
+    filteredCategory() {
+      return this.products.filter(product => product.colorTone === this.colorTone && product.productCategory === 'Lips');
+    },
+
+    filteredColorShades() {
+      const allColorShades = [];
+      // Add the color shades of the filtered category products
+      this.filteredCategory.forEach(product => {
+        if (product.colorShade) {
+          allColorShades.push(this.createGradient(this.extractColors(product.colorShade)));
+        }
+      });
+      return allColorShades;
     }
   },
   methods: {
@@ -44,8 +59,15 @@ export default {
       try {
         const response = await axios.get('http://localhost:8000/data');
         this.products = response.data;
+        console.log('Products fetched:', this.products);
+
+        this.displayProduct = this.products.find(p =>
+          p.productName.includes(this.$route.params.productName)
+        );
+
+        console.log('Display product:', this.displayProduct);
       } catch (error) {
-        console.error(error, "Error, You didn't connect with the database.");
+        console.error('Error fetching data:', error);
       }
     },
 
@@ -80,6 +102,7 @@ export default {
   }
 };
 </script>
+
 
 <style scoped>
 .color_select {

@@ -20,7 +20,7 @@
                 <p class="cardo-regular">No season selected</p>
             </div>
             <router-link v-if="selectedOption"
-                :to="{ name: 'seasonProductView', params: { colorTone: selectedOption.value } }">
+                :to="{ name: 'seasonLayout', params: { colorTone: selectedOption.value } }">
                 <button class="next-button">Next</button>
             </router-link>
         </div>

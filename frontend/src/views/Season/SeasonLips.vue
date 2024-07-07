@@ -1,9 +1,9 @@
 <template>
-    <div class="color_select" v-if="filteredColorShades.length">
-      <span v-for="(gradient, index) in filteredColorShades" :key="index" :style="{ background: gradient }"
-        class="color-circle">
-      </span>
-    </div>
+  <div class="color_select" v-if="filteredColorShades.length">
+    <span v-for="(gradient, index) in filteredColorShades" :key="index" :style="{ background: gradient }"
+      class="color-circle">
+    </span>
+  </div>
 </template>
 
 <script>
@@ -21,23 +21,23 @@ export default {
     };
   },
   computed: {
-    combinedColorShades() {
-      const allColorShades = [];
-      if (this.displayProduct) {
-        // Add the color shades of the main product
-        if (this.displayProduct.colorShade) {
-          allColorShades.push(this.createGradient(this.extractColors(this.displayProduct.colorShade)));
-        }
+    // combinedColorShades() {
+    //   const allColorShades = [];
+    //   if (this.displayProduct) {
+    //     // Add the color shades of the main product
+    //     if (this.displayProduct.colorShade) {
+    //       allColorShades.push(this.createGradient(this.extractColors(this.displayProduct.colorShade)));
+    //     }
 
-        // Add the color shades of similar products
-        this.similarProducts.forEach(product => {
-          if (product.colorShade) {
-            allColorShades.push(this.createGradient(this.extractColors(product.colorShade)));
-          }
-        });
-      }
-      return allColorShades;
-    },
+    //     // Add the color shades of similar products
+    //     this.similarProducts.forEach(product => {
+    //       if (product.colorShade) {
+    //         allColorShades.push(this.createGradient(this.extractColors(product.colorShade)));
+    //       }
+    //     });
+    //   }
+    //   return allColorShades;
+    // },
 
     filteredCategory() {
       return this.products.filter(product => product.colorTone === this.colorTone && product.productCategory === 'Lips');

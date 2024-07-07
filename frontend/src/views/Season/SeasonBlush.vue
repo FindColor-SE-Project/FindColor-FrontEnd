@@ -1,13 +1,21 @@
 <template>
-  <div class="color_select" v-if="filteredColorShades.length">
-    <span v-for="(color, index) in filteredColorShades" :key="index" :style="{ background: color }"
-      class="color-circle">
-    </span>
+  <div class="color_select" v-if="groupedByProduct.length">
+    <div v-for="([productName, colorGroups], index) in groupedByProduct" :key="index" class="color-group">
+      <div v-for="(colors, subIndex) in colorGroups" :key="subIndex" class="color-subgroup">
+        <span
+          v-for="(color, colorIndex) in colors"
+          :key="colorIndex"
+          :style="{ background: color }"
+          class="color-circle"
+        ></span>
+      </div>
+      <!-- Add a vertical line after each product group except the last one -->
+      <div v-if="index < groupedByProduct.length - 1" class="vertical-line"></div>
+    </div>
   </div>
 </template>
 
 <script>
-import ProductCard from '@/components/ProductCard.vue';
 import { useRoute } from 'vue-router';
 import axios from 'axios';
 
@@ -22,18 +30,28 @@ export default {
   },
   computed: {
     filteredCategory() {
-      return this.products.filter(product => product.colorTone === this.colorTone && product.productCategory === 'Blush');
+      return this.products.filter(
+        (product) => product.colorTone === this.colorTone && product.productCategory === 'Blush'
+      );
     },
 
-    filteredColorShades() {
-      const allColorShades = [];
-      // Add the color shades of the filtered category products
-      this.filteredCategory.forEach(product => {
-        if (product.colorShade) {
-          allColorShades.push(...(this.extractColors(product.colorShade)));
+    groupedByProduct() {
+    const productMap = new Map();
+    
+    this.filteredCategory.forEach((product) => {
+      if (product.colorShade) {
+        const colors = this.extractColors(product.colorShade);
+        const productName = product.productName;
+
+        if (!productMap.has(productName)) {
+          productMap.set(productName, []);
         }
-      });
-      return allColorShades;
+        productMap.get(productName).push(colors);
+      }
+    });
+
+    // Convert map to array and sort by product name
+    return Array.from(productMap.entries()).sort(([a], [b]) => a.localeCompare(b));
     }
   },
   methods: {
@@ -43,7 +61,7 @@ export default {
         this.products = response.data;
         console.log('Products fetched:', this.products);
 
-        this.displayProduct = this.products.find(p =>
+        this.displayProduct = this.products.find((p) =>
           p.productName.includes(this.$route.params.productName)
         );
 
@@ -56,13 +74,13 @@ export default {
     extractColors(colorShade) {
       const matches = colorShade.match(/\((\d+),\s*(\d+),\s*(\d+)\)/g);
       if (matches) {
-        return matches.map(match => {
+        return matches.map((match) => {
           const [_, r, g, b] = match.match(/\((\d+),\s*(\d+),\s*(\d+)\)/).map(Number);
           return `rgb(${r}, ${g}, ${b})`;
         });
       }
       return [];
-    },
+    }
   },
 
   mounted() {
@@ -73,7 +91,6 @@ export default {
 };
 </script>
 
-
 <style scoped>
 .color_select {
   display: flex;
@@ -81,11 +98,32 @@ export default {
   margin: 20px 0;
 }
 
-.color_select span {
-  margin-right: 10px;
-  width: 50px;
-  height: 50px;
+.color-group {
+  display: flex;
+  align-items: center;
+  margin-right: 20px; /* Space between product groups */
+}
+
+.color-subgroup {
+  display: flex;
+  align-items: center;
+  margin-right: 10px; /* Space between subgroups */
+}
+
+.color-circle {
+  width: 50px; /* Size of color circles */
+  height: 50px; /* Size of color circles */
   border: 1px solid #000;
   border-radius: 50%;
+  margin-right: 5px; /* Space between color circles */
+}
+
+.vertical-line {
+  width: 2px; /* Width of the vertical line */
+  background-color: #000; /* Color of the vertical line */
+  margin-left: 10px; /* Space between the last circle and the line */
+  /* Adjust the height based on the height of the color circles */
+  height: 50px; /* Should match the height of the color circles */
 }
 </style>
+

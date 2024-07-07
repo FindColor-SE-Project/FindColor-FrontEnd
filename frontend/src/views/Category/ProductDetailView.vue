@@ -10,7 +10,13 @@
         {{ displayProduct.colorTone }}
       </label>
       <div class="color_select">
-        <span v-for="(gradient, index) in combinedColorShades" :key="index" :style="{ background: gradient }" class="color-circle"></span>
+                <span
+                    v-for="(product, index) in collectionProductsWithGradients"
+                    :key="index"
+                    :style="{ background: product.gradient, borderColor: isSelectedProduct(product) ? 'black' : 'transparent' }"
+                    class="color-circle"
+                    @click="updateDisplayProduct(product)"
+                ></span>
       </div>
     </div>
   </div>
@@ -46,12 +52,15 @@ export default {
       }
     };
 
-    const similarProducts = computed(() => {
+    const updateDisplayProduct = (product) => {
+      displayProduct.value = product;
+    };
+
+    const collectionProducts = computed(() => {
       if (displayProduct.value) {
         const collectionName = extractCollectionName(displayProduct.value.productName);
         return products.value.filter(product =>
-            extractCollectionName(product.productName) === collectionName &&
-            product.productID !== displayProduct.value.productID
+            extractCollectionName(product.productName) === collectionName
         );
       }
       return [];
@@ -71,23 +80,16 @@ export default {
       }
     });
 
-    const combinedColorShades = computed(() => {
-      const allColorShades = [];
-      if (displayProduct.value) {
-        // Add the color shades of the main product
-        if (displayProduct.value.colorShade) {
-          allColorShades.push(createGradient(extractColors(displayProduct.value.colorShade)));
-        }
-
-        // Add the color shades of similar products
-        similarProducts.value.forEach(product => {
-          if (product.colorShade) {
-            allColorShades.push(createGradient(extractColors(product.colorShade)));
-          }
-        });
-      }
-      return allColorShades;
+    const collectionProductsWithGradients = computed(() => {
+      return collectionProducts.value.map(product => ({
+        ...product,
+        gradient: createGradient(extractColors(product.colorShade))
+      }));
     });
+
+    const isSelectedProduct = (product) => {
+      return displayProduct.value && product.productID === displayProduct.value.productID;
+    };
 
     const extractColors = (colorShade) => {
       const matches = colorShade.match(/\((\d+),\s*(\d+),\s*(\d+)\)/g);
@@ -122,9 +124,10 @@ export default {
     return {
       products,
       displayProduct,
-      similarProducts,
+      collectionProductsWithGradients,
       seasonColorLabel,
-      combinedColorShades
+      updateDisplayProduct,
+      isSelectedProduct
     };
   }
 };
@@ -182,7 +185,12 @@ p {
   margin-right: 10px;
   width: 50px;
   height: 50px;
-  border: 1px solid #000;
+  border: 2px solid transparent;
   border-radius: 50%;
+  cursor: pointer;
+}
+
+.color_select span.selected {
+  border-color: black;
 }
 </style>

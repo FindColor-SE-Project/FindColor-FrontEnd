@@ -9,6 +9,7 @@
       <ProductCard v-if="displayProduct" :product="displayProduct" />
     </div>
   </div>
+  <div v-else>Sorry, No color shades available </div>
 </template>
 
 <script>

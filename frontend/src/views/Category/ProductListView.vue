@@ -5,7 +5,6 @@
 </template>
 
 <script>
-// import { ref, computed, onMounted, watch } from 'vue';
 import ProductCard from '@/components/ProductCard.vue';
 import axios from 'axios';
 import { useRoute } from 'vue-router'
@@ -14,51 +13,11 @@ export default {
   components: {
     ProductCard
   },
-  // setup() {
-  //   const route = useRoute();
-  //   const products = ref([]);
-  //   const brandName = computed(() => route.params.brandName);
-
-  //   const filteredProducts = computed(() => {
-  //     try {
-  //       return products.value.filter(product => product.brandName === brandName.value);
-  //     } catch (error) {
-  //       console.error('Error filtering products:', error);
-  //       return [];
-  //     }
-  //   });
-
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await axios.get('http://localhost:8000/data');
-  //       products.value = response.data;
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   };
-
-  //   onMounted(fetchData);
-
-  //   watch(
-  //     () => route.params.brandName,
-  //     async (newBrandName, oldBrandName) => {
-  //       if (newBrandName !== oldBrandName) {
-  //         await fetchData();
-  //       }
-  //     }
-  //   );
-
-  //   return {
-  //     products,
-  //     brandName,
-  //     filteredProducts
-  //   };
-  // }
-
+ 
   data() {
     return {
       products: [],
-      brandName: null // มาจากที่เรากำหนด path: '/brandListView/:brandName'
+      brandName: null
     }
   },
 

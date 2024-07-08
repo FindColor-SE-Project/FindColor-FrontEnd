@@ -14,90 +14,90 @@ import SeasonBlush from '@/views/Season/SeasonBlush.vue';
 import SeasonEyeshadow from '@/views/Season/SeasonEyeshadow.vue';
 
 const routes = [
-    {
-        path: '/',
-        name: 'home',
-        component: Homepage
-    },
-    {
-        path: '/brandListView',
-        name: 'brandListView',
-        component: BrandListView  
-    },
-    {
-        path: '/getseasons',
-        name: 'getseasonsPage',
-        component: GetSeasonsPage,
-    },
-    {
-        path: '/brandListView/:brandName',
-        name: 'productLayout',
-        component: ProductLayout,
+  {
+    path: '/',
+    name: 'home',
+    component: Homepage
+  },
+  {
+    path: '/brands',
+    name: 'brandListView',
+    component: BrandListView  
+  },
+  {
+    path: '/seasons',
+    name: 'getseasonsPage',
+    component: GetSeasonsPage,
+  },
+  {
+    path: '/brands/:brandName',
+    name: 'productLayout',
+    component: ProductLayout,
+    props: true,
+    children: [
+      {
+        path: '',
+        name: 'productListView',
+        component: ProductListView,
         props: true,
-        children: [
-            {
-                path: '',
-                name: 'productListView',
-                component: ProductListView,
-                props: true,
-            },
-            {
-                path: 'Lips',
-                name: 'lipsView',
-                component: LipsView,
-                props: true
-            },
-            {
-                path: 'Blush',
-                name: 'blushView',
-                component: BlushView,
-                props: true
-            },
-            {
-                path: 'Eyeshadow',
-                name: 'eyeshadowView',
-                component: EyeshadowView,
-                props: true
-            }
-        ]
-    }, 
-    {
-        path: '/brandListView/:brandName/:productName',
-        name: 'productDetailView',
-        component: ProductDetailView,
+      },
+      {
+        path: 'lips',
+        name: 'lipsView',
+        component: LipsView,
         props: true
-    },
-    {
-        path: '/getseasons/:colorTone',
-        name: 'seasonLayout',
-        component: SeasonLayout,
-        props: true,
-        children: [
-            {
-                path: 'seasonLips',
-                name: 'seasonLips',
-                component: SeasonLips,
-                props: true
-            },
-            {
-                path: 'seasonBlush',
-                name: 'seasonBlush',
-                component: SeasonBlush,
-                props: true
-            },
-            {
-                path: 'seasonEyeshadow',
-                name: 'seasonEyeshadow',
-                component: SeasonEyeshadow,
-                props: true
-            }
-        ]
-    }
+      },
+      {
+        path: 'blush',
+        name: 'blushView',
+        component: BlushView,
+        props: true
+      },
+      {
+        path: 'eyeshadow',
+        name: 'eyeshadowView',
+        component: EyeshadowView,
+        props: true
+      }
+    ]
+  }, 
+  {
+    path: '/brands/:brandName/:productName',
+    name: 'productDetailView',
+    component: ProductDetailView,
+    props: true
+  },
+  {
+    path: '/seasons/:colorTone',
+    name: 'seasonLayout',
+    component: SeasonLayout,
+    props: true,
+    children: [
+      {
+        path: '',
+        name: 'seasonLips',
+        component: SeasonLips,
+        props: true
+      },
+      {
+        path: 'blush',
+        name: 'seasonBlush',
+        component: SeasonBlush,
+        props: true
+      },
+      {
+        path: 'eyeshadow',
+        name: 'seasonEyeshadow',
+        component: SeasonEyeshadow,
+        props: true
+      }
+    ]
+  }  
 ];
 
 const router = createRouter({
-    history: createWebHistory(),
-    routes
+  history: createWebHistory(),
+  routes
 });
 
 export default router;

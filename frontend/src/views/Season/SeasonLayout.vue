@@ -18,47 +18,29 @@
 </template>
 
 <script>
-import ProductCard from '@/components/ProductCard.vue';
-import axios from 'axios';
 import { useRoute } from 'vue-router';
 
 export default {
-  components: {
-    ProductCard,
-  },
-
   data() {
     return {
-      products: [],
-      colorTone: null,
+      colorTone: null
     };
   },
-
+  
   methods: {
-    async fetchData() {
-      try {
-        const response = await axios.get('http://localhost:8000/data');
-        this.products = response.data;
-      } catch (error) {
-        console.error(error, "Error, You didn't connect with the database.");
-      }
+    setDefaultChild() {
+      const route = useRoute();
+      this.colorTone = route.params.colorTone;
+      this.$router.replace({ name: 'seasonLips', params: { colorTone: this.colorTone } });
     }
   },
-
-  computed: {
-    filteredProducts() {
-      return this.products.filter(product => product.colorTone === this.colorTone);
-    }
-  },
-
+  
   mounted() {
-    this.fetchData();
-    const route = useRoute();
-
-    this.colorTone = route.params.colorTone;
+    this.setDefaultChild();
   }
 }
 </script>
+
 
 <style>
 .product-container {

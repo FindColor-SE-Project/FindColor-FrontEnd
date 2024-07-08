@@ -18,44 +18,15 @@
 </template>
 
 <script>
-// import { ref, computed, onMounted } from 'vue';
+import ProductCard from '@/components/ProductCard.vue';
 import axios from 'axios';
 import { useRoute } from 'vue-router';
 
 export default {
+  components: {
+    ProductCard,
+  },
 
-  // setup() {
-  //   const route = useRoute();
-  //   const products = ref([]);
-  //   const colorTone = computed(() => route.params.colorTone);
-
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await axios.get('http://localhost:8000/data');
-  //       products.value = response.data;
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   };
-
-  //   // const selectColor = (color) => {
-  //   //   console.log(`คุณเลือกสี: ${color.name}`);
-  //   // };
-
-  //   // const filteredProducts = computed(() => {
-  //   //   return products.value.filter(product => product.colorTone === colorTone.value);
-  //   // });
-
-  //   onMounted(fetchData);
-
-  //   return {
-  //     products,
-  //     colorTone,
-  //     // filteredProducts,
-  //     // selectColor
-  //   };
-  // }
-  
   data() {
     return {
       products: [],

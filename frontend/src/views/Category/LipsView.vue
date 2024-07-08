@@ -1,11 +1,11 @@
 <template>
   <div class="product-list">
     <ProductCard v-for="product in filteredCategory" :key="product.productID" :product="product" />
+    <div v-if="filteredCategory.length === 0">Sorry, {{ brandName }} didn't have this category product</div>
   </div>
 </template>
 
 <script>
-// import { ref, computed, onMounted, watch } from 'vue';
 import ProductCard from '@/components/ProductCard.vue';
 import axios from 'axios';
 import { useRoute } from 'vue-router'
@@ -14,45 +14,11 @@ export default {
   components: {
     ProductCard
   },
-  // setup () {
-  //   const route = useRoute();
-  //   const products = ref([]);
-  //   const brandName = computed(() => route.params.brandName);
 
-  //   const filteredCategory = computed(() => {
-  //     return products.value.filter(product => product.brandName === brandName.value && product.productCategory === 'Lips');
-  //   });
-
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await axios.get('http://localhost:8000/data');
-  //       products.value = response.data;
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   };
-
-  //   onMounted(fetchData);
-
-  //   watch(
-  //     () => route.params.brandName,
-  //     async (newBrandName, oldBrandName) => {
-  //       if (newBrandName !== oldBrandName) {
-  //         await fetchData();
-  //       }
-  //     }
-  //   );
-
-  //   return {
-  //     products,
-  //     brandName,
-  //     filteredCategory
-  //   };
-  // }
   data() {
     return {
       products: [],
-      brandName: null // มาจากที่เรากำหนด path: '/brandListView/:brandName'
+      brandName: null
     }
   },
 
@@ -68,7 +34,7 @@ export default {
         const response = await axios.get('http://localhost:8000/data');
         this.products = response.data;
       } catch (error) {
-        console.error(error, "Error, You didn't connect with the database.");
+        console.error("Error, You didn't connect with the database.", error);
       }
     }
   },
@@ -90,11 +56,11 @@ export default {
 
 .card-title {
   text-align: center;
-    margin-top: 5%;
-    margin-bottom: 2%;
-    font-size: 72px;
-    font-style: italic;
-    font-weight: bold;
+  margin-top: 5%;
+  margin-bottom: 2%;
+  font-size: 72px;
+  font-style: italic;
+  font-weight: bold;
 }
 
 .category-select {
@@ -112,5 +78,4 @@ export default {
   color: inherit;
   padding: 5px 10px;
 }
-
 </style>

@@ -1,12 +1,12 @@
 <template>
   <div class="product-list">
     <ProductCard v-for="product in filteredCategory" :key="product.productID" :product="product" />
+    <div v-if="filteredCategory.length === 0">Sorry, {{ brandName }} didn't have this category product</div>
   </div>
 
 </template>
 
 <script>
-// import { ref, computed, onMounted, watch } from 'vue';
 import ProductCard from '@/components/ProductCard.vue';
 import axios from 'axios';
 import { useRoute } from 'vue-router'
@@ -15,51 +15,11 @@ export default {
   components: {
     ProductCard
   },
-  // setup() {
-  //   const route = useRoute();
-  //   const products = ref([]);
-  //   const brandName = computed(() => route.params.brandName);
-
-  //   const filteredCategory = computed(() => {
-  //     try {
-  //       return products.value.filter(product => product.brandName === brandName.value && product.productCategory === 'Eyeshadow');
-  //     } catch (error) {
-  //       console.error('Error filtering products by category:', error);
-  //       return []; // คืนค่าอาร์เรย์ว่างหากเกิดข้อผิดพลาด
-  //     }
-  //   });
-
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await axios.get('http://localhost:8000/data');
-  //       products.value = response.data;
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   };
-
-  //   onMounted(fetchData);
-
-  //   watch(
-  //     () => route.params.brandName,
-  //     async (newBrandName, oldBrandName) => {
-  //       if (newBrandName !== oldBrandName) {
-  //         await fetchData();
-  //       }
-  //     }
-  //   );
-
-  //   return {
-  //     products,
-  //     brandName,
-  //     filteredCategory
-  //   };
-  // }
 
   data() {
     return {
       products: [],
-      brandName: null // มาจากที่เรากำหนด path: '/brandListView/:brandName'
+      brandName: null
     }
   },
 

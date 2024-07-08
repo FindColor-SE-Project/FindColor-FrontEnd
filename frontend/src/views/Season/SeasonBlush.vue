@@ -1,30 +1,38 @@
 <template>
   <div class="color_select" v-if="groupedByProduct.length">
-    <div v-for="([productName, colorGroups], index) in groupedByProduct" :key="index" class="color-group">
-      <div v-for="(colors, subIndex) in colorGroups" :key="subIndex" class="color-subgroup">
-        <span
-          v-for="(color, colorIndex) in colors"
-          :key="colorIndex"
-          :style="{ background: color }"
-          class="color-circle"
-        ></span>
+    <div class="color-group-container">
+      <div v-for="([productName, colorGroups], index) in groupedByProduct" :key="index" class="color-group">
+        <div v-for="(colors, subIndex) in colorGroups" :key="subIndex" class="color-subgroup">
+          <span v-for="(color, colorIndex) in colors" :key="colorIndex" :style="{ background: color }" 
+            @click="showProductCard(productName, color)" class="color-circle">
+          </span>
+        </div>
+        <!-- vertical line -->
+        <div v-if="index < groupedByProduct.length - 1" class="vertical-line"></div>
       </div>
-      <!-- Add a vertical line after each product group except the last one -->
-      <div v-if="index < groupedByProduct.length - 1" class="vertical-line"></div>
+    </div>
+    <div class="product-card-container" v-if="displayProduct">
+      <ProductCard :product="displayProduct" />
     </div>
   </div>
 </template>
 
 <script>
+import ProductCard from '@/components/ProductCard.vue';
 import { useRoute } from 'vue-router';
 import axios from 'axios';
 
 export default {
+  components: {
+    ProductCard,
+  },
+
   data() {
     return {
       products: [],
       displayProduct: null,
       similarProducts: [],
+      displayProductColor: null,
       colorTone: null
     };
   },
@@ -36,22 +44,20 @@ export default {
     },
 
     groupedByProduct() {
-    const productMap = new Map();
+      const productMap = new Map();
     
-    this.filteredCategory.forEach((product) => {
-      if (product.colorShade) {
-        const colors = this.extractColors(product.colorShade);
-        const productName = product.productName;
+      this.filteredCategory.forEach((product) => {
+        if (product.colorShade) {
+            const colors = this.extractColors(product.colorShade);
+            const productName = product.productName;
 
-        if (!productMap.has(productName)) {
-          productMap.set(productName, []);
+            if (!productMap.has(productName)) {
+              productMap.set(productName, []);
+            }
+            productMap.get(productName).push(colors);
         }
-        productMap.get(productName).push(colors);
-      }
-    });
-
-    // Convert map to array and sort by product name
-    return Array.from(productMap.entries()).sort(([a], [b]) => a.localeCompare(b));
+      });
+      return Array.from(productMap.entries()).sort(([a], [b]) => a.localeCompare(b));
     }
   },
   methods: {
@@ -80,6 +86,17 @@ export default {
         });
       }
       return [];
+    },
+
+    showProductCard(productName, color) {
+      if (this.displayProduct && this.displayProduct.productName === productName && this.displayProductColor === color) {
+        this.displayProduct = null;
+        this.displayProductColor = null;
+      } else {
+        this.displayProduct = this.products.find(product => product.productName === productName);
+        this.displayProductColor = color;
+      }
+      console.log('Display product:', this.displayProduct);
     }
   },
 
@@ -94,36 +111,51 @@ export default {
 <style scoped>
 .color_select {
   display: flex;
+  flex-direction: column;
   align-items: center;
   margin: 20px 0;
+}
+
+.color-group-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .color-group {
   display: flex;
   align-items: center;
-  margin-right: 20px; /* Space between product groups */
+  margin-right: 20px;
+  margin-bottom: 20px;
 }
 
 .color-subgroup {
   display: flex;
   align-items: center;
-  margin-right: 10px; /* Space between subgroups */
+  margin-right: 10px;
 }
 
 .color-circle {
-  width: 50px; /* Size of color circles */
-  height: 50px; /* Size of color circles */
+  width: 50px;
+  height: 50px; 
   border: 1px solid #000;
   border-radius: 50%;
-  margin-right: 5px; /* Space between color circles */
+  margin-right: 5px;
 }
 
 .vertical-line {
-  width: 2px; /* Width of the vertical line */
-  background-color: #000; /* Color of the vertical line */
-  margin-left: 10px; /* Space between the last circle and the line */
-  /* Adjust the height based on the height of the color circles */
-  height: 50px; /* Should match the height of the color circles */
+  width: 0.75px;
+  background-color: #000;
+  height: 25px;
+  align-self: stretch;
+  margin-left: 5px;
+  margin-top: 15px;
+}
+
+.product-card-container {
+  margin-top: 20px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 </style>
-

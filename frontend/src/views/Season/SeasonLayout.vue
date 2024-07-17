@@ -7,10 +7,10 @@
     <div class="season-right">
       <h2 class="cardo-regular">Your season color tone is</h2>
       <h1 class="cardo-regular">{{ colorTone }}</h1>
-      <div class="category_season">
-        <router-link class="josefin-sans-font category-layout" :to="{ name: 'seasonLips' }">Lips</router-link>
-        <router-link class="josefin-sans-font category-layout" :to="{ name: 'seasonBlush' }">Blush</router-link>
-        <router-link class="josefin-sans-font category-layout" :to="{ name: 'seasonEyeshadow' }">Eyeshadow</router-link>
+      <div class="season-category">
+        <router-link class="josefin-sans-font season-layout" :to="{ name: 'seasonLips' }">Lips</router-link>
+        <router-link class="josefin-sans-font season-layout" :to="{ name: 'seasonBlush' }">Blush</router-link>
+        <router-link class="josefin-sans-font season-layout" :to="{ name: 'seasonEyeshadow' }">Eyeshadow</router-link>
       </div>
       <router-view></router-view>
     </div>
@@ -62,14 +62,29 @@ export default {
     background-color: #fff;
 }
 
-.color-option {
-  display: inline-block;
-  width: 50px;
-  height: 50px;
-  margin: 5px;
-  cursor: pointer;
-  border: 1px solid #000;
-  background-size: cover;
-  background-position: center;
+.season-category {
+  padding: 15px;
+}
+
+.season-layout {
+  font-size: 24px;
+  font-style: #000;
+  margin: 0 10px;
+  border: 1px solid #8ABAD3;
+  text-decoration: none; 
+  color: inherit;
+  padding: 5px 10px;
+}
+
+.router-link-exact-active {
+  background-color: #8ABAD3;
+}
+
+.season-right h2{
+  font-size: 28px;
+}
+
+.season-right h1{
+  font-size: 42px;
 }
 </style>

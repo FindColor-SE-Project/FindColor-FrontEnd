@@ -14,7 +14,7 @@
 <script>
 import ProductCard from '@/components/ProductCard.vue';
 import axios from 'axios';
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 export default {
   components: {
@@ -41,11 +41,13 @@ export default {
 
   methods: {
     async fetchData() {
+      const router = useRouter();
       try {
         const response = await axios.get('http://localhost:8000/data');
         this.products = response.data;
       } catch (error) {
         console.error(error, "Error, You didn't connect with the database.");
+        router.push({ name: 'DatabaseError' });
       }
     }
   },

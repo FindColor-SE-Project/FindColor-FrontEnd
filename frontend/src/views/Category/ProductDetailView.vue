@@ -28,11 +28,12 @@
 <script>
 import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 export default {
   setup() {
     const route = useRoute();
+    const router = useRouter();
     const products = ref([]);
     const displayProduct = ref(null);
 
@@ -49,6 +50,7 @@ export default {
         console.log('Display product:', displayProduct.value);
       } catch (error) {
         console.error('Error fetching data:', error);
+        router.push({ name: 'DatabaseError' });
       }
     };
 

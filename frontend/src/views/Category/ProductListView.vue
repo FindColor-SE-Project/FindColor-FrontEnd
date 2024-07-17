@@ -9,6 +9,7 @@ import ProductCard from '@/components/ProductCard.vue';
 import axios from 'axios';
 import { useRoute } from 'vue-router'
 
+
 export default {
   components: {
     ProductCard
@@ -39,6 +40,7 @@ export default {
         this.products = response.data;
       } catch (error) {
         console.error(error, "Error, You didn't connect with the database.");
+        
       }
     }
   },

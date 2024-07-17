@@ -12,6 +12,7 @@ import SeasonLayout from '@/views/Season/SeasonLayout.vue';
 import SeasonLips from '@/views/Season/SeasonLips.vue';
 import SeasonBlush from '@/views/Season/SeasonBlush.vue';
 import SeasonEyeshadow from '@/views/Season/SeasonEyeshadow.vue';
+import DatabaseError from '@/components/DatabaseError.vue'
 
 const routes = [
   {
@@ -92,7 +93,12 @@ const routes = [
         props: true
       }
     ]
-  }  
+  },
+  {
+      path: '/error',
+      name: 'DatabaseError',
+      component: DatabaseError
+  }
 ];
 
 const router = createRouter({

@@ -9,12 +9,12 @@
       <ProductCard v-if="displayProduct" :product="displayProduct" />
     </div>
   </div>
-  <div v-else>Sorry, No color shades available </div>
+  <div v-else>Sorry, No color shades available</div>
 </template>
 
 <script>
 import ProductCard from '@/components/ProductCard.vue';
-import { useRoute } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import axios from 'axios';
 
 export default {
@@ -26,9 +26,10 @@ export default {
     return {
       products: [],
       displayProduct: null,
-      colorTone: null
+      colorTone: null,
     };
   },
+
   computed: {
     filteredCategory() {
       return this.products.filter(product => product.colorTone === this.colorTone && product.productCategory === 'Lips');
@@ -42,10 +43,12 @@ export default {
         }
       });
       return allColorShades;
-    }
+    },
   },
+
   methods: {
     async fetchData() {
+      const router = useRouter();
       try {
         const response = await axios.get('http://localhost:8000/data');
         this.products = response.data;
@@ -58,6 +61,7 @@ export default {
         console.log('Display product:', this.displayProduct);
       } catch (error) {
         console.error('Error fetching data:', error);
+        router.push({ name: 'DatabaseError' });
       }
     },
 
@@ -79,14 +83,14 @@ export default {
         this.displayProduct = this.filteredCategory[index];
       }
       console.log('Display product:', this.displayProduct);
-    }
+    },
   },
 
   mounted() {
     const route = useRoute();
     this.colorTone = route.params.colorTone;
     this.fetchData();
-  }
+  },
 };
 </script>
 
@@ -108,7 +112,6 @@ export default {
   margin-right: 10px;
   width: 50px;
   height: 50px;
-  border: 1px solid #000;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -121,5 +124,13 @@ export default {
   width: 100%;
   display: flex;
   justify-content: center;
+}
+
+.color-circles span:hover {
+  border: 1px solid #000;
+}
+
+.color-circles span.selected {
+  border: 1px solid #000;
 }
 </style>

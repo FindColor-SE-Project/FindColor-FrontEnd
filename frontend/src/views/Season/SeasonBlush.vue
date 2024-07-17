@@ -139,7 +139,6 @@ export default {
 .color-circle {
   width: 50px;
   height: 50px; 
-  border: 1px solid #000;
   border-radius: 50%;
   margin-right: 5px;
 }
@@ -158,5 +157,13 @@ export default {
   width: 100%;
   display: flex;
   justify-content: center;
+}
+
+.color-circle:hover {
+  border: 1px solid #000;
+}
+
+.color-circle.selected {
+  border: 1px solid #000;
 }
 </style>

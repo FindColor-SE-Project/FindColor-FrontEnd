@@ -19,22 +19,22 @@ import { ref } from 'vue'
             <div class="season_card spring">
                 <img width="96" height="96" src="https://img.icons8.com/color/96/spring.png" alt="spring"/>
                 <h2 class="cardo-regular">Spring</h2>
-                <p class="josefin-sans-font">The makeup tone is Coral, Orange, Milk Tea, Peach Pink, Salmon Pink, and Peach</p>
+                <p class="cardo-regular">The makeup tone is Coral, Orange, Milk Tea, Peach Pink, Salmon Pink, and Peach</p>
             </div>
             <div class="season_card summer">
                 <img width="96" height="96" src="https://img.icons8.com/color/96/summer--v1.png" alt="summer--v1"/>
                 <h2 class="cardo-regular">Summer</h2>
-                <p class="josefin-sans-font">The makeup tone is Pink, Pink nude, Rosy, Pastel color including, Light Blue, Larvender except Orange</p>
+                <p class="cardo-regular">The makeup tone is Pink, Pink nude, Rosy, Pastel color including, Light Blue, Larvender except Orange</p>
             </div>
             <div class="season_card autumn">
                 <img width="96" height="96" src="https://img.icons8.com/color/96/autumn.png" alt="autumn"/>
                 <h2 class="cardo-regular">Autumn</h2>
-                <p class="josefin-sans-font">The makeup tone is Orange-Red, Dark Peach, Red, Brown, Red Brick, Orange Brick, Warm Red, and Warm Orange</p>
+                <p class="cardo-regular">The makeup tone is Orange-Red, Dark Peach, Red, Brown, Red Brick, Orange Brick, Warm Red, and Warm Orange</p>
             </div>
             <div class="season_card winter">
                 <img width="96" height="96" src="https://img.icons8.com/color/96/winter--v1.png" alt="winter--v1"/>
                 <h2 class="cardo-regular">Winter</h2>
-                <p class="josefin-sans-font">The makeup tone is Berry, True Red, Burgundy, Plum, Dark Pink, and Fuchsia</p>
+                <p class="cardo-regular">The makeup tone is Berry, True Red, Burgundy, Plum, Dark Pink, and Fuchsia</p>
             </div>
         </div>
     </div>
@@ -114,12 +114,12 @@ import { ref } from 'vue'
 }
 
 .season_card h2 {
-    font-size: 32px;
-    font-weight: 500;
+    font-size: 40px;
+    font-weight: bold;
 }
 
 .season_card p {
-
+    font-size: 24px;
 }
 
 .spring {

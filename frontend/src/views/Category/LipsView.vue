@@ -1,7 +1,7 @@
 <template>
   <div class="product-list">
     <ProductCard v-for="product in filteredCategory" :key="product.productID" :product="product" />
-    <div v-if="filteredCategory.length === 0">Sorry, {{ brandName }} didn't have this category product</div>
+    <div v-if="filteredCategory.length === 0" class="error-page cardo-regular">Sorry, {{ brandName }} didn't have this category product</div>
   </div>
 </template>
 
@@ -77,5 +77,10 @@ export default {
   text-decoration: none; 
   color: inherit;
   padding: 5px 10px;
+}
+
+.error-page {
+  font-size: 32px;
+  margin: 20px 0;
 }
 </style>

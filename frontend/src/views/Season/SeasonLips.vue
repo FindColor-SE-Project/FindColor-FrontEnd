@@ -9,7 +9,7 @@
       <ProductCard v-if="displayProduct" :product="displayProduct" />
     </div>
   </div>
-  <div v-else>Sorry, No color shades available</div>
+  <div v-else class="for-error cardo-regular">Sorry, No color shades available</div>
 </template>
 
 <script>
@@ -117,6 +117,14 @@ export default {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  border: 2px solid transparent;
+  transition: border-color 0.3s; 
+}
+
+.color-circles span:hover {
+  border-color: #000;
+  box-shadow: 0px 5px 5px -2px rgba(0, 0, 0, 0.3);
+
 }
 
 .product-card-container {
@@ -126,11 +134,8 @@ export default {
   justify-content: center;
 }
 
-.color-circles span:hover {
-  border: 1px solid #000;
-}
-
-.color-circles span.selected {
-  border: 1px solid #000;
+.for-error {
+  font-size: 24px;
+  margin: 20px 0;
 }
 </style>

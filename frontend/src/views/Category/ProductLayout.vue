@@ -13,7 +13,7 @@
 
 <script>
 import ProductCard from '@/components/ProductCard.vue';
-import axios from 'axios';
+// import axios from 'axios';
 import { useRoute, useRouter } from 'vue-router'
 
 export default {
@@ -39,21 +39,21 @@ export default {
     }
   },
 
-  methods: {
-    async fetchData() {
-      const router = useRouter();
-      try {
-        const response = await axios.get('http://localhost:8000/data');
-        this.products = response.data;
-      } catch (error) {
-        console.error(error, "Error, You didn't connect with the database.");
-        router.push({ name: 'DatabaseError' });
-      }
-    }
-  },
+  // methods: {
+  //   async fetchData() {
+  //     const router = useRouter();
+  //     try {
+  //       const response = await axios.get('http://localhost:8000/data');
+  //       this.products = response.data;
+  //     } catch (error) {
+  //       console.error(error, "Error, You didn't connect with the database.");
+  //       router.push({ name: 'DatabaseError' });
+  //     }
+  //   }
+  // },
 
   mounted() {
-    this.fetchData();
+    // this.fetchData();
     const route = useRoute();
     this.brandName = route.params.brandName;
   }

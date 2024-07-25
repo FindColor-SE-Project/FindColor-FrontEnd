@@ -8,9 +8,9 @@
       <h2 class="cardo-regular">Your season color tone is</h2>
       <h1 class="cardo-regular">{{ colorTone }}</h1>
       <div class="season-category">
-        <router-link class="josefin-sans-font season-layout" :to="{ name: 'seasonLips' }">Lips</router-link>
-        <router-link class="josefin-sans-font season-layout" :to="{ name: 'seasonBlush' }">Blush</router-link>
-        <router-link class="josefin-sans-font season-layout" :to="{ name: 'seasonEyeshadow' }">Eyeshadow</router-link>
+        <router-link class="josefin-sans-font season-layout" :to="{ name: 'seasonLips' }" active-class="active">Lips</router-link>
+        <router-link class="josefin-sans-font season-layout" :to="{ name: 'seasonBlush' }" active-class="active">Blush</router-link>
+        <router-link class="josefin-sans-font season-layout" :to="{ name: 'seasonEyeshadow' }" active-class="active">Eyeshadow</router-link>
       </div>
       <router-view></router-view>
     </div>
@@ -76,7 +76,7 @@ export default {
   padding: 5px 10px;
 }
 
-.router-link-exact-active {
+.season-layout.active {
   background-color: #8ABAD3;
 }
 

@@ -10,13 +10,14 @@
         {{ displayProduct.colorTone }}
       </label>
       <div class="color_select">
-                <span
-                    v-for="(product, index) in collectionProductsWithGradients"
-                    :key="index"
-                    :style="{ background: product.gradient, borderColor: isSelectedProduct(product) ? 'black' : 'transparent' }"
-                    class="color-circle"
-                    @click="updateDisplayProduct(product)"
-                ></span>
+        <span
+          v-for="(product, index) in collectionProductsWithGradients"
+          :key="index"
+          :style="{ background: product.gradient, borderColor: isSelectedProduct(product) ? 'black' : 'transparent' }"
+          class="color-circle"
+          :class="{ selected: isSelectedProduct(product) }"
+          @click="updateDisplayProduct(product)"
+        ></span>
       </div>
     </div>
   </div>
@@ -148,9 +149,16 @@ export default {
   padding: 50px 20px;
 }
 
-.product-right h1,
+.product-right h1, p {
+  margin: 20px 0;
+}
+
+h1 {
+  font-size: 45px;
+}
+
 p {
-  margin: 10px 0;
+  font-size: 22px;
 }
 
 .flex {
@@ -163,16 +171,12 @@ p {
   width: 100%;
 }
 
-.product-right,
-.color_select span {
-  margin: 20px 0;
-}
 
 .season_color {
   padding: 5px 10px;
   border: 3px solid;
   border-radius: 30px;
-  font-size: 32px;
+  font-size: 36px;
   font-style: italic;
   font-weight: bold;
 }
@@ -190,9 +194,15 @@ p {
   border: 2px solid transparent;
   border-radius: 50%;
   cursor: pointer;
+  transition: border-color 0.3s;
 }
 
 .color_select span.selected {
   border-color: black;
+  box-shadow: 0px 5px 5px -2px rgba(0, 0, 0, 0.3);
+}
+
+.color_select span:hover {
+  border-color: black !important;
 }
 </style>

@@ -76,6 +76,10 @@ const routes = [
     children: [
       {
         path: '',
+        redirect: { name: 'seasonLips' }
+      },
+      {
+        path: 'lips',
         name: 'seasonLips',
         component: SeasonLips,
         props: true

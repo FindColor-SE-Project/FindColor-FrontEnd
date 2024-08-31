@@ -6,7 +6,7 @@
 
     <div class="season-right">
       <h2 class="cardo-regular">Your season color tone is</h2>
-      <h1 class="cardo-regular">{{ colorTone }}</h1>
+      <h1 class="cardo-regular">{{ seasonColorTone }}</h1>
       <div class="season-category">
         <router-link class="josefin-sans-font season-layout" :to="{ name: 'seasonLips' }" active-class="active">Lips</router-link>
         <router-link class="josefin-sans-font season-layout" :to="{ name: 'seasonBlush' }" active-class="active">Blush</router-link>
@@ -23,15 +23,15 @@ import { useRoute } from 'vue-router';
 export default {
   data() {
     return {
-      colorTone: null
+      seasonColorTone: null
     };
   },
   
   methods: {
     setDefaultChild() {
       const route = useRoute();
-      this.colorTone = route.params.colorTone;
-      this.$router.replace({ name: 'seasonLips', params: { colorTone: this.colorTone } });
+      this.seasonColorTone = route.params.seasonColorTone;
+      this.$router.replace({ name: 'seasonLips', params: { seasonColorTone: this.seasonColorTone } });
     }
   },
   

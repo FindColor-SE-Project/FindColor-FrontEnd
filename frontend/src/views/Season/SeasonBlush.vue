@@ -40,7 +40,7 @@ export default {
   computed: {
     filteredCategory() {
       return this.products.filter(
-        (product) => product.colorTone === this.colorTone && product.productCategory === 'Blush'
+        (product) => product.seasonColorTone === this.seasonColorTone && product.productCategory === 'Blush'
       );
     },
 
@@ -103,7 +103,7 @@ export default {
 
   mounted() {
     const route = useRoute();
-    this.colorTone = route.params.colorTone;
+    this.seasonColorTone = route.params.seasonColorTone;
     this.fetchData();
   }
 };

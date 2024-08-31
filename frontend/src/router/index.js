@@ -69,7 +69,7 @@ const routes = [
     props: true
   },
   {
-    path: '/seasons/:colorTone',
+    path: '/seasons/:seasonColorTone',
     name: 'seasonLayout',
     component: SeasonLayout,
     props: true,

@@ -14,7 +14,7 @@
 <script>
 import ProductCard from '@/components/ProductCard.vue';
 // import axios from 'axios';
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 
 export default {
   components: {

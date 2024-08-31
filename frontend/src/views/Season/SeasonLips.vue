@@ -26,13 +26,13 @@ export default {
     return {
       products: [],
       displayProduct: null,
-      colorTone: null,
+      seasonColorTone: null,
     };
   },
 
   computed: {
     filteredCategory() {
-      return this.products.filter(product => product.colorTone === this.colorTone && product.productCategory === 'Lips');
+      return this.products.filter(product => product.seasonColorTone === this.seasonColorTone && product.productCategory === 'Lips');
     },
 
     filteredColorShades() {
@@ -88,7 +88,7 @@ export default {
 
   mounted() {
     const route = useRoute();
-    this.colorTone = route.params.colorTone;
+    this.seasonColorTone = route.params.seasonColorTone;
     this.fetchData();
   },
 };

@@ -6,8 +6,8 @@
 
         <div class="season-right">
             <div class="card button-group ">
-                <button class="cardo-regular" v-for="option in options" :key="option.season"
-                    :class="{ 'active': option.season === selectedSeason }" @click="selectOption(option.season)">
+                <button class="cardo-regular" v-for="option in options" :key="option.seasonColorTone"
+                    :class="{ 'active': option.seasonColorTone === selectedSeason }" @click="selectOption(option.seasonColorTone)">
                     {{ option.name }}
                 </button>
             </div>
@@ -20,7 +20,7 @@
                 <p class="cardo-regular">No season selected</p>
             </div>
             <router-link v-if="selectedOption"
-                :to="{ name: 'seasonLayout', params: { colorTone: selectedOption.season } }">
+                :to="{ name: 'seasonLayout', params: { seasonColorTone: selectedOption.seasonColorTone } }">
                 <button class="next-button josefin-sans-font">Next</button>
             </router-link>
         </div>
@@ -32,19 +32,19 @@ import { ref, computed } from 'vue';
 
 const selectedSeason = ref(null);
 const options = ref([
-    { name: 'Spring', season: 'Spring', detail: 'The makeup tone is Coral, Orange, Milk Tea, Peach Pink, Salmon Pink, and Peach' },
-    { name: 'Summer', season: 'Summer', detail: 'The makeup tone is Pink, Pink nude, Rosy, Pastel color including, Light Blue, Lavender except Orange' },
-    { name: 'Autumn', season: 'Autumn', detail: 'The makeup tone is Orange-Red, Dark Peach, Red, Brown, Red Brick, Orange Brick, Warm Red, and Warm Orange' },
-    { name: 'Winter', season: 'Winter', detail: 'The makeup tone is Berry, True Red, Burgundy, Plum, Dark Pink, and Fuchsia' },
+    { name: 'Spring', seasonColorTone: 'Spring', detail: 'The makeup tone is Coral, Orange, Milk Tea, Peach Pink, Salmon Pink, and Peach' },
+    { name: 'Summer', seasonColorTone: 'Summer', detail: 'The makeup tone is Pink, Pink nude, Rosy, Pastel color including, Light Blue, Lavender except Orange' },
+    { name: 'Autumn', seasonColorTone: 'Autumn', detail: 'The makeup tone is Orange-Red, Dark Peach, Red, Brown, Red Brick, Orange Brick, Warm Red, and Warm Orange' },
+    { name: 'Winter', seasonColorTone: 'Winter', detail: 'The makeup tone is Berry, True Red, Burgundy, Plum, Dark Pink, and Fuchsia' },
 ]);
 
 const selectedOption = computed(() => {
-    return options.value.find(option => option.season === selectedSeason.value) || null;
+    return options.value.find(option => option.seasonColorTone === selectedSeason.value) || null;
 });
 
 // Methods
-function selectOption(season) {
-    selectedSeason.value = season;
+function selectOption(seasonColorTone) {
+    selectedSeason.value = seasonColorTone;
 }
 
 </script>

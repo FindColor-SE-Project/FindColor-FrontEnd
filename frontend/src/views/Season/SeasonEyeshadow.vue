@@ -34,13 +34,13 @@ export default {
       displayProduct: null,
       similarProducts: [],
       displayProductColor: null,
-      colorTone: null
+      seasonColorTone: null
     };
   },
   computed: {
     filteredCategory() {
       return this.products.filter(
-        (product) => product.colorTone === this.colorTone && product.productCategory === 'Eyeshadow'
+        (product) => product.seasonColorTone === this.seasonColorTone && product.productCategory === 'Eyeshadow'
       );
     },
 
@@ -104,7 +104,7 @@ export default {
 
   mounted() {
     const route = useRoute();
-    this.colorTone = route.params.colorTone;
+    this.seasonColorTone = route.params.seasonColorTone;
     this.fetchData();
   }
 };

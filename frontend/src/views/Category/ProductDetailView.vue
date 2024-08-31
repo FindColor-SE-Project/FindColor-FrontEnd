@@ -7,7 +7,7 @@
       <h1 class="cardo-regular">{{ displayProduct.productName }}</h1>
       <p>{{ displayProduct.productDescription }}</p>
       <label class="season_color cardo-regular" :style="{ borderColor: seasonColorLabel.borderColor }">
-        {{ displayProduct.colorTone }}
+        {{ displayProduct.seasonColorTone }}
       </label>
       <div class="color_select">
         <span
@@ -70,7 +70,7 @@ export default {
     });
 
     const seasonColorLabel = computed(() => {
-      const seasonColor = displayProduct.value?.colorTone;
+      const seasonColor = displayProduct.value?.seasonColorTone;
       const seasonStyle = {
         Summer: { borderColor: '#CAEDFF' },
         Spring: { borderColor: '#FFC7EA' },

@@ -77,11 +77,11 @@ nav ul li a:hover {
     border-radius: 20px;
 }
 
-/* nav ul li a:focus {
+nav ul li a.active {
     border: black solid 1px;
     background-color: #EDC2D8;
     padding: 7px;
     border-radius: 20px;
-} */
+}
 </style>
 

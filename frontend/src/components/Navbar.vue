@@ -14,7 +14,7 @@ import { ref } from 'vue'
                         <router-link class="nav__link josefin-sans-font" :to="{ name: 'brandListView'}">Product</router-link>
                     </li>
                     <li class="nav__item">
-                        <router-link class="nav__link josefin-sans-font" :to="{ name: 'getseasonsPage'}">Get Seasons</router-link>
+                        <router-link class="nav__link josefin-sans-font" :to="{ name: 'uploadView'}">Get Seasons</router-link>
                     </li>
                 </ul>
             </div>

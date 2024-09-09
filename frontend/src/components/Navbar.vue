@@ -4,7 +4,7 @@ import { ref } from 'vue'
 
 <template>
     <nav class="nav container">
-            <router-link class="nav__logo lora-font" :to="{ name: 'home'}">FindColor</router-link>
+            <router-link class="nav__logo lora-font" :to="{ name: 'home'}"><img class="logo" src="@/assets/logo.png"></router-link>
             <div class="nav__list" id="nav-list">
                 <ul>
                     <li class="nav__item">
@@ -32,6 +32,9 @@ import { ref } from 'vue'
 </template>
 
 <style>
+.logo {
+    width: 175px;
+}
 
 ul, .nav__logo {
     list-style-type: none;
@@ -52,11 +55,6 @@ nav {
     border-bottom: black solid 2px;
 }
 
-.nav__logo {
-    color: black;
-    font-size: 32px;
-}
-
 nav ul {
     display: flex;
     gap: 80px;
@@ -74,14 +72,23 @@ nav ul li a {
 nav ul li a:hover {
     border: black solid 1px;
     padding: 7px;
-    border-radius: 20px;
+    border-radius: 5px;
 }
 
 nav ul li a.active {
     border: black solid 1px;
     background-color: #EDC2D8;
     padding: 7px;
-    border-radius: 20px;
+    border-radius: 5px;
 }
+
+.circle {
+  height: 30px;
+  width: 30px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+}
+
 </style>
 

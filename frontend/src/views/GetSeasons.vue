@@ -32,10 +32,10 @@ import { ref, computed } from 'vue';
 
 const selectedSeason = ref(null);
 const options = ref([
-    { name: 'Spring', seasonColorTone: 'Spring', detail: 'The makeup tone is Coral, Orange, Milk Tea, Peach Pink, Salmon Pink, and Peach' },
-    { name: 'Summer', seasonColorTone: 'Summer', detail: 'The makeup tone is Pink, Pink nude, Rosy, Pastel color including, Light Blue, Lavender except Orange' },
-    { name: 'Autumn', seasonColorTone: 'Autumn', detail: 'The makeup tone is Orange-Red, Dark Peach, Red, Brown, Red Brick, Orange Brick, Warm Red, and Warm Orange' },
-    { name: 'Winter', seasonColorTone: 'Winter', detail: 'The makeup tone is Berry, True Red, Burgundy, Plum, Dark Pink, and Fuchsia' },
+    { name: 'Spring', seasonColorTone: 'Spring', detail: 'The makeup tone is Coral, Orange, Milk Tea, Peach-Pink, Salmon-Pink, Salmon, Coral-Pink, and Peach' },
+    { name: 'Summer', seasonColorTone: 'Summer', detail: 'The makeup tone of Summer is Pink Nude, Rosy, Pink, Lilac, Medium Pink, Light Rose, Light Pink, and Lavender' },
+    { name: 'Autumn', seasonColorTone: 'Autumn', detail: 'The makeup tone is Orange-Red, Dark Peach, Red, Brown, Red Brick, Brick Orange, Tomato, and Brown Brick' },
+    { name: 'Winter', seasonColorTone: 'Winter', detail: 'The makeup tone is Dark Pink, Burgundy, Berry, True Red, Plum, Fuchsia, Magenta, and Hot Pink' },
 ]);
 
 const selectedOption = computed(() => {
@@ -88,29 +88,30 @@ function selectOption(seasonColorTone) {
 }
 
 .card {
-    background-color: #EDC2D8;
-    border: 1px solid #E19BBF;
-    border-radius: 8px;
+    background-color: #F9E9F1;
+    border-radius: 5px;
     padding: 10px;
-    width: 500px;
-    text-align: center;
+    width: 580px;
+    text-align: justify;
     margin: 5px;
 }
 
 .button-group button {
     background-color: #fff;
     font-size: 32px;
-    padding: 0 3px;
-    border: none;
+    padding: 0 10px;
+    margin: 5px;
+    border: 3px solid #EDC2D8;
+    border-radius: 5px;
 }
 
 .button-group button:hover {
     font-weight: bold;
-    background-color: #F9E9F1;
+    background-color: #EDC2D8;
 }
 
 .button-group button.active  {
-    background-color: #F9E9F1;
+    background-color: #EDC2D8;
     font-weight: bold;
 }
 

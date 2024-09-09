@@ -12,6 +12,6 @@ export default {
 <template>
   <div id="app">
     <Navbar/>
-    <RouterView/>    
+    <RouterView/>   
   </div>
 </template>

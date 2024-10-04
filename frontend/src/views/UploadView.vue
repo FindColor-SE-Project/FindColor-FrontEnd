@@ -1,19 +1,58 @@
-<script setup>
-import { ref } from 'vue'
-</script>
-
 <template>
     <div class="upload__container">
             <div class="upload__area">
-                <div class="icon__upload"><font-awesome-icon icon="cloud-arrow-up" /></div>
-                <button class="josefin-sans-font">Choose Image to Upload</button>
-                <input type="file" hidden>
-                <button class="josefin-sans-font">Take a photo to Upload</button>
-                <p class="josefin-sans-font">or Drag and Drop image to Upload</p>
+                <div class="showUpload" v-if="!isDragging">
+                    <div class="icon__upload"><font-awesome-icon icon="cloud-arrow-up" /></div>
+                    <button class="josefin-sans-font" role="button" @click="selectImage">Choose Image to Upload</button>
+                    <input type="file" hidden>
+                    <button class="josefin-sans-font">Take a photo to Upload</button>
+                    <p class="josefin-sans-font">or Drag and Drop image to Upload</p>
+                </div>
+                <div v-else class="showDrag">Drag Image Here</div>
+                <input type="file" class="imageFile" ref="fileInput" @change="onImageSelect" />   
+                <div class="showImage">
+                        <div class="icon_delete"><font-awesome-icon :icon="['fas', 'circle-xmark']" /></div>
+                </div>
+                <button>Upload Image</button>
             </div>
     </div>
 
 </template>
+
+<script> 
+import { ref } from 'vue'
+
+export default{
+    data() {
+        return {
+            image: [],
+            isDragging: false
+        }
+    },
+
+    methods: {
+        selectImage() {
+            this.$refs.fileInput.click();
+        },
+
+        onImageSelect(event) {
+            const file = event.target.files[0]; // Get Only One Image
+            if (!file || file.type.split("/")[0] != "image") return; // Verify that it is an image file
+            
+            // Delete Image File
+            if (this.image.length > 0) {
+                this.image.splice(0, 1);
+            }
+
+            this.image.push({
+                name: file.name,
+                url: URL.createObjectURL(file)
+            });
+        }
+    }
+}
+</script>
+
 
 <style>
 .upload__container {

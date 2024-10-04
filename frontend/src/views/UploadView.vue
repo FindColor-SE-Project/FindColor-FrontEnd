@@ -1,18 +1,27 @@
 <template>
     <div class="upload__container">
             <div class="upload__area">
-                <div class="showUpload" v-if="!isDragging">
+                <div class="showUpload" v-if="image.length === 0 && !isDragging">
                     <div class="icon__upload"><font-awesome-icon icon="cloud-arrow-up" /></div>
                     <button class="josefin-sans-font" role="button" @click="selectImage">Choose Image to Upload</button>
                     <input type="file" hidden>
                     <button class="josefin-sans-font">Take a photo to Upload</button>
                     <p class="josefin-sans-font">or Drag and Drop image to Upload</p>
                 </div>
-                <div v-else class="showDrag">Drag Image Here</div>
-                <input type="file" class="imageFile" ref="fileInput" @change="onImageSelect" />   
-                <div class="showImage">
-                        <div class="icon_delete"><font-awesome-icon :icon="['fas', 'circle-xmark']" /></div>
+
+                <div v-else-if="isDragging" class="showDrag">Drag Image Here</div>
+
+                <!-- Section to show uploaded image and delete icon -->
+                <div v-else class="showImage">
+                    <img :src="image[0].url" alt="Uploaded Image" class="uploaded-image" />
+                    <div class="icon_delete" @click="removeImage">
+                    <font-awesome-icon :icon="['fas', 'circle-xmark']" />
+                    </div>
                 </div>
+
+                <!-- Hidden file input for selecting images -->
+                <input type="file" class="imageFile" ref="fileInput" @change="onImageSelect" />
+
                 <button>Upload Image</button>
             </div>
     </div>

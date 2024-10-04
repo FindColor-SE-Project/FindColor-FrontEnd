@@ -9,12 +9,15 @@
                     <p class="josefin-sans-font">or Drag and Drop image to Upload</p>
                 </div>
 
-                <div v-else-if="isDragging" class="showDrag">Drag Image Here</div>
+                <div v-else-if="isDragging" class="showDrag" @dragover.prevent="onDragOver"
+                @dragleave.prevent="onDragLeave" @drop.preven="onDrop">
+                    Drag Image Here
+                </div>
 
                 <!-- Section to show uploaded image and delete icon -->
                 <div v-else class="showImage">
                     <img :src="image[0].url" alt="Uploaded Image" class="uploaded-image" />
-                    <div class="icon_delete" @click="removeImage">
+                    <div class="icon_delete" @click="deleteImage">
                     <font-awesome-icon :icon="['fas', 'circle-xmark']" />
                     </div>
                 </div>
@@ -57,13 +60,42 @@ export default{
             });
         },
 
-        removeImage() {
-            this.image = []; // Remove the uploaded image
+        deleteImage(i) {
+            // this.image = []; // Remove the uploaded image
+            this.image.splice(i, 1);
         },
 
         uploadImage() {
             // Logic to upload the image to the server
             console.log("Image uploaded:", this.image[0]);
+        },
+
+        onDragOver(event) {
+            event.preventDefault();
+            this.isDragging = true;
+            event.dataTransfer.dropEffect = "copy";
+        },
+
+        onDragLeave(event) {
+            event.preventDefault();
+            this.isDragging = false;
+        },
+
+        onDrop(event) {
+            event.preventDefault();
+            this.isDragging = false;
+            const file = event.target.files[0]; // Get Only One Image
+            if (!file || file.type.split("/")[0] != "image") return; // Verify that it is an image file
+            
+            // Delete Image File
+            if (this.image.length > 0) {
+                this.image.splice(0, 1);
+            }
+
+            this.image.push({
+                name: file.name,
+                url: URL.createObjectURL(file)
+            });
         }
     }
 }

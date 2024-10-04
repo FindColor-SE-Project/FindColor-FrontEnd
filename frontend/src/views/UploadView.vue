@@ -20,8 +20,6 @@
 </template>
 
 <script> 
-import { ref } from 'vue'
-
 export default{
     data() {
         return {
@@ -48,6 +46,15 @@ export default{
                 name: file.name,
                 url: URL.createObjectURL(file)
             });
+        },
+
+        removeImage() {
+            this.image = []; // Remove the uploaded image
+        },
+
+        uploadImage() {
+            // Logic to upload the image to the server
+            console.log("Image uploaded:", this.image[0]);
         }
     }
 }

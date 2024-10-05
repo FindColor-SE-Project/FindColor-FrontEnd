@@ -31,11 +31,11 @@
 
     <div class="upload__container">
         <div v-if="image.length === 0 " @dragover.prevent="onDragOver"
-        @dragleave.prevent="onDragLeave" @drop.prevent="onDrop">
+            @dragleave.prevent="onDragLeave" @drop.prevent="onDrop">
             <div class="upload__area" v-if="!isDragging">
                 <div>
                     <div class="icon__upload"><font-awesome-icon icon="cloud-arrow-up" /></div>
-                    <button class="josefin-sans-font" role="button"  @click="selectImage">
+                    <button class="josefin-sans-font" role="button" @click="selectImage">
                         Choose Image to Upload
                     </button>
                     <div>or Drag and Drop image to Upload</div>
@@ -110,7 +110,7 @@ export default{
         onDrop(event) {
             event.preventDefault();
             this.isDragging = false;
-            const file = event.target.files[0]; // Get Only One Image
+            const file = event.dataTransfer.files[0]; // Get Only One Image
             if (!file || file.type.split("/")[0] != "image") return; // Verify that it is an image file
             
             // Delete Image File
@@ -193,7 +193,7 @@ button:hover {
 }
 
 .upload__container .upload__area {
-    /* text-align: center; */
+    text-align: center;
     height: 150px;
     border-radius: 5px;
     border: #EDC2D8 dashed 5px;

@@ -1,5 +1,5 @@
 <template>
-    <div class="upload__container">
+    <!-- <div class="upload__container">
             <div class="upload__area">
                 <div class="showUpload" v-if="image.length === 0 && !isDragging">
                     <div class="icon__upload"><font-awesome-icon icon="cloud-arrow-up" /></div>
@@ -12,23 +12,49 @@
                 <div v-else-if="isDragging" class="showDrag" @dragover.prevent="onDragOver"
                 @dragleave.prevent="onDragLeave" @drop.preven="onDrop">
                     Drag Image Here
-                </div>
+                </div> -->
 
                 <!-- Section to show uploaded image and delete icon -->
-                <div v-else class="showImage">
+                <!-- <div v-else class="showImage">
                     <img :src="image[0].url" alt="Uploaded Image" class="uploaded-image" />
                     <div class="icon_delete" @click="deleteImage">
                     <font-awesome-icon :icon="['fas', 'circle-xmark']" />
                     </div>
-                </div>
+                </div> -->
 
                 <!-- Hidden file input for selecting images -->
-                <input type="file" class="imageFile" ref="fileInput" @change="onImageSelect" />
+                <!-- <input type="file" class="imageFile" ref="fileInput" @change="onImageSelect" />
 
                 <button>Upload Image</button>
             </div>
-    </div>
+    </div> -->
 
+    <div class="upload__container">
+        <div v-if="image.length === 0 ">
+            <div class="upload__area" v-if="!isDragging">
+                <div>
+                    <div class="icon__upload"><font-awesome-icon icon="cloud-arrow-up" /></div>
+                    <button class="josefin-sans-font" role="button"  @click="selectImage">
+                        Choose Image to Upload
+                    </button>
+                    <div>or Drag and Drop image to Upload</div>
+                </div>
+            </div>
+            <div v-else-if="isDragging" @dragover.prevent="onDragOver"
+                @dragleave.prevent="onDragLeave" @drop.prevent="onDrop" class="showDrag">
+                Drag Image Here
+            </div>
+            <input type="file" class="imageFile" ref="fileInput" @change="onImageSelect" />
+        </div>        
+
+        <div class="image__container" v-else>
+            <div class="showImage">
+                <span class="icon_delete" @click="deleteImage">&times;</span>
+                <img :src="image[0].url" alt="Uploaded Image" class="uploaded-image" />
+            </div>
+        </div>
+        <button class="upload__button">Upload</button>
+    </div>
 </template>
 
 <script> 
@@ -102,8 +128,8 @@ export default{
 </script>
 
 
-<style>
-.upload__container {
+<style scoped>
+/* .upload__container {
     height: 90vh;
     flex-direction: column;
     display: flex;
@@ -145,5 +171,93 @@ p {
 
 button:hover {
     background-color: #FCF6F5;
+} */
+
+.upload__container {
+    width: 100%;
+    padding: 10%;
+    box-shadow: 0 0 5px #ccc;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.upload__container .upload__button {
+    outline: 0;
+    border: 0;
+    color: #fff;
+    border-radius: 4px;
+    font-weight: 400;
+    padding: 8px 13px;
+    width: 100%;
+    background: #EDC2D8;
+}
+
+.upload__container .upload__area {
+    /* text-align: center; */
+    height: 150px;
+    border-radius: 5px;
+    border: #EDC2D8 dashed 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: center;
+    -webkit-user-select: none;
+    margin-top: 10px;
+}
+
+.upload__container .selectDrag {
+    color: #EDC2D8;
+    margin-left: 5px;
+    cursor: pointer;
+    transition: 0.4s;
+}
+
+.upload__container .selectDrag:hover {
+    opacity: 0.6;   
+}
+
+.upload__container .image__container {
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    max-height: 200px;
+    position: relative;
+    margin-bottom: 8px;
+}
+
+.upload__container .image__container .showImage {
+    width: 75px;
+    margin-right: 5px;
+    height: 75px;
+    position: relative;
+    margin-bottom: 8px;
+}
+
+.upload__container .image__container .showImage img {
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+}
+
+.upload__container .image__container .showImage div {
+    position: absolute;
+    top: -2px;
+    right: 9px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.upload__container input,
+.upload__container .upload__area .on-drop,
+.upload__container .upload__area.dropover .visible {
+    display: none;
+}
+
+.icon_delete {
+    z-index: 999;
+    color: #EDC2D8;
 }
 </style>

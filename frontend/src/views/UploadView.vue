@@ -30,7 +30,8 @@
     </div> -->
 
     <div class="upload__container">
-        <div v-if="image.length === 0 ">
+        <div v-if="image.length === 0 " @dragover.prevent="onDragOver"
+        @dragleave.prevent="onDragLeave" @drop.prevent="onDrop">
             <div class="upload__area" v-if="!isDragging">
                 <div>
                     <div class="icon__upload"><font-awesome-icon icon="cloud-arrow-up" /></div>
@@ -40,8 +41,7 @@
                     <div>or Drag and Drop image to Upload</div>
                 </div>
             </div>
-            <div v-else-if="isDragging" @dragover.prevent="onDragOver"
-                @dragleave.prevent="onDragLeave" @drop.prevent="onDrop" class="showDrag">
+            <div v-else-if="isDragging" class="showDrag">
                 Drag Image Here
             </div>
             <input type="file" class="imageFile" ref="fileInput" @change="onImageSelect" />

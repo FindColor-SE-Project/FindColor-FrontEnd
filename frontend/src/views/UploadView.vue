@@ -35,10 +35,13 @@
             <div class="upload__area" v-if="!isDragging">
                 <div>
                     <div class="icon__upload"><font-awesome-icon icon="cloud-arrow-up" /></div>
-                    <button class="josefin-sans-font" role="button" @click="selectImage">
+                    <button class="josefin-sans-font select_button" role="button" @click="selectImage">
                         Choose Image to Upload
                     </button>
-                    <div>or Drag and Drop image to Upload</div>
+                    <button class="josefin-sans-font select_button">
+                        Take a photo to Upload
+                    </button>
+                    <div class="josefin-sans-font messageDrag">or Drag and Drop image to Upload</div>
                 </div>
             </div>
             <div v-else-if="isDragging" class="showDrag">
@@ -49,11 +52,12 @@
 
         <div class="image__container" v-else>
             <div class="showImage">
-                <span class="icon_delete" @click="deleteImage">&times;</span>
+                <span class="icon_delete" @click="deleteImage">&times;
+                </span>
                 <img :src="image[0].url" alt="Uploaded Image" class="uploaded-image" />
             </div>
         </div>
-        <button class="upload__button">Upload</button>
+        <button class="josefin-sans-font upload__button">Upload</button>
     </div>
 </template>
 
@@ -129,56 +133,41 @@ export default{
 
 
 <style scoped>
-/* .upload__container {
-    height: 90vh;
-    flex-direction: column;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.upload__area {
-    width: 850px;
-    height: 500px;
-    padding: 30px;
-    text-align: center;
-    border-radius: 20px;
-    flex-direction: column;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: #EDC2D8 dashed 5px;
-}
-
 .icon__upload {
     font-size: 70px;
     color: #8ABAD3;
 }
 
-button {
+.upload__container {
+    width: 75%;
+    height: 90vh;
+    padding: 10%;
+    overflow: hidden;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.upload__container .select_button {
     font-size: 28px;
-    margin: 5px 0;
+    margin: 15px 0;
     padding: 6px 10px;
     border: black solid 1px;
     border-radius: 20px;
     background-color: #EDC2D8;
+    display: block;
+    width: 100%;
 }
 
-p {
+.upload__container .select_button:hover {
+    background-color: #FCF6F5;
+}
+
+.upload__container .messageDrag {
     font-size: 24px;
     margin: 5px 0;
-}
 
-button:hover {
-    background-color: #FCF6F5;
-} */
-
-.upload__container {
-    width: 100%;
-    padding: 10%;
-    box-shadow: 0 0 5px #ccc;
-    border-radius: 5px;
-    overflow: hidden;
 }
 
 .upload__container .upload__button {
@@ -187,14 +176,20 @@ button:hover {
     color: #fff;
     border-radius: 4px;
     font-weight: 400;
-    padding: 8px 13px;
+    padding: 10px 13px;
     width: 100%;
     background: #EDC2D8;
+    margin-top: 20px;
+    font-size: 28px;
+}
+
+.upload__container .upload__button:hover {
+    background: #8ABAD3;
 }
 
 .upload__container .upload__area {
     text-align: center;
-    height: 150px;
+    height: 500px;
     border-radius: 5px;
     border: #EDC2D8 dashed 5px;
     display: flex;
@@ -203,6 +198,7 @@ button:hover {
     user-select: center;
     -webkit-user-select: none;
     margin-top: 10px;
+    background: #FCF6F5;
 }
 
 .upload__container .selectDrag {
@@ -220,8 +216,8 @@ button:hover {
     width: 100%;
     height: auto;
     display: flex;
-    justify-content: flex-start;
-    align-items: flex-start;
+    justify-content: center;
+    align-items: center;
     flex-wrap: wrap;
     max-height: 200px;
     position: relative;
@@ -229,17 +225,20 @@ button:hover {
 }
 
 .upload__container .image__container .showImage {
-    width: 75px;
+    width: auto;
     margin-right: 5px;
-    height: 75px;
+    height: 45vh;
     position: relative;
     margin-bottom: 8px;
+    overflow: hidden;
 }
 
 .upload__container .image__container .showImage img {
     width: 100%;
     height: 100%;
     border-radius: 5px;
+    border: 1px solid #ccc;
+    object-fit: cover;
 }
 
 .upload__container .image__container .showImage div {
@@ -252,12 +251,29 @@ button:hover {
 
 .upload__container input,
 .upload__container .upload__area .on-drop,
-.upload__container .upload__area.dropover .visible {
+.upload__container .upload__area.dropover {
     display: none;
 }
 
 .icon_delete {
-    z-index: 999;
-    color: #EDC2D8;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 24px;
+    color: #fff;
+    background-color: red;
+    border-radius: 50%;
+    padding: 0;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    line-height: 0;
+}
+
+.icon_delete:hover {
+    background-color: #111;
 }
 </style>

@@ -4,7 +4,8 @@
       <div v-for="([productName, colorGroups], index) in groupedByProduct" :key="index" class="color-group">
         <div v-for="(colors, subIndex) in colorGroups" :key="subIndex" class="color-subgroup">
           <span v-for="(color, colorIndex) in colors" :key="colorIndex" :style="{ background: color }" 
-            @click="showProductCard(productName, color)" class="color-circle">
+            @click="showProductCard(productName, color)" class="color-circle"
+            :class="{ selected: isSelectedColor(color) }">
           </span>
         </div>
         <!-- vertical line -->
@@ -98,6 +99,10 @@ export default {
         this.displayProductColor = color;
       }
       console.log('Display product:', this.displayProduct);
+    },
+
+    isSelectedColor(color) {
+      return this.displayProductColor === color;
     }
   },
 
@@ -136,7 +141,7 @@ export default {
   margin-right: 10px;
 }
 
-.color-circle {
+.color-circle  {
   width: 50px;
   height: 50px; 
   border-radius: 50%;
@@ -162,6 +167,10 @@ export default {
 }
 
 .color-circle:hover {
+  border-color: #000;
+}
+
+.color-circle.selected {
   border-color: #000;
   box-shadow: 0px 5px 5px -2px rgba(0, 0, 0, 0.3);
 }

@@ -1,8 +1,9 @@
 <template>
   <div class="color_select" v-if="filteredColorShades.length">
-    <div class="color-circles">
+    <div class="color-circle">
       <span v-for="(color, index) in filteredColorShades" :key="index" :style="{ background: color }"
-        @click="showProductCard(index)">
+        @click="showProductCard(index)" class="color-circle"
+        :class="{ selected: isSelectedColor(color) }" >
       </span>
     </div>
     <div class="product-card-container">
@@ -84,6 +85,10 @@ export default {
       }
       console.log('Display product:', this.displayProduct);
     },
+
+    isSelectedColor(color) {
+      return this.displayProduct && this.extractColors(this.displayProduct.colorShade).includes(color);
+    }
   },
 
   mounted() {
@@ -102,13 +107,13 @@ export default {
   margin: 20px 0;
 }
 
-.color-circles {
+.color-circle {
   display: flex;
   align-items: center;
   margin-bottom: 20px;
 }
 
-.color-circles span {
+.color-circle span {
   margin-right: 10px;
   width: 50px;
   height: 50px;
@@ -121,10 +126,8 @@ export default {
   transition: border-color 0.3s; 
 }
 
-.color-circles span:hover {
+.color-circle span:hover {
   border-color: #000;
-  box-shadow: 0px 5px 5px -2px rgba(0, 0, 0, 0.3);
-
 }
 
 .product-card-container {
@@ -132,6 +135,11 @@ export default {
   width: 100%;
   display: flex;
   justify-content: center;
+}
+
+.color-circle.selected {
+  border-color: #000;
+  box-shadow: 0px 5px 5px -2px rgba(0, 0, 0, 0.3);
 }
 
 .for-error {

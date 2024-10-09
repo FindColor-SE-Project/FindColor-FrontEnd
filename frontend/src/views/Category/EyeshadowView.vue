@@ -1,7 +1,7 @@
 <template>
   <div class="product-list">
     <ProductCard v-for="product in filteredCategory" :key="product.productID" :product="product" />
-    <div v-if="filteredCategory.length === 0" class="error-page cardo-regular">Sorry, {{ brandName }} didn't have this category product</div>
+    <div v-if="filteredCategory.length === 0" class="error-page cardo-regular">Sorry, {{ brandName }} didn't have this product category</div>
   </div>
 
 </template>

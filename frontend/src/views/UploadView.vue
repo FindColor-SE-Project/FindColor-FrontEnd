@@ -27,11 +27,13 @@
                 <img :src="image[0].url" alt="Uploaded Image" class="uploaded-image" />
             </div>
         </div>
-        <button class="josefin-sans-font upload__button">Upload</button>
+        <button class="josefin-sans-font upload__button" @click="uploadImage">Upload</button>
     </div>
 </template>
 
 <script> 
+import axios from 'axios';
+
 export default{
     data() {
         return {
@@ -56,7 +58,8 @@ export default{
 
             this.image.push({
                 name: file.name,
-                url: URL.createObjectURL(file)
+                url: URL.createObjectURL(file),
+                file: file // เก็บ file object ไว้ใน image array
             });
         },
 
@@ -95,6 +98,30 @@ export default{
             this.image.push({
                 name: file.name,
                 url: URL.createObjectURL(file)
+            });
+        },
+
+        uploadImage() {
+            const fileInput = this.$refs.fileInput; // Assuming you have a ref to the file input
+            if (fileInput.files.length === 0) {
+                alert('No file selected');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            axios.post('http://localhost:8000/upload', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+            .then(response => {
+                alert(response.data.message);
+            })
+            .catch(error => {
+                console.error("There was an error uploading the image!", error);
+                alert("Upload failed: " + error.message);
             });
         }
     }

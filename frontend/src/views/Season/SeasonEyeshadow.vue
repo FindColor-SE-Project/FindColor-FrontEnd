@@ -102,6 +102,9 @@ export default {
       console.log('Display product:', this.displayProduct);
     },
 
+    isSelectedColor(color) {
+      return this.displayProductColor === color;
+    }
 
   },
 

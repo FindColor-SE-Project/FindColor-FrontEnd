@@ -68,11 +68,6 @@ export default{
             this.image.splice(i, 1);
         },
 
-        uploadImage() {
-            // Logic to upload the image to the server
-            console.log("Image uploaded:", this.image[0]);
-        },
-
         onDragOver(event) {
             event.preventDefault();
             this.isDragging = true;

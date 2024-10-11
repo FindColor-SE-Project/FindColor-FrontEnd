@@ -118,6 +118,9 @@ export default{
             .then(response => {
                 alert("Upload successful: " + response.data.message);
                 this.deleteImage(0); // ลบภาพหลังจากอัปโหลดสำเร็จ
+
+                // นำทางไปหน้าใหม่
+                this.$router.push('/seasons');
             })
             .catch(error => {
                 console.error("There was an error uploading the image!", error);

@@ -22,7 +22,7 @@
 
         <div class="image__container" v-else>
             <div class="showImage">
-                <span class="icon_delete" @click="deleteImage">&times;
+                <span class="icon_delete" @click="deleteImage(0)">&times;
                 </span>
                 <img :src="image[0].url" alt="Uploaded Image" class="uploaded-image" />
             </div>
@@ -64,8 +64,11 @@ export default{
         },
 
         deleteImage(i) {
-            // this.image = []; // Remove the uploaded image
-            this.image.splice(i, 1);
+            if (i !== undefined) {
+                this.image.splice(i, 1); // ลบภาพที่มี index ที่กำหนด
+            } else {
+                this.image = []; // ลบทุกภาพ
+            }
         },
 
         onDragOver(event) {
@@ -83,28 +86,29 @@ export default{
             event.preventDefault();
             this.isDragging = false;
             const file = event.dataTransfer.files[0]; // Get Only One Image
-            if (!file || file.type.split("/")[0] != "image") return; // Verify that it is an image file
+            if (!file || file.type.split("/")[0] != "image") {
+                alert('Please drop a valid image file.');
+                return; // Verify that it is an image file
+            }
             
             // Delete Image File
-            if (this.image.length > 0) {
-                this.image.splice(0, 1);
-            }
-
+            this.image = [];
             this.image.push({
                 name: file.name,
-                url: URL.createObjectURL(file)
+                url: URL.createObjectURL(file),
+                file: file // Store file object
             });
         },
 
         uploadImage() {
-            const fileInput = this.$refs.fileInput; // Assuming you have a ref to the file input
-            if (fileInput.files.length === 0) {
+            // ตรวจสอบว่า image array มีไฟล์อยู่หรือไม่
+            if (this.image.length === 0) {
                 alert('No file selected');
                 return;
             }
 
             const formData = new FormData();
-            formData.append('file', fileInput.files[0]);
+            formData.append('file', this.image[0].file); // ใช้ไฟล์จาก image array
 
             axios.post('http://localhost:8000/upload', formData, {
                 headers: {
@@ -112,11 +116,12 @@ export default{
                 }
             })
             .then(response => {
-                alert(response.data.message);
+                alert("Upload successful: " + response.data.message);
+                this.deleteImage(0); // ลบภาพหลังจากอัปโหลดสำเร็จ
             })
             .catch(error => {
                 console.error("There was an error uploading the image!", error);
-                alert("Upload failed: " + error.message);
+                alert("Upload failed: " + (error.response?.data?.message || error.message));
             });
         }
     }

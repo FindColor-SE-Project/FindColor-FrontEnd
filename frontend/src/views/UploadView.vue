@@ -8,9 +8,33 @@
                     <button class="josefin-sans-font select_button" role="button" @click="selectImage">
                         Choose Image to Upload
                     </button>
-                    <button class="josefin-sans-font select_button">
+                    <div>
+                        <button class="josefin-sans-font select_button"
+                        v-if="!isCameraOpen" role="button" @click="toggleCamera">
                         Take a photo to Upload
-                    </button>
+                        </button>
+
+                        <div v-show="isCameraOpen && isLoading" class="camera-loading">
+                            <ul class="loader-circle">
+                            <li></li>
+                            <li></li>
+                            <li></li>
+                            </ul>
+                        </div>
+                        
+                        <div v-if="isCameraOpen" v-show="!isLoading" class="camera-box" :class="{ 'flash' : isShotPhoto }">
+                            
+                            <div class="camera-shutter" :class="{'flash' : isShotPhoto}"></div>
+                            
+                            <video v-show="!isPhotoTaken" ref="camera" :width="450" :height="337.5" autoplay></video>
+                            
+                            <canvas v-show="isPhotoTaken" id="photoTaken" ref="canvas" :width="450" :height="337.5"></canvas>
+                        </div>
+                        
+                        <div v-if="isCameraOpen && !isLoading" class="camera-shoot">
+                            <i class="fa-solid fa-camera"></i>
+                        </div>
+                    </div>
                     <div class="josefin-sans-font messageDrag">or Drag and Drop image to Upload</div>
                 </div>
             </div>
@@ -38,7 +62,13 @@ export default{
     data() {
         return {
             image: [],
-            isDragging: false
+            isDragging: false,
+            // For Camera
+            isCameraOpen: false,
+            isPhotoTaken: false,
+            isShotPhoto: false,
+            isLoading: false,
+            link: '#'
         }
     },
 
@@ -98,6 +128,64 @@ export default{
                 url: URL.createObjectURL(file),
                 file: file // Store file object
             });
+        },
+
+        toggleCamera() {
+            if (this.isCameraOpen) {
+                this.isCameraOpen = false;
+                this.isPhotoTaken = false;
+                this.isShotPhoto = false;
+                this.stopCameraStream();
+            }
+            else {
+                this.isCameraOpen = true;
+                this.createCameraElement();
+            }
+        },
+
+        createCameraElement() {
+            this.isLoading = true;
+
+            const constraints = (window.constraints = {
+                audio: false,
+                video: true
+            });
+
+            navigator.mediaDevices
+                .getUserMedia(constraints)
+                .then(stream => {
+                    this.isLoading = false;
+                    this.$refs.camera.srcObject = stream;
+                })
+                .catch(error => {
+                    this.isLoading = false;
+                    alert("May the browser didn't support it, or there are some errors.");
+                });
+        },
+
+        stopCameraStream() {
+            let tracks = this.$refs.camera.srcObject.getTracks();
+
+            tracks.forEach(track => {
+                track.stop();
+            });
+        },
+
+        takePhoto() {
+            if (!this.isPhotoTaken) {
+                this.isShotPhoto = true;
+
+                const flash_timeout = 50;
+
+                setTimeout(() => {
+                    this.isShotPhoto = false;
+                }, flash_timeout);
+            }
+
+            this.isPhotoTaken = !this.isPhotoTaken;
+
+            const context = this.$refs.canvas.getContext('2d');
+            context.drawImage(this.$refs.camera, 0, 0, 450, 337.5);
         },
 
         uploadImage() {

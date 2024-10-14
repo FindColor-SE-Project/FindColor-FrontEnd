@@ -9,9 +9,9 @@
                         Choose Image to Upload
                     </button>
                     <div>
-                        <button class="josefin-sans-font select_button"
-                        v-if="!isCameraOpen" role="button" @click="toggleCamera">
-                        Take a photo to Upload
+                        <button class="select_button" role="button" @click="toggleCamera">
+                            <span v-if="!isCameraOpen" class="josefin-sans-font">Take a photo to Upload</span>
+                            <span v-else class="josefin-sans-font">Close Camera</span>
                         </button>
 
                         <div v-show="isCameraOpen && isLoading" class="camera-loading">

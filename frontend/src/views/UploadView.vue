@@ -21,7 +21,7 @@
                     <div class="josefin-sans-font messageDrag">or Drag and Drop image to Upload</div>
                 </div>
             </div>
-            <div v-else-if="isDragging" class="josefin-sans-font showDrag">
+            <div v-if="isDragging" class="josefin-sans-font showDrag">
                 Drag Image Here
             </div>
             <input type="file" class="imageFile" ref="fileInput" @change="onImageSelect" />
@@ -35,35 +35,34 @@
             
             <div v-show="isCameraOpen && isLoading" class="camera-loading">
                 <ul class="loader-circle">
-                <li></li>
-                <li></li>
-                <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
                 </ul>
             </div>
                         
-            <div v-if="isCameraOpen" v-show="!isLoading" class="camera-box" :class="{ 'flash' : isShotPhoto }">
-                            
+            <div v-show="!isLoading" class="camera-box" :class="{ 'flash' : isShotPhoto }">
                 <div class="camera-shutter" :class="{'flash' : isShotPhoto}"></div>
-                            
-                    <video v-show="!isPhotoTaken" ref="camera" :width="450" :height="337.5" autoplay></video>
-                            
+                    <video v-show="!isPhotoTaken" ref="camera" :width="450" :height="337.5" autoplay></video> 
                     <canvas v-show="isPhotoTaken" id="photoTaken" ref="canvas" :width="450" :height="337.5"></canvas>
                 </div>
+            </div>
                         
-                <div v-if="isCameraOpen && !isLoading && !isPhotoTaken" class="camera-shoot" @click="takePhoto">
-                    <i class="fa-solid fa-camera"></i>
-                 </div>
+            <div v-if="isCameraOpen && !isPhotoTaken" class="camera-shoot" @click="takePhoto">
+                <button type="button" class="takeButton"><i class="fa-solid fa-camera"></i></button>
+            </div>    
         </div>
 
         <!-- Display Image -->
-        <div class="image__container" v-else-if="image.length > 0"">
+        <div class="image__container" v-if="image.length > 0">
             <div class="showImage">
-                <span class="icon_delete" @click="deleteImage(0)">&times;
-                </span>
+                <span class="icon_delete" @click="deleteImage(0)">&times;</span>
                 <img :src="image[0].url" alt="Uploaded Image" class="uploaded-image" />
             </div>
         </div>
-        <button class="josefin-sans-font upload__button" v-if="!isCameraOpen" @click="uploadImage">Upload</button>
+
+        <!-- Upload Button -->
+        <button class="josefin-sans-font upload__button" v-if="!isCameraOpen && image.length > 0" @click="uploadImage">Upload</button>
     </div>
 </template>
 
@@ -386,4 +385,5 @@ export default{
 .icon_delete:hover {
     background-color: #111;
 }
+
 </style>

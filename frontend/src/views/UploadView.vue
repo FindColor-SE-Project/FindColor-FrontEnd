@@ -40,17 +40,18 @@
                     <li></li>
                 </ul>
             </div>
-                        
-            <div v-show="!isLoading" class="camera-box" :class="{ 'flash' : isShotPhoto }">
+            
+            <div v-if="isCameraOpen" v-show="!isLoading" class="camera-box" :class="{ 'flash' : isShotPhoto }">
                 <div class="camera-shutter" :class="{'flash' : isShotPhoto}"></div>
                     <video v-show="!isPhotoTaken" ref="camera" :width="450" :height="337.5" autoplay></video> 
                     <canvas v-show="isPhotoTaken" id="photoTaken" ref="canvas" :width="450" :height="337.5"></canvas>
-                </div>
             </div>
-                        
-            <div v-if="isCameraOpen && !isPhotoTaken" class="camera-shoot" @click="takePhoto">
-                <button type="button" class="takeButton"><i class="fa-solid fa-camera"></i></button>
-            </div>    
+            
+            <div v-if="isCameraOpen && !isLoading" class="camera-shoot">
+                <button type="button" class="button" @click="takePhoto">
+                    <font-awesome-icon :icon="['fas', 'camera']" />                
+                </button>
+            </div>
         </div>
 
         <!-- Display Image -->

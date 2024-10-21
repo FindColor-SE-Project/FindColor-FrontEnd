@@ -2,10 +2,13 @@
     <div class="product-container">
         <div class="season-left">
             <!-- Left -->
+            <div v-for="image in images" :key="image.filename">
+                <img :src="`data:image/jpeg;base64,${image.filepath}`" :alt="image.filename" />
+            </div>
         </div>
 
         <div class="season-right">
-            <div class="card button-group ">
+            <div class="card button-group">
                 <button class="cardo-regular" v-for="option in options" :key="option.seasonColorTone"
                     :class="{ 'active': option.seasonColorTone === selectedSeason }" @click="selectOption(option.seasonColorTone)">
                     {{ option.name }}
@@ -28,7 +31,7 @@
 </template>
 
 <script>
-import { ref, computed } from 'vue';
+import axios from 'axios';
 
 export default {
     data() {
@@ -39,23 +42,40 @@ export default {
                 { name: 'Summer', seasonColorTone: 'Summer', detail: 'The makeup tone is Pink, Pink nude, Rosy, Pastel color including, Light Blue, Lavender except Orange' },
                 { name: 'Autumn', seasonColorTone: 'Autumn', detail: 'The makeup tone is Orange-Red, Dark Peach, Red, Brown, Red Brick, Orange Brick, Warm Red, and Warm Orange' },
                 { name: 'Winter', seasonColorTone: 'Winter', detail: 'The makeup tone is Berry, True Red, Burgundy, Plum, Dark Pink, and Fuchsia' },
-            ]
+            ],
+            images: []
         };
     },
 
     computed: {
         selectedOption() {
-            return options.value.find(option => option.seasonColorTone === selectedSeason.value) || null;
+            return this.options.find(option => option.seasonColorTone === this.selectedSeason) || null;
         }
     },
 
     methods: {
         selectOption(seasonColorTone) {
-            selectedSeason.value = seasonColorTone;
+            this.selectedSeason = seasonColorTone;
+        },
+
+        async displayImage() {
+            try {
+                const response = await axios.get('http://localhost:8000/upload');
+                console.log(response.data);  // Log ข้อมูลที่ได้มาเพื่อตรวจสอบ
+                this.images = response.data;
+            } catch (error) {
+                console.error(error, "Error, You didn't connect with the database.");
+                this.$router.push({ name: 'DatabaseError' });
+            }
         }
+    },
+
+    mounted() {
+        this.displayImage();
     }
 }
 </script>
+
 
 <style scoped>
 .product-container {

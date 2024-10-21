@@ -27,26 +27,34 @@
     </div>
 </template>
 
-<script setup>
+<script>
 import { ref, computed } from 'vue';
 
-const selectedSeason = ref(null);
-const options = ref([
-    { name: 'Spring', seasonColorTone: 'Spring', detail: 'The makeup tone is Coral, Orange, Milk Tea, Peach Pink, Salmon Pink, and Peach' },
-    { name: 'Summer', seasonColorTone: 'Summer', detail: 'The makeup tone is Pink, Pink nude, Rosy, Pastel color including, Light Blue, Lavender except Orange' },
-    { name: 'Autumn', seasonColorTone: 'Autumn', detail: 'The makeup tone is Orange-Red, Dark Peach, Red, Brown, Red Brick, Orange Brick, Warm Red, and Warm Orange' },
-    { name: 'Winter', seasonColorTone: 'Winter', detail: 'The makeup tone is Berry, True Red, Burgundy, Plum, Dark Pink, and Fuchsia' },
-]);
+export default {
+    data() {
+        return {
+            selectedSeason: null,
+            options: [
+                { name: 'Spring', seasonColorTone: 'Spring', detail: 'The makeup tone is Coral, Orange, Milk Tea, Peach Pink, Salmon Pink, and Peach' },
+                { name: 'Summer', seasonColorTone: 'Summer', detail: 'The makeup tone is Pink, Pink nude, Rosy, Pastel color including, Light Blue, Lavender except Orange' },
+                { name: 'Autumn', seasonColorTone: 'Autumn', detail: 'The makeup tone is Orange-Red, Dark Peach, Red, Brown, Red Brick, Orange Brick, Warm Red, and Warm Orange' },
+                { name: 'Winter', seasonColorTone: 'Winter', detail: 'The makeup tone is Berry, True Red, Burgundy, Plum, Dark Pink, and Fuchsia' },
+            ]
+        };
+    },
 
-const selectedOption = computed(() => {
-    return options.value.find(option => option.seasonColorTone === selectedSeason.value) || null;
-});
+    computed: {
+        selectedOption() {
+            return options.value.find(option => option.seasonColorTone === selectedSeason.value) || null;
+        }
+    },
 
-// Methods
-function selectOption(seasonColorTone) {
-    selectedSeason.value = seasonColorTone;
+    methods: {
+        selectOption(seasonColorTone) {
+            selectedSeason.value = seasonColorTone;
+        }
+    }
 }
-
 </script>
 
 <style scoped>

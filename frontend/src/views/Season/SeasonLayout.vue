@@ -2,6 +2,9 @@
   <div class="product-container">
     <div class="season-left">
       <!-- Left -->
+      <div v-for="image in images" :key="image.filename">
+        <img :src="`data:image/jpeg;base64,${image.filepath}`" :alt="image.filename" />
+      </div>
     </div>
 
     <div class="season-right">
@@ -19,11 +22,13 @@
 
 <script>
 import { useRoute } from 'vue-router';
+import axios from 'axios';
 
 export default {
   data() {
     return {
-      seasonColorTone: null
+      seasonColorTone: null,
+      images: []
     };
   },
   
@@ -32,11 +37,23 @@ export default {
       const route = useRoute();
       this.seasonColorTone = route.params.seasonColorTone;
       this.$router.replace({ name: 'seasonLips', params: { seasonColorTone: this.seasonColorTone } });
+    },
+
+    async displayImage() {
+      try {
+        const response = await axios.get('http://localhost:8000/upload');
+        console.log(response.data);  // Log ข้อมูลที่ได้มาเพื่อตรวจสอบ
+        this.images = response.data;
+      } catch (error) {
+        console.error(error, "Error, You didn't connect with the database.");
+        this.$router.push({ name: 'DatabaseError' });
+      }
     }
   },
   
   mounted() {
     this.setDefaultChild();
+    this.displayImage();
   }
 }
 </script>

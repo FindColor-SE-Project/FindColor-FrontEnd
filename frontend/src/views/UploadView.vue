@@ -63,7 +63,7 @@
         </div>
 
         <!-- Upload Button -->
-        <button class="josefin-sans-font upload__button" v-if="!isCameraOpen && image.length > 0" @click="uploadImage">Upload</button>
+        <button class="josefin-sans-font upload__button" v-if="isCameraOpen && isPhotoTaken" @click="uploadImage">Upload</button>
     </div>
 </template>
 

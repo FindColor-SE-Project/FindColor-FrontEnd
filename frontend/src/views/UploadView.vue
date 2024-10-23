@@ -201,31 +201,35 @@ export default{
         },
 
         uploadImage() {
-            // ตรวจสอบว่า image array มีไฟล์อยู่หรือไม่
-            if (this.image.length === 0) {
-                alert('No file selected');
-                return;
-            }
+            // ดึงข้อมูลจาก canvas เพื่อใช้แทน image array
+            const canvas = this.$refs.canvas;
 
-            const formData = new FormData();
-            formData.append('file', this.image[0].file); // ใช้ไฟล์จาก image array
-
-            axios.post('http://localhost:8000/upload', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
+            // แปลงรูปจาก canvas เป็น Blob เพื่อเตรียมอัพโหลด
+            canvas.toBlob((blob) => {
+                if (!blob) {
+                    alert('No file selected');
+                    return;
                 }
-            })
-            .then(response => {
-                alert("Upload successful: " + response.data.message);
-                this.deleteImage(0); // ลบภาพหลังจากอัปโหลดสำเร็จ
 
-                // นำทางไปหน้าใหม่
-                this.$router.push('/seasons');
-            })
-            .catch(error => {
-                console.error("There was an error uploading the image!", error);
-                alert("Upload failed: " + (error.response?.data?.message || error.message));
-            });
+                const formData = new FormData();
+                formData.append('file', blob, 'image.jpeg');
+
+                axios.post('http://localhost:8000/upload', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                .then(response => {
+                    alert("Upload successful: " + response.data.message);
+                    this.isPhotoTaken = false;
+
+                    this.$router.push('/seasons');
+                })
+                .catch(error => {
+                    console.error("There was an error uploading the image!", error);
+                    alert("Upload failed: " + (error.response?.data?.message || error.message));
+                });
+            }, 'image/jpeg');
         }
     }
 }

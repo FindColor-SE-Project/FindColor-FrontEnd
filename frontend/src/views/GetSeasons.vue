@@ -2,7 +2,7 @@
     <div class="product-container">
         <div class="season-left">
             <!-- Left -->
-            <div v-for="image in images" :key="image.filename">
+            <div v-for="image in images" :key="image.filename" class="image-container" :class="getBackgroundColor(selectedSeason)">
                 <img :src="`data:image/jpeg;base64,${image.filepath}`" :alt="image.filename" />
             </div>
         </div>
@@ -29,6 +29,7 @@
         </div>
     </div>
 </template>
+
 
 <script>
 import axios from 'axios';
@@ -67,7 +68,23 @@ export default {
                 console.error(error, "Error, You didn't connect with the database.");
                 this.$router.push({ name: 'DatabaseError' });
             }
+        },
+
+        getBackgroundColor(season) {
+        switch (season) {
+            case 'Spring':
+                return 'background-spring'; // เพิ่ม class ที่จะเปลี่ยนสีพื้นหลัง
+            case 'Summer':
+                return 'background-summer';
+            case 'Autumn':
+                return 'background-autumn';
+            case 'Winter':
+                return 'background-winter';
+            default:
+                return '';
         }
+    }
+
     },
 
     mounted() {
@@ -167,4 +184,69 @@ export default {
 .next-button:hover {
     background-color: #5299be;
 }
+
+.image-container img {
+  width: 400px; /* ปรับขนาดรูปภาพตามที่ต้องการ */
+  height: 500px;
+  object-fit: cover; /* ครอปรูปภาพให้อยู่ภายในขอบเขต */
+  border-radius: 50%; /* ทำให้รูปภาพเป็นวงรี */
+}
+
+.background-spring {
+    background-color: #fff;
+    background-image: repeating-conic-gradient(
+    #FFB07C 0deg 22.5deg,
+    #FF7F50 22.5deg 45deg,
+    #FFA500 45deg 67.5deg,
+    #FF7E70 67.5deg 90deg,
+    #D08574 90deg 112.5deg,
+    #FE7B7C 112.5deg 135deg,
+    #F88379 135deg 157.5deg,
+    #FF9A8A 157.5deg 180deg);
+}
+
+.background-summer {
+    background-color: #fff;
+    background-image: repeating-conic-gradient(
+    #FFC0CB 0deg 22.5deg,
+    #D3D3FF 22.5deg 45deg,
+    #C8A2C8 45deg 67.5deg,
+    #FFC5CB 67.5deg 90deg,
+    #F2DADF 90deg 112.5deg,
+    #FFB6C1 112.5deg 135deg,
+    #F6688E 135deg 157.5deg,
+    #F36196 157.5deg 180deg);
+}
+
+.background-autumn {
+    background-color: #fff;
+    background-image: repeating-conic-gradient(
+    #DE7E5D 0deg 22.5deg,
+    #FF6347 22.5deg 45deg,
+    #C14A09 45deg 67.5deg,
+    #855246 67.5deg 90deg,
+    #964B00 90deg 112.5deg,
+    #FF0000 112.5deg 135deg,
+    #FF5733 135deg 157.5deg,
+    #FF4500 157.5deg 180deg);
+}
+
+.background-winter {
+    background-color: #fff;
+    background-image: repeating-conic-gradient(
+    #FF00FF 0deg 22.5deg,
+    #5A2653 22.5deg 45deg,
+    #990F4B 45deg 67.5deg,
+    #AA336A 67.5deg 90deg,
+    #800020 90deg 112.5deg,
+    #BF1932 112.5deg 135deg,
+    #EF2B7C 135deg 157.5deg,
+    #FF69B4 157.5deg 180deg);
+}
+
+.image-container {
+    padding: 50px; /* เพิ่ม padding หากต้องการ */
+    transition: background-color 0.3s; /* เพิ่ม transition เพื่อให้สวยงาม */
+}
+
 </style>

@@ -201,35 +201,48 @@ export default{
         },
 
         uploadImage() {
-            // ดึงข้อมูลจาก canvas เพื่อใช้แทน image array
-            const canvas = this.$refs.canvas;
+            let fileToUpload;
 
-            // แปลงรูปจาก canvas เป็น Blob เพื่อเตรียมอัพโหลด
-            canvas.toBlob((blob) => {
-                if (!blob) {
-                    alert('No file selected');
-                    return;
-                }
-
-                const formData = new FormData();
-                formData.append('file', blob, 'image.jpeg');
-
-                axios.post('http://localhost:8000/upload', formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
+            if (this.isPhotoTaken) {
+                // ถ้าถ่ายภาพจากกล้อง ใช้ข้อมูลจาก canvas
+                const canvas = this.$refs.canvas;
+                canvas.toBlob((blob) => {
+                    if (!blob) {
+                        alert('No file selected');
+                        return;
                     }
-                })
-                .then(response => {
-                    alert("Upload successful: " + response.data.message);
-                    this.isPhotoTaken = false;
 
-                    this.$router.push('/seasons');
-                })
-                .catch(error => {
-                    console.error("There was an error uploading the image!", error);
-                    alert("Upload failed: " + (error.response?.data?.message || error.message));
-                });
-            }, 'image/jpeg');
+                    fileToUpload = blob;
+                    this.uploadFromDevice(fileToUpload);
+                }, 'image/jpeg');
+            } else if (this.image.length > 0) {
+                // ถ้าผู้ใช้เลือกไฟล์จากอุปกรณ์ ใช้ข้อมูลจาก image array
+                fileToUpload = this.image[0].file;
+                this.uploadFromDevice(fileToUpload);
+            } else {
+                alert('No file selected');
+            }
+        },
+
+        uploadFromDevice(file) {
+            const formData = new FormData();
+            formData.append('file', file, 'image.jpeg');
+
+            axios.post('http://localhost:8000/upload', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+            .then(response => {
+                alert("Upload successful: " + response.data.message);
+                this.isPhotoTaken = false;
+                this.image = []; // Clear image after upload
+                this.$router.push('/seasons');
+            })
+            .catch(error => {
+                console.error("There was an error uploading the image!", error);
+                alert("Upload failed: " + (error.response?.data?.message || error.message));
+            });
         }
     }
 }

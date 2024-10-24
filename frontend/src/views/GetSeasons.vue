@@ -39,10 +39,10 @@ export default {
         return {
             selectedSeason: null,
             options: [
-                { name: 'Spring', seasonColorTone: 'Spring', detail: 'The makeup tone is Coral, Orange, Milk Tea, Peach Pink, Salmon Pink, and Peach' },
-                { name: 'Summer', seasonColorTone: 'Summer', detail: 'The makeup tone is Pink, Pink nude, Rosy, Pastel color including, Light Blue, Lavender except Orange' },
-                { name: 'Autumn', seasonColorTone: 'Autumn', detail: 'The makeup tone is Orange-Red, Dark Peach, Red, Brown, Red Brick, Orange Brick, Warm Red, and Warm Orange' },
-                { name: 'Winter', seasonColorTone: 'Winter', detail: 'The makeup tone is Berry, True Red, Burgundy, Plum, Dark Pink, and Fuchsia' },
+                { name: 'Spring', seasonColorTone: 'Spring', detail: 'The makeup tone is Coral, Orange, Milk Tea, Peach-Pink, Salmon-Pink, Salmon, Coral-Pink, and Peach' },
+                { name: 'Summer', seasonColorTone: 'Summer', detail: 'The makeup tone is Pink Nude, Rosy, Pink, Lilac, Medium Pink, Light Rose, Light Pink, and Lavender' },
+                { name: 'Autumn', seasonColorTone: 'Autumn', detail: 'The makeup tone is Orange-Red, Dark Peach, Red, Brown, Red Brick, Brick Orange, Tomato, and Brown Brick' },
+                { name: 'Winter', seasonColorTone: 'Winter', detail: 'The makeup tone is Dark Pink, Burgundy, Berry, True Red, Deep Plum, Fuchsia, Magenta, and Hot Pink' },
             ],
             images: []
         };
@@ -61,7 +61,7 @@ export default {
 
         async displayImage() {
             try {
-                const response = await axios.get('http://localhost:8000/upload');
+                const response = await axios.get('http://localhost:8000/user');
                 console.log(response.data);  // Log ข้อมูลที่ได้มาเพื่อตรวจสอบ
                 this.images = response.data;
             } catch (error) {
@@ -73,7 +73,7 @@ export default {
         getBackgroundColor(season) {
         switch (season) {
             case 'Spring':
-                return 'background-spring'; // เพิ่ม class ที่จะเปลี่ยนสีพื้นหลัง
+                return 'background-spring'; // เปลี่ยนสีพื้นหลัง
             case 'Summer':
                 return 'background-summer';
             case 'Autumn':

@@ -41,7 +41,7 @@ export default {
 
     async displayImage() {
       try {
-        const response = await axios.get('http://localhost:8000/upload');
+        const response = await axios.get('http://localhost:8000/user');
         console.log(response.data);  // Log ข้อมูลที่ได้มาเพื่อตรวจสอบ
         this.images = response.data;
       } catch (error) {

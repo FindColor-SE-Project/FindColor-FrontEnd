@@ -29,7 +29,7 @@
 
         <!-- If Camera open -->
         <div v-if="isCameraOpen">
-            <button class="select_button" role="button" @click="toggleCamera">
+            <button class="close_button" role="button" @click="toggleCamera">
                 <span class="josefin-sans-font">Close Camera</span>
             </button>
             
@@ -228,7 +228,7 @@ export default{
             const formData = new FormData();
             formData.append('file', file, 'image.jpeg');
 
-            axios.post('http://localhost:8000/upload', formData, {
+            axios.post('http://localhost:8000/user', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -404,4 +404,15 @@ export default{
     background-color: #111;
 }
 
+.upload__container .close_button {
+    font-size: 28px;
+    margin: 15px 0;
+    padding: 6px;
+    border: solid 1px;
+    border-radius: 20px;
+    background-color: red;
+    display: block;
+    color:#fff;
+    width: 25%;
+}
 </style>

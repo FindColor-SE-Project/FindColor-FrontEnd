@@ -44,7 +44,8 @@ export default {
                 { name: 'Autumn', seasonColorTone: 'Autumn', detail: 'The makeup tone is Orange-Red, Dark Peach, Red, Brown, Red Brick, Brick Orange, Tomato, and Brown Brick' },
                 { name: 'Winter', seasonColorTone: 'Winter', detail: 'The makeup tone is Dark Pink, Burgundy, Berry, True Red, Deep Plum, Fuchsia, Magenta, and Hot Pink' },
             ],
-            images: []
+            images: [],
+            user_id: 1
         };
     },
 
@@ -57,6 +58,25 @@ export default {
     methods: {
         selectOption(seasonColorTone) {
             this.selectedSeason = seasonColorTone;
+            this.saveSelectedOption(seasonColorTone);
+        },
+
+        async saveSelectedOption(seasonColorTone) {
+            console.log("Sending seasonColorTone:", seasonColorTone);
+            try {
+                const response = await axios.post('http://localhost:8000/user/seasonColorTone', {
+                    seasonColorTone: seasonColorTone,
+                    user_id: this.user_id  // ส่ง user_id ของผู้ใช้ที่แท้จริง
+                });
+                console.log(response.data.message);
+                alert("ฤดูได้ถูกบันทึกแล้วเป็น " + seasonColorTone); 
+            } catch (error) {
+                // ลองตรวจสอบ response ทั้งหมดที่ได้กลับมา
+                console.error("Full error response:", error.response);
+
+                // ข้อความแจ้งเตือน
+                alert("เกิดข้อผิดพลาดในการบันทึกฤดู: " + (error.response?.data?.message || error.message));
+            }
         },
 
         async displayImage() {
@@ -71,20 +91,19 @@ export default {
         },
 
         getBackgroundColor(season) {
-        switch (season) {
-            case 'Spring':
-                return 'background-spring'; // เปลี่ยนสีพื้นหลัง
-            case 'Summer':
-                return 'background-summer';
-            case 'Autumn':
-                return 'background-autumn';
-            case 'Winter':
-                return 'background-winter';
-            default:
-                return '';
+            switch (season) {
+                case 'Spring':
+                    return 'background-spring'; // เปลี่ยนสีพื้นหลัง
+                case 'Summer':
+                    return 'background-summer';
+                case 'Autumn':
+                    return 'background-autumn';
+                case 'Winter':
+                    return 'background-winter';
+                default:
+                    return '';
+            }
         }
-    }
-
     },
 
     mounted() {

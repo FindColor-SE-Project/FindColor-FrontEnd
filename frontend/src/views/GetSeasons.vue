@@ -62,19 +62,14 @@ export default {
         },
 
         async saveSelectedOption(seasonColorTone) {
-            console.log("Sending seasonColorTone:", seasonColorTone);
             try {
                 const response = await axios.post('http://localhost:8000/user/seasonColorTone', {
-                    seasonColorTone: seasonColorTone,
-                    user_id: this.user_id  // ส่ง user_id ของผู้ใช้ที่แท้จริง
+                    seasonColorTone: seasonColorTone
                 });
                 console.log(response.data.message);
                 alert("ฤดูได้ถูกบันทึกแล้วเป็น " + seasonColorTone); 
             } catch (error) {
-                // ลองตรวจสอบ response ทั้งหมดที่ได้กลับมา
                 console.error("Full error response:", error.response);
-
-                // ข้อความแจ้งเตือน
                 alert("เกิดข้อผิดพลาดในการบันทึกฤดู: " + (error.response?.data?.message || error.message));
             }
         },

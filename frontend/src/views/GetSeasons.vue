@@ -22,14 +22,12 @@
                 <h2 class="cardo-regular">Select a season</h2>
                 <p class="cardo-regular">No season selected</p>
             </div>
-            <router-link v-if="selectedOption"
-                :to="{ name: 'seasonLayout', params: { seasonColorTone: selectedOption.seasonColorTone } }">
-                <button class="next-button josefin-sans-font">Next</button>
+            <router-link v-if="selectedOption" :to="{ name: 'seasonLayout', params: { seasonColorTone: selectedOption.seasonColorTone } }">
+                <button class="next-button josefin-sans-font" @click="saveSelectedOption">Next</button>
             </router-link>
         </div>
     </div>
 </template>
-
 
 <script>
 import axios from 'axios';
@@ -58,16 +56,14 @@ export default {
     methods: {
         selectOption(seasonColorTone) {
             this.selectedSeason = seasonColorTone;
-            this.saveSelectedOption(seasonColorTone);
         },
 
-        async saveSelectedOption(seasonColorTone) {
+        async saveSelectedOption() {
             try {
                 const response = await axios.post('http://localhost:8000/user/seasonColorTone', {
-                    seasonColorTone: seasonColorTone
+                    seasonColorTone: this.selectedSeason
                 });
                 console.log(response.data.message);
-                alert("ฤดูได้ถูกบันทึกแล้วเป็น " + seasonColorTone); 
             } catch (error) {
                 console.error("Full error response:", error.response);
                 alert("เกิดข้อผิดพลาดในการบันทึกฤดู: " + (error.response?.data?.message || error.message));

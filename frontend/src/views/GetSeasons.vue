@@ -3,14 +3,9 @@
         <!-- Left -->
         <div class="season-left">
             <!-- Button -->
-            <div class="button-row">
-                <button class="change-button josefin-sans-font" @click="changeImage(images.id)">
-                    <font-awesome-icon :icon="['fas', 'trash']" /> Change Image
-                </button>
-                <button class="change-button josefin-sans-font" @click="changeImage(images.id)">
-                    <font-awesome-icon :icon="['fas', 'trash']" /> Change Image
-                </button>
-            </div>
+            <button class="change-button josefin-sans-font" @click="changeImage(images.id)">
+                <font-awesome-icon :icon="['fas', 'trash']" /> Change Image
+            </button>
 
             <!-- Image -->
             <div v-for="image in images" :key="image.filename" class="image-container" :class="getBackgroundColor(selectedSeason)">

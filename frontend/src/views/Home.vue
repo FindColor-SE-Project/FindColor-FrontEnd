@@ -1,14 +1,13 @@
-<script setup>
-import { ref } from 'vue'
-</script>
-
 <template>
     <div class="main">
         <div class="home__data">
             <div class="home__content">
-                <h2 class="cardo-regular">Hello, Beautiful</h2>
-                <h1 class="lora-font">FindColor</h1>
-                <p class="cardo-regular">a website collects cosmetic brands for users <br> to find the data easily and comfortably</p>
+                <img src="../assets/header.png" class="header_img"/>
+                <div class="header_text">
+                    <h2 class="cardo-regular" style="font-style: italic">Hello, Beautiful</h2>
+                    <h1 class="lora-font">FindColor</h1>
+                    <p class="cardo-regular">a website collects cosmetic brands for users <br> to find the data easily and comfortably</p>
+                </div>
             </div>
         </div>
     </div>
@@ -42,8 +41,10 @@ import { ref } from 'vue'
 
 <style>
 .main {
-    background-image: url(@/assets/pic.jpeg);
-    width: 100%;
+    /* background-image: url(@/assets/pic.jpeg); */
+    background: linear-gradient(180deg, white, rgba(237, 194, 216, 0.3), 
+    rgba(237, 194, 216, 0.3), white); /* opacity = 0.3 */
+    width: auto;
     height: 800px;
     /* object-fit: cover;
     object-position: center; */
@@ -52,9 +53,9 @@ import { ref } from 'vue'
     background-repeat: no-repeat;
 }
 
-.home__data {
-    padding-block: 10rem;
-    display: grid;
+.home__content {
+    display: flex;
+    gap: 50px;
 }
 
 .home__content h2 {
@@ -73,8 +74,11 @@ import { ref } from 'vue'
 
 @media (width > 768px) {
     .home__data {
-        padding-block: 10%;
         grid-template-columns: repeat(2, 2fr);
+    }
+
+    .header_text {
+        padding-block: 15%;
     }
 
     .home__content {
@@ -138,4 +142,8 @@ import { ref } from 'vue'
     border: 4px solid #D8B4F8;
 }
 
+.header_img {
+    width: auto;
+    height: 750px;
+}
 </style>

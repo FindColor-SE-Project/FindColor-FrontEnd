@@ -1,12 +1,24 @@
 <template>
     <div class="product-container">
+        <!-- Left -->
         <div class="season-left">
-            <!-- Left -->
+            <!-- Button -->
+            <div class="button-row">
+                <button class="change-button josefin-sans-font" @click="changeImage(images.id)">
+                    <font-awesome-icon :icon="['fas', 'trash']" /> Change Image
+                </button>
+                <button class="change-button josefin-sans-font" @click="changeImage(images.id)">
+                    <font-awesome-icon :icon="['fas', 'trash']" /> Change Image
+                </button>
+            </div>
+
+            <!-- Image -->
             <div v-for="image in images" :key="image.filename" class="image-container" :class="getBackgroundColor(selectedSeason)">
                 <img :src="`data:image/jpeg;base64,${image.filepath}`" :alt="image.filename" />
             </div>
         </div>
 
+        <!-- Right -->
         <div class="season-right">
             <div class="card button-group">
                 <button class="cardo-regular" v-for="option in options" :key="option.seasonColorTone"
@@ -43,7 +55,6 @@ export default {
                 { name: 'Winter', seasonColorTone: 'Winter', detail: 'The makeup tone is Dark Pink, Burgundy, Berry, True Red, Deep Plum, Fuchsia, Magenta, and Hot Pink' },
             ],
             images: [],
-            user_id: 1
         };
     },
 
@@ -74,7 +85,10 @@ export default {
             try {
                 const response = await axios.get('http://localhost:8000/user');
                 console.log(response.data);  // Log ข้อมูลที่ได้มาเพื่อตรวจสอบ
-                this.images = response.data;
+                this.images = response.data.map(image => ({
+                    ...image,
+                    id: image.id  // เพิ่ม id ของภาพ เพื่อเชื่อมโยงกับปุ่มลบ
+                }));
             } catch (error) {
                 console.error(error, "Error, You didn't connect with the database.");
                 this.$router.push({ name: 'DatabaseError' });
@@ -93,6 +107,20 @@ export default {
                     return 'background-winter';
                 default:
                     return '';
+            }
+        },
+
+        async changeImage() {
+            try {
+                // เรียกใช้ API เพื่อลบข้อมูลทั้งหมด
+                const response = await axios.delete(`http://localhost:8000/user`);
+                console.log(response.data.message);
+                
+                // หลังจากลบข้อมูลเสร็จสิ้น กลับไปที่หน้า Upload
+                this.$router.push('/upload');
+            } catch (error) {
+                console.error("Error deleting images:", error.response);
+                alert("เกิดข้อผิดพลาดในการลบข้อมูล");
             }
         }
     },
@@ -259,4 +287,24 @@ export default {
     transition: background-color 0.3s; /* เพิ่ม transition เพื่อให้สวยงาม */
 }
 
+.button-row {
+  display: flex; /* จัดปุ่มให้เป็นแถวเดียวกัน */
+  align-self: flex-end;
+  margin-bottom: 20px;
+}
+
+.change-button {
+  font-size: 20px;
+  margin: 0 10px;
+  border: 1px solid #000;
+  padding: 5px 10px;
+  border-radius: 5px;
+  background-color: #fff;
+}
+
+.change-button:hover {
+  color: #fff;
+  background-color: #2E2E2E;
+  border: 1px solid #2E2E2E;
+}
 </style>

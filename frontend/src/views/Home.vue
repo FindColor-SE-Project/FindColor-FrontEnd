@@ -18,22 +18,22 @@
             <div class="season_card spring">
                 <img width="96" height="96" src="https://img.icons8.com/color/96/spring.png" alt="spring"/>
                 <h2 class="cardo-regular">Spring</h2>
-                <p class="cardo-regular">The makeup tone is Coral, Orange, Milk Tea, Peach Pink, Salmon Pink, and Peach</p>
+                <p class="cardo-regular">The makeup tone is Coral, Orange, Milk Tea, Peach-Pink, Salmon-Pink, Salmon, Coral-Pink, and Peach</p>
             </div>
             <div class="season_card summer">
                 <img width="96" height="96" src="https://img.icons8.com/color/96/summer--v1.png" alt="summer--v1"/>
                 <h2 class="cardo-regular">Summer</h2>
-                <p class="cardo-regular">The makeup tone is Pink, Pink nude, Rosy, Pastel color including, Light Blue, Larvender except Orange</p>
+                <p class="cardo-regular">The makeup tone is Pink Nude, Rosy, Pink, Lilac, Medium Pink, Light Rose, Light Pink, and Lavender</p>
             </div>
             <div class="season_card autumn">
                 <img width="96" height="96" src="https://img.icons8.com/color/96/autumn.png" alt="autumn"/>
                 <h2 class="cardo-regular">Autumn</h2>
-                <p class="cardo-regular">The makeup tone is Orange-Red, Dark Peach, Red, Brown, Red Brick, Orange Brick, Warm Red, and Warm Orange</p>
+                <p class="cardo-regular">The makeup tone is Orange-Red, Dark Peach, Red, Brown, Red Brick, Brick Orange, Tomato, and Brown Brick</p>
             </div>
             <div class="season_card winter">
                 <img width="96" height="96" src="https://img.icons8.com/color/96/winter--v1.png" alt="winter--v1"/>
                 <h2 class="cardo-regular">Winter</h2>
-                <p class="cardo-regular">The makeup tone is Berry, True Red, Burgundy, Plum, Dark Pink, and Fuchsia</p>
+                <p class="cardo-regular">The makeup tone is Dark Pink, Burgundy, Berry, True Red, Deep Plum, Fuchsia, Magenta, and Hot Pink</p>
             </div>
         </div>
     </div>
@@ -41,7 +41,6 @@
 
 <style>
 .main {
-    /* background-image: url(@/assets/pic.jpeg); */
     background: linear-gradient(180deg, white, rgba(237, 194, 216, 0.3), 
     rgba(237, 194, 216, 0.3), white); /* opacity = 0.3 */
     width: auto;
@@ -53,6 +52,11 @@
     background-repeat: no-repeat;
 }
 
+.header_img {
+    width: auto;
+    height: 750px;
+}
+
 .home__content {
     display: flex;
     gap: 50px;
@@ -60,16 +64,16 @@
 
 .home__content h2 {
     font-weight: 300;
-    font-size: 60px;
+    font-size: 72px;
 }
 
 .home__content h1 {
-    font-size: 120px;
+    font-size: 144px;
     font-weight: 100;
 }
 
 .home__content p {
-    font-size: 28px;
+    font-size: 30px;
 }
 
 @media (width > 768px) {
@@ -78,11 +82,11 @@
     }
 
     .header_text {
-        padding-block: 15%;
+        padding-block: 14%;
     }
 
     .home__content {
-        margin-left: 15%;
+        margin-left: 10%;
         grid-column: 2/3;
     }
 
@@ -99,17 +103,17 @@
     display: grid;
     gap: 1rem;
     justify-items: center;
-    padding: 4rem;
-    margin: 4rem;
+    padding: 5rem;
 }
 
 .season_card {
-    width: 18%;
-    padding: 4rem;
-    margin: 4rem;
+    width: auto;
+    max-width: 600px;
+    padding: 2rem;
+    margin: 20px 50px;
     text-align: center;
-    float: left;
     border-radius: 20px;
+    transition: transform 0.3s;
 }
 
 .season_card img {
@@ -123,7 +127,22 @@
 }
 
 .season_card p {
-    font-size: 24px;
+    padding-top: 10px;
+    font-size: 28px;
+}
+
+.season_card:hover {
+    transform: scale(1.05); /* เพิ่มเอฟเฟกต์ hover */
+}
+
+
+.season_row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* แบ่งเป็น 2 คอลัมน์ */
+    gap: 2rem; /* ระยะห่างระหว่างคอลัมน์และแถว */
+    justify-items: center;
+    margin: 2rem;
+
 }
 
 .spring {
@@ -140,10 +159,5 @@
 
 .winter {
     border: 4px solid #D8B4F8;
-}
-
-.header_img {
-    width: auto;
-    height: 750px;
 }
 </style>

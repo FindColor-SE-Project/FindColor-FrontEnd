@@ -60,9 +60,42 @@ export default {
     },
 
     methods: {
-        selectOption(seasonColorTone) {
-            this.selectedSeason = seasonColorTone;
-        },
+        async selectOption(seasonColorTone) {
+        this.selectedSeason = seasonColorTone;
+
+        // ส่งภาพไปยัง API เพื่อทำการครอป
+        if (this.images.length > 0) {
+            const imageToCrop = this.images[0]; // ใช้ภาพแรกในการครอป
+            const formData = new FormData();
+            const blob = this.dataURLtoBlob(`data:image/jpeg;base64,${imageToCrop.filepath}`);
+            formData.append('file', blob, imageToCrop.filename);
+
+            try {
+                const response = await axios.post('http://localhost:8000/user/crop_image', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
+                // นำภาพที่ครอปมาแสดง
+                this.images[0].filepath = response.data.image; // อัปเดตภาพที่ครอปมา
+            } catch (error) {
+                console.error("Error cropping image:", error.response);
+                alert("เกิดข้อผิดพลาดในการครอปภาพ");
+            }
+        }
+    },
+
+    dataURLtoBlob(dataURL) {
+        const byteString = atob(dataURL.split(',')[1]);
+        const mimeString = dataURL.split(',')[0].split(':')[1].split(';')[0];
+        const ab = new ArrayBuffer(byteString.length);
+        const ia = new Uint8Array(ab);
+        for (let i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
+        }
+        return new Blob([ab], { type: mimeString });
+    },
+
 
         async saveSelectedOption() {
             try {
@@ -87,6 +120,27 @@ export default {
             } catch (error) {
                 console.error(error, "Error, You didn't connect with the database.");
                 this.$router.push({ name: 'DatabaseError' });
+            }
+        },
+
+        async cropImage() {
+            try {
+                const response = await axios.post('http://localhost:8000/user/crop_image', {
+                    seasonColorTone: this.selectedSeason // ส่งข้อมูลที่จำเป็นไปยัง API
+                });
+
+                if (response.data.image) {
+                    // แสดงภาพที่ถูกครอปในที่ที่เหมาะสม
+                    const croppedImageContainer = document.getElementById('croppedImageContainer');
+                    const croppedImage = document.getElementById('croppedImage');
+                    croppedImage.src = 'data:image/jpeg;base64,' + response.data.image;
+                    croppedImageContainer.style.display = 'block';
+                } else {
+                    alert(response.data.message || "เกิดข้อผิดพลาดในการครอปภาพ");
+                }
+            } catch (error) {
+                console.error("Error cropping image:", error.response);
+                alert("เกิดข้อผิดพลาดในการครอปภาพ: " + (error.response?.data?.message || error.message));
             }
         },
 
@@ -218,12 +272,12 @@ export default {
     background-color: #5299be;
 }
 
-.image-container img {
-  width: 400px; /* ปรับขนาดรูปภาพตามที่ต้องการ */
+/* .image-container img {
+  width: 400px;
   height: 500px;
-  object-fit: cover; /* ครอปรูปภาพให้อยู่ภายในขอบเขต */
-  border-radius: 50%; /* ทำให้รูปภาพเป็นวงรี */
-}
+  object-fit: cover;
+  border-radius: 50%; ทำให้รูปภาพเป็นวงรี
+} */
 
 .background-spring {
     background-color: #fff;

@@ -9,7 +9,7 @@
 
             <!-- Image -->
             <div v-for="image in images" :key="image.filename" class="image-container" :class="getBackgroundColor(selectedSeason)">
-                <img :src="`data:image/jpeg;base64,${image.filepath}`" :alt="image.filename" />
+                <img :src="`data:image/jpeg;base64,${croppedImage || image.filepath}`" :alt="image.filename" />
             </div>
         </div>
 
@@ -43,6 +43,7 @@ export default {
     data() {
         return {
             selectedSeason: null,
+            croppedImage: null, // ตัวแปรเพื่อเก็บภาพที่ถูกครอบ
             options: [
                 { name: 'Spring', seasonColorTone: 'Spring', detail: 'The makeup tone is Coral, Orange, Milk Tea, Peach-Pink, Salmon-Pink, Salmon, Coral-Pink, and Peach' },
                 { name: 'Summer', seasonColorTone: 'Summer', detail: 'The makeup tone is Pink Nude, Rosy, Pink, Lilac, Medium Pink, Light Rose, Light Pink, and Lavender' },
@@ -77,7 +78,7 @@ export default {
                         }
                     });
                     // นำภาพที่ครอปมาแสดง
-                    this.images[0].filepath = response.data.image; // อัปเดตภาพที่ครอปมา
+                    this.croppedImage = response.data.image; // อัปเดตตัวแปร croppedImage
                 } catch (error) {
                     console.error("Error cropping image:", error.response);
                     alert("เกิดข้อผิดพลาดในการครอปภาพ");
@@ -95,7 +96,6 @@ export default {
             }
             return new Blob([ab], { type: mimeString });
         },
-
 
         async saveSelectedOption() {
             try {

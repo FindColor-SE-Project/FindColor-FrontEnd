@@ -8,8 +8,8 @@
             </button>
 
             <!-- Image -->
-            <div v-for="image in images" :key="image.filename" class="image-container" :class="getBackgroundColor(selectedSeason)">
-                <img :src="`data:image/jpeg;base64,${croppedImage || image.filepath}`" :alt="image.filename" />
+            <div v-if="croppedImage" class="image-container" :class="getBackgroundColor(selectedSeason)">
+                <img :src="`data:image/jpeg;base64,${croppedImage}`" alt="Cropped Image" />
             </div>
         </div>
 
@@ -63,27 +63,7 @@ export default {
     methods: {
         async selectOption(seasonColorTone) {
             this.selectedSeason = seasonColorTone;
-
-            // ส่งภาพไปยัง API เพื่อทำการครอป
-            if (this.images.length > 0) {
-                const imageToCrop = this.images[0]; // ใช้ภาพแรกในการครอป
-                const formData = new FormData();
-                const blob = this.dataURLtoBlob(`data:image/jpeg;base64,${imageToCrop.filepath}`);
-                formData.append('file', blob, imageToCrop.filename);
-
-                try {
-                    const response = await axios.post('http://localhost:8000/user/crop_image', formData, {
-                        headers: {
-                            'Content-Type': 'multipart/form-data'
-                        }
-                    });
-                    // นำภาพที่ครอปมาแสดง
-                    this.croppedImage = response.data.image; // อัปเดตตัวแปร croppedImage
-                } catch (error) {
-                    console.error("Error cropping image:", error.response);
-                    alert("เกิดข้อผิดพลาดในการครอปภาพ");
-                }
-            }
+            this.cropImage();
         },
 
         dataURLtoBlob(dataURL) {
@@ -116,31 +96,36 @@ export default {
                 this.images = response.data.map(image => ({
                     ...image,
                     id: image.id  // เพิ่ม id ของภาพ เพื่อเชื่อมโยงกับปุ่มลบ
-                }));
+                }));                
+                
+                // Automatically crop the first image on load
+                this.cropImage();
             } catch (error) {
                 console.error(error, "Error, You didn't connect with the database.");
                 this.$router.push({ name: 'DatabaseError' });
             }
         },
 
-        async cropImage() {
-            try {
-                const response = await axios.post('http://localhost:8000/user/crop_image', {
-                    seasonColorTone: this.selectedSeason // ส่งข้อมูลที่จำเป็นไปยัง API
-                });
+        async cropImage() {            
+            // ส่งภาพไปยัง API เพื่อทำการครอป
+            if (this.images.length > 0) {
+                const imageToCrop = this.images[0]; // ใช้ภาพแรกในการครอป
+                const formData = new FormData();
+                const blob = this.dataURLtoBlob(`data:image/jpeg;base64,${imageToCrop.filepath}`);
+                formData.append('file', blob, imageToCrop.filename);
 
-                if (response.data.image) {
-                    // แสดงภาพที่ถูกครอปในที่ที่เหมาะสม
-                    const croppedImageContainer = document.getElementById('croppedImageContainer');
-                    const croppedImage = document.getElementById('croppedImage');
-                    croppedImage.src = 'data:image/jpeg;base64,' + response.data.image;
-                    croppedImageContainer.style.display = 'block';
-                } else {
-                    alert(response.data.message || "เกิดข้อผิดพลาดในการครอปภาพ");
+                try {
+                    const response = await axios.post('http://localhost:8000/user/crop_image', formData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    });
+                    // นำภาพที่ครอปมาแสดง
+                    this.croppedImage = response.data.image; // อัปเดตตัวแปร croppedImage
+                } catch (error) {
+                    console.error("Error cropping image:", error.response);
+                    alert("เกิดข้อผิดพลาดในการครอปภาพ");
                 }
-            } catch (error) {
-                console.error("Error cropping image:", error.response);
-                alert("เกิดข้อผิดพลาดในการครอปภาพ: " + (error.response?.data?.message || error.message));
             }
         },
 
@@ -155,7 +140,7 @@ export default {
                 case 'Winter':
                     return 'background-winter';
                 default:
-                    return '';
+                    return 'background-default';
             }
         },
 
@@ -278,6 +263,10 @@ export default {
   object-fit: cover;
   border-radius: 50%; ทำให้รูปภาพเป็นวงรี
 } */
+
+.background-default {
+    background-color: #666;
+}
 
 .background-spring {
     background-color: #fff;

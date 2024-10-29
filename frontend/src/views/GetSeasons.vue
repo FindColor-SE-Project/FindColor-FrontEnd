@@ -61,40 +61,40 @@ export default {
 
     methods: {
         async selectOption(seasonColorTone) {
-        this.selectedSeason = seasonColorTone;
+            this.selectedSeason = seasonColorTone;
 
-        // ส่งภาพไปยัง API เพื่อทำการครอป
-        if (this.images.length > 0) {
-            const imageToCrop = this.images[0]; // ใช้ภาพแรกในการครอป
-            const formData = new FormData();
-            const blob = this.dataURLtoBlob(`data:image/jpeg;base64,${imageToCrop.filepath}`);
-            formData.append('file', blob, imageToCrop.filename);
+            // ส่งภาพไปยัง API เพื่อทำการครอป
+            if (this.images.length > 0) {
+                const imageToCrop = this.images[0]; // ใช้ภาพแรกในการครอป
+                const formData = new FormData();
+                const blob = this.dataURLtoBlob(`data:image/jpeg;base64,${imageToCrop.filepath}`);
+                formData.append('file', blob, imageToCrop.filename);
 
-            try {
-                const response = await axios.post('http://localhost:8000/user/crop_image', formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                });
-                // นำภาพที่ครอปมาแสดง
-                this.images[0].filepath = response.data.image; // อัปเดตภาพที่ครอปมา
-            } catch (error) {
-                console.error("Error cropping image:", error.response);
-                alert("เกิดข้อผิดพลาดในการครอปภาพ");
+                try {
+                    const response = await axios.post('http://localhost:8000/user/crop_image', formData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    });
+                    // นำภาพที่ครอปมาแสดง
+                    this.images[0].filepath = response.data.image; // อัปเดตภาพที่ครอปมา
+                } catch (error) {
+                    console.error("Error cropping image:", error.response);
+                    alert("เกิดข้อผิดพลาดในการครอปภาพ");
+                }
             }
-        }
-    },
+        },
 
-    dataURLtoBlob(dataURL) {
-        const byteString = atob(dataURL.split(',')[1]);
-        const mimeString = dataURL.split(',')[0].split(':')[1].split(';')[0];
-        const ab = new ArrayBuffer(byteString.length);
-        const ia = new Uint8Array(ab);
-        for (let i = 0; i < byteString.length; i++) {
-            ia[i] = byteString.charCodeAt(i);
-        }
-        return new Blob([ab], { type: mimeString });
-    },
+        dataURLtoBlob(dataURL) {
+            const byteString = atob(dataURL.split(',')[1]);
+            const mimeString = dataURL.split(',')[0].split(':')[1].split(';')[0];
+            const ab = new ArrayBuffer(byteString.length);
+            const ia = new Uint8Array(ab);
+            for (let i = 0; i < byteString.length; i++) {
+                ia[i] = byteString.charCodeAt(i);
+            }
+            return new Blob([ab], { type: mimeString });
+        },
 
 
         async saveSelectedOption() {

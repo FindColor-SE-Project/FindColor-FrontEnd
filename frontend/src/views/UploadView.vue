@@ -43,9 +43,10 @@
             
             <div v-if="isCameraOpen" v-show="!isLoading" class="camera-box" :class="{ 'flash' : isShotPhoto }">
                 <div class="camera-shutter" :class="{'flash' : isShotPhoto}"></div>
-                    <video v-show="!isPhotoTaken" ref="camera" :width="450" :height="337.5" autoplay></video> 
-                    <canvas v-show="isPhotoTaken" id="photoTaken" ref="canvas" :width="450" :height="337.5"></canvas>
+                <video v-show="!isPhotoTaken" ref="camera" width="500" height="600" autoplay></video>
+                <canvas v-show="isPhotoTaken" id="photoTaken" ref="canvas" width="500" height="600"></canvas>
             </div>
+
             
             <div v-if="isCameraOpen && !isLoading" class="camera-shoot">
                 <button type="button" class="button" @click="takePhoto">
@@ -196,8 +197,32 @@ export default{
 
             this.isPhotoTaken = !this.isPhotoTaken;
 
-            const context = this.$refs.canvas.getContext('2d');
-            context.drawImage(this.$refs.camera, 0, 0, 450, 337.5);
+            const videoElement = this.$refs.camera;
+            const canvasElement = this.$refs.canvas;
+            const context = canvasElement.getContext('2d');
+
+            // ตั้งค่าขนาด canvas
+            canvasElement.width = 500;
+            canvasElement.height = 600;
+
+            const videoAspectRatio = videoElement.videoWidth / videoElement.videoHeight;
+            const canvasAspectRatio = canvasElement.width / canvasElement.height;
+
+            let drawWidth, drawHeight, offsetX, offsetY;
+
+            if (videoAspectRatio > canvasAspectRatio) {
+                drawHeight = canvasElement.height;
+                drawWidth = drawHeight * videoAspectRatio;
+                offsetX = (canvasElement.width - drawWidth) / 2; 
+                offsetY = 0;
+            } else {
+                drawWidth = canvasElement.width;
+                drawHeight = drawWidth / videoAspectRatio;
+                offsetX = 0;
+                offsetY = (canvasElement.height - drawHeight) / 2;
+            }
+
+            context.drawImage(videoElement, 0, 0, videoElement.videoWidth, videoElement.videoHeight, offsetX, offsetY, drawWidth, drawHeight);
         },
 
         uploadImage() {
@@ -237,13 +262,15 @@ export default{
                 alert("Upload successful: " + response.data.message);
                 this.isPhotoTaken = false;
                 this.image = []; // Clear image after upload
-                this.$router.push('/seasons');
+                this.$router.push('/seasonColorTone');
             })
             .catch(error => {
                 console.error("There was an error uploading the image!", error);
                 alert("Upload failed: " + (error.response?.data?.message || error.message));
             });
-        }
+        },
+
+        
     }
 }
 </script>
@@ -406,7 +433,6 @@ export default{
 
 .upload__container .close_button {
     font-size: 28px;
-    margin: 15px 0;
     padding: 6px;
     border: solid 1px;
     border-radius: 20px;
@@ -414,5 +440,29 @@ export default{
     display: block;
     color:#fff;
     width: 25%;
+}
+
+.camera-box video, .camera-box canvas {
+    width: 500px;
+    height: 600px;
+    object-fit: cover;
+    display: flex;
+    justify-content: center;
+}
+
+.camera__container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.camera-box {
+    margin-top: 20px; /* ปรับระยะห่างด้านบน */
+}
+
+.camera-shoot {
+    display: flex; /* ทำให้ปุ่มแสดงในรูปแบบฟlex */
+    justify-content: center; /* จัดกลาง */
+    margin-top: 5px; /* เพิ่มระยะห่างจากส่วนอื่นให้มากขึ้น */
 }
 </style>

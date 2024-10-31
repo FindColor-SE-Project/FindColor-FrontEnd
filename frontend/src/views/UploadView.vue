@@ -259,14 +259,14 @@ export default{
                 }
             })
             .then(response => {
-                alert("Upload successful: " + response.data.message);
+                alert("Upload successful");
                 this.isPhotoTaken = false;
                 this.image = []; // Clear image after upload
                 this.$router.push('/seasonColorTone');
             })
             .catch(error => {
                 console.error("There was an error uploading the image!", error);
-                alert("Upload failed: " + (error.response?.data?.message || error.message));
+                alert("Upload failed: Cannot connect the database");
             });
         },
 

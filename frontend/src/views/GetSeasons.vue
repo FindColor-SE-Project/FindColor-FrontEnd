@@ -165,7 +165,6 @@ export default {
 }
 </script>
 
-
 <style scoped>
 .product-container {
     width: 100%;

@@ -56,20 +56,6 @@ export default {
 
     async changeImage() {
       try {
-          // สมมติว่า user_id ที่จะลบคือ 1 (คุณสามารถปรับให้เป็น user_id ที่ต้องการได้)
-          const response = await axios.delete(`http://localhost:8000/user/1`);
-          console.log(response.data.message);
-          
-          // หลังจากลบข้อมูลเสร็จสิ้น กลับไปที่หน้า Upload
-          this.$router.push('/upload');
-      } catch (error) {
-          console.error("Error deleting image:", error.response);
-          alert("เกิดข้อผิดพลาดในการลบข้อมูล");
-      }
-    },
-
-    async changeImage() {
-      try {
         // เรียกใช้ API เพื่อลบข้อมูลทั้งหมด
         const response = await axios.delete(`http://localhost:8000/user`);
         console.log(response.data.message);

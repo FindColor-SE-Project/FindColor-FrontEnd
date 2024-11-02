@@ -1,7 +1,3 @@
-<script setup>
-import { ref } from 'vue'
-</script>
-
 <template>
     <nav class="nav container">
             <router-link class="nav__logo lora-font" :to="{ name: 'home'}"><img class="logo" src="@/assets/logo.png"></router-link>
@@ -14,7 +10,7 @@ import { ref } from 'vue'
                         <router-link class="nav__link josefin-sans-font" :to="{ name: 'brandListView'}">Product</router-link>
                     </li>
                     <li class="nav__item">
-                        <router-link class="nav__link josefin-sans-font" :to="{ name: 'uploadView'}">Get Seasons</router-link>
+                        <router-link class="nav__link josefin-sans-font" :to="{ name: 'uploadView'}" @click="changeNavigate">Get Seasons</router-link>
                     </li>
                 </ul>
             </div>
@@ -30,6 +26,34 @@ import { ref } from 'vue'
             </div>
     </nav>
 </template>
+
+<script>
+import axios from 'axios';
+
+export default {
+    methods: {
+        async changeNavigate() {
+                // ตรวจสอบข้อมูลผู้ใช้ที่มีค่า seasonColorTone ใน database
+                const response = await axios.get('http://localhost:8000/user');
+                
+                if (response.data.length > 0) {
+                    const seasonColorTone = response.data[0].seasonColorTone;
+
+                    // ถ้ามี SeasonColorTone และ รูปภาพ ไปหน้า SeasonLayout
+                    if (seasonColorTone) {
+                        this.$router.push({ name: 'seasonLayout', params: { seasonColorTone } });
+                    } else {
+                        // ถ้ามี รูปภาพ แต่ไม่มี seasonColorTone ไปหน้า uploadView
+                        this.$router.push({ name: 'getseasonsPage' });
+                    }
+                } else {
+                    // ถ้าไม่มีรูปใน Database ไปหน้า UploadView
+                    this.$router.push({ name: 'uploadView' });
+                }
+        }
+    }
+}
+</script>
 
 <style>
 .logo {

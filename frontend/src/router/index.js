@@ -27,7 +27,7 @@ const routes = [
     component: BrandListView  
   },
   {
-    path: '/seasons',
+    path: '/seasonColorTone',
     name: 'getseasonsPage',
     component: GetSeasonsPage,
   },
@@ -70,7 +70,7 @@ const routes = [
     props: true
   },
   {
-    path: '/seasons/:seasonColorTone',
+    path: '/seasonColorTone/:seasonColorTone',
     name: 'seasonLayout',
     component: SeasonLayout,
     props: true,

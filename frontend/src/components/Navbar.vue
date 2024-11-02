@@ -38,7 +38,8 @@ export default {
                 const response = await axios.get('http://localhost:8000/user');
                 
                 if (response.data.length > 0) {
-                    const seasonColorTone = response.data[0].seasonColorTone;
+                    const seasonColorToneResponse = await axios.get('http://localhost:8000/user/seasonColorTone');
+                    const seasonColorTone = seasonColorToneResponse.data.seasonColorTone;
 
                     // ถ้ามี SeasonColorTone และ รูปภาพ ไปหน้า SeasonLayout
                     if (seasonColorTone) {

@@ -49,7 +49,7 @@
 
             
             <div v-if="isCameraOpen && !isLoading" class="camera-shoot">
-                <button type="button" class="button" @click="takePhoto">
+                <button type="button" class="camera-button" @click="takePhoto">
                     <font-awesome-icon :icon="['fas', 'camera']" />                
                 </button>
             </div>
@@ -269,8 +269,6 @@ export default{
                 alert("Upload failed: Cannot connect the database");
             });
         },
-
-        
     }
 }
 </script>
@@ -440,12 +438,17 @@ export default{
     display: block;
     color:#fff;
     width: 25%;
+    display: flex;
+    justify-content: center;
 }
 
 .camera-box video, .camera-box canvas {
     width: 500px;
     height: 600px;
     object-fit: cover;
+}
+
+.camera-box {
     display: flex;
     justify-content: center;
 }
@@ -461,8 +464,15 @@ export default{
 }
 
 .camera-shoot {
-    display: flex; /* ทำให้ปุ่มแสดงในรูปแบบฟlex */
+    display: flex;
     justify-content: center; /* จัดกลาง */
     margin-top: 5px; /* เพิ่มระยะห่างจากส่วนอื่นให้มากขึ้น */
+}
+
+.camera-button {
+    margin-top: 5px;
+    font-size: 40px;
+    padding: 20px;
+    border-radius: 50px;
 }
 </style>

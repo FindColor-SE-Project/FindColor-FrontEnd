@@ -33,6 +33,7 @@ import axios from 'axios';
 export default {
     methods: {
         async changeNavigate() {
+            try{
                 // ตรวจสอบข้อมูลผู้ใช้ที่มีค่า seasonColorTone ใน database
                 const response = await axios.get('http://localhost:8000/user');
                 
@@ -50,6 +51,9 @@ export default {
                     // ถ้าไม่มีรูปใน Database ไปหน้า UploadView
                     this.$router.push({ name: 'uploadView' });
                 }
+            } catch (error) {
+                this.$router.push({ name: 'DatabaseError' });
+            }
         }
     }
 }

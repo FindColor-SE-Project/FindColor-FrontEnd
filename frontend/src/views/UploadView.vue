@@ -12,8 +12,8 @@
 
                     <!-- 2 Take a photo -->
                     <div>
-                        <button class="select_button" role="button" @click="toggleCamera">
-                            <span v-if="!isCameraOpen" class="josefin-sans-font">Take a photo to Upload</span>
+                        <button v-if="!isCameraOpen" class="josefin-sans-font select_button" role="button" @click="toggleCamera">
+                            Take a photo to Upload
                         </button>
                     </div>
 
@@ -292,7 +292,7 @@ export default{
 }
 
 .upload__container .select_button {
-    font-size: 28px;
+    font-size: 30px;
     margin: 15px 0;
     padding: 6px 10px;
     border: black solid 1px;
@@ -307,9 +307,8 @@ export default{
 }
 
 .upload__container .messageDrag {
-    font-size: 24px;
+    font-size: 28px;
     margin: 5px 0;
-
 }
 
 .upload__container .upload__button {
@@ -326,7 +325,7 @@ export default{
 }
 
 .upload__container .upload__button:hover {
-    background: #8ABAD3;
+    background: #E19BBF;
 }
 
 .upload__container .upload__area {
@@ -438,8 +437,13 @@ export default{
     display: block;
     color:#fff;
     width: 25%;
-    display: flex;
-    justify-content: center;
+    margin: 0 auto;
+    display: block;
+    transition: background 0.3s, border 0.3s, color 0.3s;
+}
+
+.upload__container .close_button:hover {
+    background-color: #8B0000;
 }
 
 .camera-box video, .camera-box canvas {
@@ -460,19 +464,28 @@ export default{
 }
 
 .camera-box {
-    margin-top: 20px; /* ปรับระยะห่างด้านบน */
+    margin-top: 10px;
 }
 
 .camera-shoot {
     display: flex;
     justify-content: center; /* จัดกลาง */
-    margin-top: 5px; /* เพิ่มระยะห่างจากส่วนอื่นให้มากขึ้น */
+    margin-top: 5px;
 }
 
 .camera-button {
-    margin-top: 5px;
+    margin-top: 10px;
     font-size: 40px;
-    padding: 20px;
+    padding: 15px;
     border-radius: 50px;
+    background: #fff;
+    border: 2px solid #111;
+    transition: background 0.3s, border 0.3s, color 0.3s;
+}
+
+.camera-button:hover {
+    background: #8ABAD3;
+    border: 2px solid #8ABAD3;
+    color: #fff;
 }
 </style>

@@ -260,12 +260,11 @@ export default{
                 }
             })
             .then(response => {
-                // Use the message from the backend response
                 swal({
                     title: response.data.message || "Upload successful!",
                     icon: "success",
                     buttons: false,
-                    timer: 1000
+                    // timer: 1000
                 });
                 this.isPhotoTaken = false;
                 this.image = []; // Clear image after upload

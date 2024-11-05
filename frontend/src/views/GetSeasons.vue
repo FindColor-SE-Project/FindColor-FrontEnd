@@ -145,17 +145,12 @@ export default {
         },
 
         async changeImage() {
-            try {
-                // เรียกใช้ API เพื่อลบข้อมูลทั้งหมด
-                const response = await axios.delete(`http://localhost:8000/user`);
-                console.log(response.data.message);
+            // เรียกใช้ API เพื่อลบข้อมูลทั้งหมด
+            const response = await axios.delete(`http://localhost:8000/user`);
+            console.log(response.data.message);
                 
-                // หลังจากลบข้อมูลเสร็จสิ้น กลับไปที่หน้า Upload
-                this.$router.push('/upload');
-            } catch (error) {
-                console.error("Error deleting images:", error.response);
-                alert("เกิดข้อผิดพลาดในการลบข้อมูล");
-            }
+            // หลังจากลบข้อมูลเสร็จสิ้น กลับไปที่หน้า Upload
+            this.$router.push('/upload');
         }
     },
 

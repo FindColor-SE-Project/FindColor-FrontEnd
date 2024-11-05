@@ -55,19 +55,22 @@ body {
 .swal-text {
   font-family: "Cardo", serif;
   font-size: 28px;
-  max-width: 450px; /* Set max width to control line wrapping */
-  white-space: pre-wrap; /* Enable text wrapping */
-  word-wrap: break-word; /* Ensure words break if they're too long */
-  text-align: center; /* Center-align text for better readability */
+  max-width: 450px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  text-align: center;
 }
 
-
-.swal-modal {
+.swal-modal{
   width: 40%;
   height: 30%;
 }
 
-.swal-icon {  
-  margin: 35px auto;
+.swal-icon--success__line--tip,.swal-icon--success__ring ,
+.swal-icon--success__line--long {
+  margin: 50px auto;
 }
 
+.swal-icon {
+  margin: 70px auto;
+}

@@ -61,16 +61,14 @@ body {
   text-align: center;
 }
 
-.swal-modal{
+.error-alert {
   width: 40%;
   height: 30%;
+  padding: 25px 0;
 }
 
-.swal-icon--success__line--tip,.swal-icon--success__ring ,
-.swal-icon--success__line--long {
-  margin: 50px auto;
-}
-
-.swal-icon {
-  margin: 70px auto;
+.success-alert {
+  padding: 60px 0;
+  width: 20%;
+  height: 30%;
 }

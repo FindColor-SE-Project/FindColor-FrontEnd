@@ -261,10 +261,11 @@ export default{
             })
             .then(response => {
                 swal({
-                    title: response.data.message || "Upload successful!",
+                    title: "Upload Successful!",
                     icon: "success",
                     buttons: false,
                     // timer: 1000
+                    className: "success-alert"
                 });
                 this.isPhotoTaken = false;
                 this.image = []; // Clear image after upload
@@ -279,7 +280,8 @@ export default{
                     text: errorMessage,
                     icon: "error",
                     buttons: false,
-                    timer: 1200
+                    // timer: 1200
+                    className: "error-alert"
                 });
             });
         }
@@ -501,4 +503,5 @@ export default{
     border: 2px solid #8ABAD3;
     color: #fff;
 }
+
 </style>

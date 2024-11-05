@@ -70,6 +70,7 @@
 
 <script> 
 import axios from 'axios';
+import swal from 'sweetalert';
 
 export default{
     data() {
@@ -259,20 +260,30 @@ export default{
                 }
             })
             .then(response => {
-                alert("Upload successful");
+                swal({
+                    title: "Upload successful!",
+                    icon: "success",
+                    buttons: false,
+                    timer: 1000
+                });
                 this.isPhotoTaken = false;
                 this.image = []; // Clear image after upload
                 this.$router.push('/seasonColorTone');
             })
             .catch(error => {
                 console.error("There was an error uploading the image!", error);
-                alert("Upload failed: Cannot connect the database");
+                swal({
+                    title: "Upload failed",
+                    text: "Cannot connect the database",
+                    icon: "error",
+                    buttons: false,
+                    timer: 1200
+                });
             });
         },
     }
 }
 </script>
-
 
 <style scoped>
 .icon__upload {

@@ -12,9 +12,8 @@ const app = createApp(App)
 
 // Use the router
 app.use(router)
-
+  
 // Import FontAwesomeIcon
 app.component('font-awesome-icon', FontAwesomeIcon)
-
 app.mount('#app')
 

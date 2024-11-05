@@ -46,6 +46,23 @@ body {
   font-style: italic;
 }
 
+.swal-title {
+  font-family: "Cardo", serif;
+  font-weight: bold;
+  font-size: 40px;
+}
 
+.swal-text {
+  font-family: "Cardo", serif;
+  font-size: 28px;
+}
 
+.swal-modal {
+  width: 30%;
+  height: 30%;
+}
+
+.swal-icon {  
+  margin: 35px auto;
+}
 

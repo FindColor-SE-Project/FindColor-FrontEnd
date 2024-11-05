@@ -55,10 +55,15 @@ body {
 .swal-text {
   font-family: "Cardo", serif;
   font-size: 28px;
+  max-width: 450px; /* Set max width to control line wrapping */
+  white-space: pre-wrap; /* Enable text wrapping */
+  word-wrap: break-word; /* Ensure words break if they're too long */
+  text-align: center; /* Center-align text for better readability */
 }
 
+
 .swal-modal {
-  width: 30%;
+  width: 40%;
   height: 30%;
 }
 

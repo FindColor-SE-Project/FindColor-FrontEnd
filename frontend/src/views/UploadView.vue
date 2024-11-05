@@ -260,8 +260,9 @@ export default{
                 }
             })
             .then(response => {
+                // Use the message from the backend response
                 swal({
-                    title: "Upload successful!",
+                    title: response.data.message || "Upload successful!",
                     icon: "success",
                     buttons: false,
                     timer: 1000
@@ -271,16 +272,18 @@ export default{
                 this.$router.push('/seasonColorTone');
             })
             .catch(error => {
-                console.error("There was an error uploading the image!", error);
+                // Use the error message from the backend if available
+                const errorMessage = error.response?.data?.message || "Cannot connect the database";
+                console.error(errorMessage, error);
                 swal({
                     title: "Upload failed",
-                    text: "Cannot connect the database",
+                    text: errorMessage,
                     icon: "error",
                     buttons: false,
                     timer: 1200
                 });
             });
-        },
+        }
     }
 }
 </script>

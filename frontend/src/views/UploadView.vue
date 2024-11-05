@@ -264,10 +264,12 @@ export default{
                     title: "Upload Successful!",
                     icon: "success",
                     buttons: false,
-                    // timer: 1000
+                    timer: 1000,
                     className: "success-alert"
                 });
                 this.isPhotoTaken = false;
+                this.isCameraOpen = false;
+                this.stopCameraStream();
                 this.image = []; // Clear image after upload
                 this.$router.push('/seasonColorTone');
             })
@@ -280,7 +282,7 @@ export default{
                     text: errorMessage,
                     icon: "error",
                     buttons: false,
-                    // timer: 1200
+                    timer: 1200,
                     className: "error-alert"
                 });
             });

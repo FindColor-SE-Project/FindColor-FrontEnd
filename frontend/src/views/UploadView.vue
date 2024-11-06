@@ -267,9 +267,14 @@ export default{
                     timer: 1000,
                     className: "success-alert"
                 });
-                this.isPhotoTaken = false;
-                this.isCameraOpen = false;
-                this.stopCameraStream();
+
+                // If user select upload by take a photo
+                if (this.isCameraOpen) {
+                    this.isPhotoTaken = false;
+                    this.isCameraOpen = false;
+                    this.stopCameraStream();
+                }
+
                 this.image = []; // Clear image after upload
                 this.$router.push('/seasonColorTone');
             })

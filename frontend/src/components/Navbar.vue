@@ -42,11 +42,12 @@ export default {
                     const seasonColorTone = seasonColorToneResponse.data.seasonColorTone;
 
                     // ถ้ามี SeasonColorTone และ รูปภาพ ไปหน้า SeasonLayout
-                    if (seasonColorTone) {
-                        this.$router.push({ name: 'seasonLayout', params: { seasonColorTone } });
+                    if (seasonColorTone == 'None') {
+                        this.$router.push({ name: 'getseasonsPage' });
                     } else {
                         // ถ้ามี รูปภาพ แต่ไม่มี seasonColorTone ไปหน้า uploadView
-                        this.$router.push({ name: 'getseasonsPage' });
+                        this.$router.push({ name: 'seasonLayout', params: { seasonColorTone } });
+
                     }
                 } else {
                     // ถ้าไม่มีรูปใน Database ไปหน้า UploadView

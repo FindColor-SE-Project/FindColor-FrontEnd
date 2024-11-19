@@ -9,6 +9,7 @@
       <div v-for="image in images" :key="image.filename">
         <img :src="`data:image/jpeg;base64,${image.filepath}`" :alt="image.filename" />
       </div>
+      <div v-if="testMessage" class="test-message">{{ testMessage }}</div>
     </div>
 
     <div class="season-right">
@@ -32,7 +33,8 @@ export default {
   data() {
     return {
       seasonColorTone: null,
-      images: []
+      images: [],
+      testMessage: ""
     };
   },
   
@@ -66,12 +68,22 @@ export default {
         console.error("Error deleting images:", error.response);
         alert("เกิดข้อผิดพลาดในการลบข้อมูล");
       }
+    },
+
+    async fetchTestMessage() {
+      try {
+        const response = await axios.post('http://localhost:8000/link_test');
+        this.testMessage = response.data.message; // Assign message to testMessage
+      } catch (error) {
+        console.error("Error fetching test message:", error);
+      }
     }
   },
   
   mounted() {
     this.setDefaultChild();
     this.displayImage();
+    this.fetchTestMessage();
   }
 }
 </script>

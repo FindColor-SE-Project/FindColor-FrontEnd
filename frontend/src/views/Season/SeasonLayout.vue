@@ -1,6 +1,7 @@
 <template>
   <div class="product-container">
     <div class="season-left">
+      <SeasonBlush @color-clicked="handleColorClick" />
       <!-- Left -->
       <button class="change-button josefin-sans-font" @click="changeImage(images.id)">
         <font-awesome-icon :icon="['fas', 'trash']" /> Change Image
@@ -9,7 +10,8 @@
       <div v-for="image in images" :key="image.filename">
         <img :src="`data:image/jpeg;base64,${image.filepath}`" :alt="image.filename" />
       </div>
-      <div v-if="testMessage" class="test-message">{{ testMessage }}</div>
+
+      <div v-if="showTestMessage" class="test-message">{{ testMessage }}</div>
     </div>
 
     <div class="season-right">
@@ -28,13 +30,19 @@
 <script>
 import { useRoute } from 'vue-router';
 import axios from 'axios';
+import SeasonBlush from '@/views/Season/SeasonBlush.vue';
 
 export default {
+  components: {
+    SeasonBlush,
+  },
+  
   data() {
     return {
       seasonColorTone: null,
       images: [],
-      testMessage: ""
+      testMessage: "abc",
+      showTestMessage: false
     };
   },
   
@@ -45,13 +53,25 @@ export default {
       this.$router.replace({ name: 'seasonLips', params: { seasonColorTone: this.seasonColorTone } });
     },
 
+    async handleColorClick(displayValue) {
+      console.log('Received color-clicked event with:', displayValue);
+      this.showTestMessage = displayValue; // Ensure this is set for displaying the message
+
+      // // Fetch message from the backend when a color is clicked
+      // try {
+      //   const response = await axios.post('http://localhost:8000/link_test');
+      //   this.testMessage = response.data.message; // Update with backend response
+      // } catch (error) {
+      //   console.error("Error fetching test message:", error);
+      // }
+    },
+
     async displayImage() {
       try {
         const response = await axios.get('http://localhost:8000/user');
-        console.log(response.data);  // Log ข้อมูลที่ได้มาเพื่อตรวจสอบ
         this.images = response.data;
       } catch (error) {
-        console.error(error, "Error, You didn't connect with the database.");
+        console.error(error, "Error, You didn't connect with the database.", error);
         this.$router.push({ name: 'DatabaseError' });
       }
     },
@@ -68,22 +88,12 @@ export default {
         console.error("Error deleting images:", error.response);
         alert("เกิดข้อผิดพลาดในการลบข้อมูล");
       }
-    },
-
-    async fetchTestMessage() {
-      try {
-        const response = await axios.post('http://localhost:8000/link_test');
-        this.testMessage = response.data.message; // Assign message to testMessage
-      } catch (error) {
-        console.error("Error fetching test message:", error);
-      }
     }
   },
   
   mounted() {
     this.setDefaultChild();
     this.displayImage();
-    this.fetchTestMessage();
   }
 }
 </script>

@@ -3,8 +3,12 @@
     <div class="color-group-container">
       <div v-for="([productName, colorGroups], index) in groupedByProduct" :key="index" class="color-group">
         <div v-for="(colors, subIndex) in colorGroups" :key="subIndex" class="color-subgroup">
-          <span v-for="(color, colorIndex) in colors" :key="colorIndex" :style="{ background: color }" 
-            @click="showProductCard(productName, color)" class="color-circle"
+          <span 
+            v-for="(color, colorIndex) in colors" 
+            :key="colorIndex" 
+            :style="{ background: color }"
+            @click="emitColorClick(productName, color)" 
+            class="color-circle"
             :class="{ selected: isSelectedColor(color) }">
           </span>
         </div>
@@ -35,7 +39,8 @@ export default {
       displayProduct: null,
       similarProducts: [],
       displayProductColor: null,
-      colorTone: null
+      colorTone: null,
+      loading: true
     };
   },
   computed: {
@@ -74,8 +79,10 @@ export default {
         );
 
         console.log('Display product:', this.displayProduct);
+        this.loading = false;
       } catch (error) {
         console.error('Error fetching data:', error);
+        this.loading = false;
       }
     },
 
@@ -90,19 +97,36 @@ export default {
       return [];
     },
 
-    showProductCard(productName, color) {
+    // showProductCard(productName, color) {
+    //   if (this.displayProduct && this.displayProduct.productName === productName && this.displayProductColor === color) {
+    //     this.displayProduct = null;
+    //     this.displayProductColor = null;  // Clear the selected color if it was already selected
+    //   } else {
+    //     this.displayProduct = this.products.find(product => product.productName === productName);
+    //     this.displayProductColor = color; // Set the selected color
+    //   }
+    //   console.log('Display product:', this.displayProduct);
+    // },
+
+    emitColorClick(productName, color) {
       if (this.displayProduct && this.displayProduct.productName === productName && this.displayProductColor === color) {
         this.displayProduct = null;
-        this.displayProductColor = null;
+        this.displayProductColor = null;  // Clear the selected color if it was already selected
+        this.$emit('color-clicked', false);
+        console.log('Emitted color-clicked with:', false);
       } else {
         this.displayProduct = this.products.find(product => product.productName === productName);
-        this.displayProductColor = color;
+        this.displayProductColor = color; // Set the selected color
+        this.$emit('color-clicked', true);
+        console.log('Emitted color-clicked with:', true);
       }
-      console.log('Display product:', this.displayProduct);
+
+      // this.$emit('color-clicked', color);  // Emit color-clicked event with color
+      // this.showProductCard(productName, color);  // Track the selected color
     },
 
     isSelectedColor(color) {
-      return this.displayProductColor === color;
+      return this.displayProductColor === color;  // Check if the color is selected
     }
   },
 

@@ -7,7 +7,7 @@
             v-for="(color, colorIndex) in colors" 
             :key="colorIndex" 
             :style="{ background: color }"
-            @click="emitColorClick(productName, color)" 
+            @click="handleColorClick(productName, color)" 
             class="color-circle"
             :class="{ selected: isSelectedColor(color) }">
           </span>
@@ -25,10 +25,13 @@
 
 <script>
 import ProductCard from '@/components/ProductCard.vue';
+import SelectColorLogic from "@/components/SelectColorLogic.vue";
 import { useRoute } from 'vue-router';
 import axios from 'axios';
 
 export default {
+  props: ["colors"],
+  
   components: {
     ProductCard,
   },
@@ -97,32 +100,17 @@ export default {
       return [];
     },
 
-    // showProductCard(productName, color) {
-    //   if (this.displayProduct && this.displayProduct.productName === productName && this.displayProductColor === color) {
-    //     this.displayProduct = null;
-    //     this.displayProductColor = null;  // Clear the selected color if it was already selected
-    //   } else {
-    //     this.displayProduct = this.products.find(product => product.productName === productName);
-    //     this.displayProductColor = color; // Set the selected color
-    //   }
-    //   console.log('Display product:', this.displayProduct);
-    // },
-
-    emitColorClick(productName, color) {
+    handleColorClick(productName, color) {
       if (this.displayProduct && this.displayProduct.productName === productName && this.displayProductColor === color) {
         this.displayProduct = null;
-        this.displayProductColor = null;  // Clear the selected color if it was already selected
         this.$emit('color-clicked', false);
-        console.log('Emitted color-clicked with:', false);
+        console.log("click f check");
       } else {
         this.displayProduct = this.products.find(product => product.productName === productName);
         this.displayProductColor = color; // Set the selected color
         this.$emit('color-clicked', true);
-        console.log('Emitted color-clicked with:', true);
+        console.log("click t check");
       }
-
-      // this.$emit('color-clicked', color);  // Emit color-clicked event with color
-      // this.showProductCard(productName, color);  // Track the selected color
     },
 
     isSelectedColor(color) {

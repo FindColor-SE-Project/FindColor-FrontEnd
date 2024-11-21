@@ -14,6 +14,7 @@ import SeasonBlush from '@/views/Season/SeasonBlush.vue';
 import SeasonEyeshadow from '@/views/Season/SeasonEyeshadow.vue';
 import DatabaseError from '@/components/DatabaseError.vue';
 import UploadView from '@/views/UploadView.vue';
+import SelectColorLogic from '@/components/SelectColorLogic.vue';
 
 const routes = [
   {
@@ -95,6 +96,12 @@ const routes = [
         path: 'eyeshadow',
         name: 'seasonEyeshadow',
         component: SeasonEyeshadow,
+        props: true
+      },
+      {
+        path: 'colorLogic',
+        name: 'selectColorLogic',
+        component: SelectColorLogic,
         props: true
       }
     ]

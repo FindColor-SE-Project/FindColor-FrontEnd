@@ -1,7 +1,7 @@
 <template>
   <div class="product-container">
     <div class="season-left">
-      <SeasonBlush @color-clicked="handleColorClick" />
+      <SelectColorLogic @color-clicked="handleColorClick" />
       <!-- Left -->
       <button class="change-button josefin-sans-font" @click="changeImage(images.id)">
         <font-awesome-icon :icon="['fas', 'trash']" /> Change Image
@@ -30,11 +30,12 @@
 <script>
 import { useRoute } from 'vue-router';
 import axios from 'axios';
-import SeasonBlush from '@/views/Season/SeasonBlush.vue';
+// import SeasonBlush from '@/views/Season/SeasonBlush.vue';
+import SelectColorLogic from '@/components/SelectColorLogic.vue';
 
 export default {
   components: {
-    SeasonBlush,
+    SelectColorLogic
   },
   
   data() {
@@ -53,9 +54,9 @@ export default {
       this.$router.replace({ name: 'seasonLips', params: { seasonColorTone: this.seasonColorTone } });
     },
 
-    async handleColorClick(displayValue) {
-      console.log('Received color-clicked event with:', displayValue);
-      this.showTestMessage = displayValue; // Ensure this is set for displaying the message
+    async handleColorClick(selectColor) {
+      console.log("layout check");
+      this.showTestMessage = true; // Ensure this is set for displaying the message
 
       // // Fetch message from the backend when a color is clicked
       // try {

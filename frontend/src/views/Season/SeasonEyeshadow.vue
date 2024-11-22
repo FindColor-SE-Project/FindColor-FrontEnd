@@ -3,9 +3,13 @@
     <div class="color-group-container">
       <div v-for="([productName, colorGroups], index) in groupedByProduct" :key="index" class="color-group">
         <div v-for="(colors, subIndex) in colorGroups" :key="subIndex" class="color-subgroup">
-          <span v-for="(color, colorIndex) in colors" :key="colorIndex" :style="{ background: color }" 
-            @click="showProductCard(productName, color)" class="color-circle"
-            :class="{ selected: isSelectedColor(color) }" >
+          <span 
+            v-for="(color, colorIndex) in colors" 
+            :key="colorIndex" 
+            :style="{ background: color }"
+            @click="handleColorClick(productName, color)" 
+            class="color-circle"
+            :class="{ selected: isSelectedColor(color) }">
           </span>
         </div>
         <!-- vertical line -->
@@ -21,12 +25,16 @@
 
 <script>
 import ProductCard from '@/components/ProductCard.vue';
+import SelectColorLogic from "@/components/SelectColorLogic.vue";
 import { useRoute } from 'vue-router';
 import axios from 'axios';
 
 export default {
+  props: ["colors"],
+  
   components: {
     ProductCard,
+    SelectColorLogic
   },
 
   data() {
@@ -91,17 +99,17 @@ export default {
       return [];
     },
 
-    showProductCard(productName, color) {
-      if (this.displayProduct && this.displayProduct.productName === productName && this.displayProductColor === color) {
-        this.displayProduct = null;
-        this.displayProductColor = null;
-      } else {
-        this.displayProduct = this.products.find(product => product.productName === productName);
-        this.displayProductColor = color;
-      }
-      console.log('Display product:', this.displayProduct);
-    },
+    handleColorClick(productName, color) {
+    const isSameProduct = this.displayProduct?.productName === productName;
+    this.displayProduct = isSameProduct && this.displayProductColor === color ? null :
+                          this.products.find(product => product.productName === productName);
+    this.displayProductColor = isSameProduct ? null : color;
 
+    // Emit the 'color-clicked' event to SeasonLayout.vue
+    this.$emit('color-clicked', Boolean(this.displayProduct));
+    console.log("Color click detected in SeasonBlush.vue");
+    },
+    
     isSelectedColor(color) {
       return this.displayProductColor === color;
     }

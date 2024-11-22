@@ -34,6 +34,7 @@ export default {
   
   components: {
     ProductCard,
+    SelectColorLogic
   },
 
   data() {
@@ -101,20 +102,18 @@ export default {
     },
 
     handleColorClick(productName, color) {
-      if (this.displayProduct && this.displayProduct.productName === productName && this.displayProductColor === color) {
-        this.displayProduct = null;
-        this.$emit('color-clicked', false);
-        console.log("click f check");
-      } else {
-        this.displayProduct = this.products.find(product => product.productName === productName);
-        this.displayProductColor = color; // Set the selected color
-        this.$emit('color-clicked', true);
-        console.log("click t check");
-      }
-    },
+    const isSameProduct = this.displayProduct?.productName === productName;
+    this.displayProduct = isSameProduct && this.displayProductColor === color ? null :
+                          this.products.find(product => product.productName === productName);
+    this.displayProductColor = isSameProduct ? null : color;
+
+    // Emit the 'color-clicked' event to SeasonLayout.vue
+    this.$emit('color-clicked', Boolean(this.displayProduct));
+    console.log("Color click detected in SeasonBlush.vue");
+  },
 
     isSelectedColor(color) {
-      return this.displayProductColor === color;  // Check if the color is selected
+      return this.displayProductColor === color;
     }
   },
 

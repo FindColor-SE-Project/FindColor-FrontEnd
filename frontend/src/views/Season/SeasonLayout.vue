@@ -1,7 +1,7 @@
 <template>
   <div class="product-container">
     <div class="season-left">
-      <SelectColorLogic @color-clicked="handleColorClick" />
+      <SelectColorLogic @color-clicked="handleClick" />
       <!-- Left -->
       <button class="change-button josefin-sans-font" @click="changeImage(images.id)">
         <font-awesome-icon :icon="['fas', 'trash']" /> Change Image
@@ -18,11 +18,15 @@
       <h2 class="cardo-regular">Your season color tone is</h2>
       <h1 class="cardo-regular">{{ seasonColorTone }}</h1>
       <div class="season-category">
-        <router-link class="josefin-sans-font season-layout" :to="{ name: 'seasonLips' }" active-class="active">Lips</router-link>
-        <router-link class="josefin-sans-font season-layout" :to="{ name: 'seasonBlush' }" active-class="active">Blush</router-link>
-        <router-link class="josefin-sans-font season-layout" :to="{ name: 'seasonEyeshadow' }" active-class="active">Eyeshadow</router-link>
+        <router-link
+          v-for="category in categories"
+          :key="category.name"
+          class="josefin-sans-font season-layout"
+          :to="{ name: category.route }"
+          active-class="active"
+        >{{ category.name }}</router-link>
       </div>
-      <router-view></router-view>
+      <router-view @color-clicked="handleClick"></router-view> <!-- Listen here -->
     </div>
   </div>
 </template>
@@ -43,7 +47,12 @@ export default {
       seasonColorTone: null,
       images: [],
       testMessage: "abc",
-      showTestMessage: false
+      showTestMessage: false,
+      categories: [
+      { name: "Lips", route: "seasonLips" },
+      { name: "Blush", route: "seasonBlush" },
+      { name: "Eyeshadow", route: "seasonEyeshadow" }
+    ]
     };
   },
   
@@ -54,9 +63,9 @@ export default {
       this.$router.replace({ name: 'seasonLips', params: { seasonColorTone: this.seasonColorTone } });
     },
 
-    async handleColorClick(selectColor) {
+    async handleClick(selectColor) {
       console.log("layout check");
-      this.showTestMessage = true; // Ensure this is set for displaying the message
+      this.showTestMessage = selectColor; // Ensure this is set for displaying the message
 
       // // Fetch message from the backend when a color is clicked
       // try {

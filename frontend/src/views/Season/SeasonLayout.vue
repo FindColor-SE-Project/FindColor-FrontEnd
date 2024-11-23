@@ -26,7 +26,7 @@
           active-class="active"
         >{{ category.name }}</router-link>
       </div>
-      <router-view @color-clicked="handleClick"></router-view> <!-- Listen here -->
+      <router-view @color-clicked="updateDisplayedImage"></router-view> <!-- Listen here -->
     </div>
   </div>
 </template>
@@ -67,19 +67,20 @@ export default {
       console.log("layout check");
       this.showTestMessage = selectColor; // Ensure this is set for displaying the message
 
-      // // Fetch message from the backend when a color is clicked
-      // try {
-      //   const response = await axios.post('http://localhost:8000/link_test');
-      //   this.testMessage = response.data.message; // Update with backend response
-      // } catch (error) {
-      //   console.error("Error fetching test message:", error);
-      // }
+      // Fetch message from the backend when a color is clicked
+      try {
+        const response = await axios.post('http://localhost:8000/link_test');
+        this.testMessage = response.data.message; // Update with backend response
+      } catch (error) {
+        console.error("Error fetching test message:", error);
+      }
     },
 
     async displayImage() {
       try {
         const response = await axios.get('http://localhost:8000/user');
         this.images = response.data;
+        console.log("the image name: ", this.images);
       } catch (error) {
         console.error(error, "Error, You didn't connect with the database.", error);
         this.$router.push({ name: 'DatabaseError' });
@@ -98,6 +99,9 @@ export default {
         console.error("Error deleting images:", error.response);
         alert("เกิดข้อผิดพลาดในการลบข้อมูล");
       }
+    },
+    updateDisplayedImage(newImage) {
+      this.images[0].filepath = newImage;  // Assuming the first image should be updated
     }
   },
   

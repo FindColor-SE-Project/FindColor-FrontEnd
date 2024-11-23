@@ -43,8 +43,9 @@ export default {
       displayProduct: null,
       similarProducts: [],
       displayProductColor: null,
-      colorTone: null,
-      loading: true
+      seasonColorTone: null,
+      loading: true,
+      image: []
     };
   },
   computed: {
@@ -101,19 +102,63 @@ export default {
       return [];
     },
 
-    handleColorClick(productName, color) {
-    const isSameProduct = this.displayProduct?.productName === productName;
-    this.displayProduct = isSameProduct && this.displayProductColor === color ? null :
-                          this.products.find(product => product.productName === productName);
-    this.displayProductColor = isSameProduct ? null : color;
+    async handleColorClick(productName, color) {
+      const isSameProduct = this.displayProduct?.productName === productName;
+      this.displayProduct = isSameProduct && this.displayProductColor === color ? null :
+                            this.products.find(product => product.productName === productName);
+      this.displayProductColor = isSameProduct ? null : color;
 
-    // Emit the 'color-clicked' event to SeasonLayout.vue
-    this.$emit('color-clicked', Boolean(this.displayProduct));
-    console.log("Color click detected in SeasonBlush.vue");
-  },
+      if (this.images.length > 0 && color) {
+        const [r, g, b] = color.match(/\d+/g).map(Number);
+        let base64Image = this.images[0].filepath;
+
+        // Add padding if the Base64 string length is not a multiple of 4
+        const padding = '='.repeat((4 - (base64Image.length % 4)) % 4);
+        base64Image += padding;
+
+        console.log("Sending data to backend:", {
+          r,
+          g,
+          b,
+          image: base64Image
+        });
+
+        try {
+          const response = await axios.post('http://localhost:8000/apply-blush', {
+            r,
+            g,
+            b,
+            image: base64Image
+          });
+          
+          this.$emit('update-image', response.data.image);
+        } catch (error) {
+          console.error("Error applying blush color:", error);
+        }
+      }
+    },
 
     isSelectedColor(color) {
       return this.displayProductColor === color;
+    },
+
+    async getImage() {
+      try {
+        // Fetch images, consistent with SeasonLayout.vue
+        const response = await axios.get('http://localhost:8000/user');
+        this.images = response.data;
+
+        // Assuming the first image should be used for the blush application
+        if (this.images.length > 0 && this.images[0].filepath) {
+          this.image = this.images[0].filepath;
+          console.log("Image fetched and set:", this.image);
+        } else {
+          console.error("No valid image found in response data");
+        }
+      } catch (error) {
+        console.error("Error, You didn't connect with the database.", error);
+        this.$router.push({ name: 'DatabaseError' });
+      }
     }
   },
 
@@ -121,6 +166,7 @@ export default {
     const route = useRoute();
     this.seasonColorTone = route.params.seasonColorTone;
     this.fetchData();
+    this.getImage();
   }
 };
 </script>

@@ -116,12 +116,12 @@ export default {
         const padding = '='.repeat((4 - (base64Image.length % 4)) % 4);
         base64Image += padding;
 
-        console.log("Sending data to backend:", {
-          r,
-          g,
-          b,
-          image: base64Image
-        });
+        // console.log("Sending data to backend:", {
+        //   r,
+        //   g,
+        //   b,
+        //   image: base64Image
+        // });
 
         try {
           const response = await axios.post('http://localhost:8000/apply-blush', {
@@ -131,7 +131,8 @@ export default {
             image: base64Image
           });
           
-          this.$emit('update-image', response.data.image);
+          console.log("Received updated image from backend:", response.data.image);
+          this.$emit('color-clicked', response.data.image);
         } catch (error) {
           console.error("Error applying blush color:", error);
         }

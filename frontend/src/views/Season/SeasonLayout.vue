@@ -1,7 +1,7 @@
 <template>
   <div class="product-container">
     <div class="season-left">
-      <SelectColorLogic @color-clicked="handleClick" />
+      <!-- <SelectColorLogic @color-clicked="handleClick" /> -->
       <!-- Left -->
       <button class="change-button josefin-sans-font" @click="changeImage(images.id)">
         <font-awesome-icon :icon="['fas', 'trash']" /> Change Image
@@ -101,6 +101,7 @@ export default {
       }
     },
     updateDisplayedImage(newImage) {
+      console.log(newImage);
       this.images[0].filepath = newImage;  // Assuming the first image should be updated
     }
   },

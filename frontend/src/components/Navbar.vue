@@ -41,11 +41,11 @@ export default {
                     const seasonColorToneResponse = await axios.get('http://localhost:8000/user/seasonColorTone');
                     const seasonColorTone = seasonColorToneResponse.data.seasonColorTone;
 
-                    // ถ้ามี SeasonColorTone และ รูปภาพ ไปหน้า SeasonLayout
+                    // ถ้ามี SeasonColorTone และ รูปภาพ ไปหน้า GetSeason
                     if (seasonColorTone == 'None') {
-                        this.$router.push({ name: 'getseasonsPage' });
+                        this.$router.push({ name: 'seasonSelectorPage' });
                     } else {
-                        // ถ้ามี รูปภาพ แต่ไม่มี seasonColorTone ไปหน้า uploadView
+                        // ถ้ามี รูปภาพ แต่ไม่มี seasonColorTone ไปหน้า SeasonLayout
                         this.$router.push({ name: 'seasonLayout', params: { seasonColorTone } });
 
                     }

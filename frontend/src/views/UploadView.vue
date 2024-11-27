@@ -239,21 +239,20 @@ export default{
                     }
 
                     fileToUpload = blob;
-                    this.uploadFromDevice(fileToUpload);
+                    this.uploadFromDevice(fileToUpload, 'image.jpeg');
                 }, 'image/jpeg');
             } else if (this.image.length > 0) {
                 // ถ้าผู้ใช้เลือกไฟล์จากอุปกรณ์ ใช้ข้อมูลจาก image array
                 fileToUpload = this.image[0].file;
-                this.uploadFromDevice(fileToUpload);
+                this.uploadFromDevice(fileToUpload, fileToUpload.name); 
             } else {
                 alert('No file selected');
             }
         },
 
-        uploadFromDevice(file) {
+        uploadFromDevice(file, filename) {
             const formData = new FormData();
-            formData.append('file', file, 'image.jpeg');
-
+            formData.append('file', file, filename);
             axios.post('http://localhost:8000/user', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'

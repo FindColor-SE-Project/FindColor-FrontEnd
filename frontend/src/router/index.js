@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Homepage from '@/views/Home.vue';
 import BrandListView from '@/views/BrandListView.vue';
-import GetSeasonsPage from '@/views/GetSeasons.vue';
+import SeasonSelectorPage from '@/views/SeasonSelector.vue';
 import ProductListView from '@/views/Category/ProductListView.vue';
 import LipsView from '@/views/Category/LipsView.vue';
 import EyeshadowView from '@/views/Category/EyeshadowView.vue';
@@ -28,8 +28,8 @@ const routes = [
   },
   {
     path: '/seasonColorTone',
-    name: 'getseasonsPage',
-    component: GetSeasonsPage,
+    name: 'seasonSelectorPage',
+    component: SeasonSelectorPage,
   },
   {
     path: '/brands/:brandName',

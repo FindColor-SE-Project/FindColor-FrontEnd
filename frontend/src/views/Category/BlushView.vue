@@ -1,7 +1,7 @@
 <template>
     <div class="product-list">
-        <ProductCard v-for="product in filteredCategory" :key="product.productID" :product="product" />
-        <div v-if="filteredCategory.length === 0" class="error-page cardo-regular">Sorry, {{ brandName }} didn't have this product category</div>
+        <ProductCard v-for="product in filteredBrandAndProductCategory" :key="product.productID" :product="product" />
+        <div v-if="filteredBrandAndProductCategory.length === 0" class="error-page cardo-regular">Sorry, {{ brandName }} didn't have this product category</div>
     </div>
 </template>
 
@@ -23,7 +23,7 @@ export default {
   },
 
   computed: {
-    filteredCategory() {
+    filteredBrandAndProductCategory() {
       return this.products.filter(product => product.brandName === this.brandName && product.productCategory === 'Blush')
     }
   },

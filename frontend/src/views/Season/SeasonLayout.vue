@@ -55,17 +55,34 @@ export default {
     },
 
     async changeImage() {
-      try {
-        // เรียกใช้ API เพื่อลบข้อมูลทั้งหมด
-        const response = await axios.delete(`http://localhost:8000/user`);
-        console.log(response.data.message);
-                
-        // หลังจากลบข้อมูลเสร็จสิ้น กลับไปที่หน้า Upload
-        this.$router.push('/upload');
-      } catch (error) {
-        console.error("Error deleting images:", error.response);
-        alert("เกิดข้อผิดพลาดในการลบข้อมูล");
-      }
+      swal({
+        title: "Are you sure?",
+        text: "Once deleted, you cannot recover this image!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      }).then(async (willDelete) => {
+        if (willDelete) {
+          try {
+            // เรียกใช้ API เพื่อลบข้อมูลทั้งหมด
+            const response = await axios.delete(`http://localhost:8000/user`);
+            console.log(response.data.message);
+
+            // แสดง Noti ว่าลบสำเร็จ
+            swal("Deleted!", "Your image has been deleted.", "success");
+
+            // หลังจากลบข้อมูลเสร็จสิ้น กลับไปที่หน้า Upload
+            this.$router.push('/upload');
+          } catch (error) {
+            // หากเกิดข้อผิดพลาด แสดงข้อความเตือน
+            console.error(error);
+            swal("Error", "Failed to delete the image. Please try again.", "error");
+          }
+        } else {
+          // แสดงข้อความเมื่อผู้ใช้ยกเลิกการลบ
+          swal("Cancelled", "Your image is safe!", "info");
+          }
+      });
     }
   },
   

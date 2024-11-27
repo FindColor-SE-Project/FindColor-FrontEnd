@@ -3,9 +3,13 @@
     <div class="color-group-container">
       <div v-for="([productName, colorGroups], index) in groupedByProduct" :key="index" class="color-group">
         <div v-for="(colors, subIndex) in colorGroups" :key="subIndex" class="color-subgroup">
-          <span v-for="(color, colorIndex) in colors" :key="colorIndex" :style="{ background: color }" 
-            @click="showProductCard(productName, color)" class="color-circle"
-            :class="{ selected: isSelectedColor(color) }" >
+          <span 
+            v-for="(color, colorIndex) in colors" 
+            :key="colorIndex" 
+            :style="{ background: color }"
+            @click="handleColorClick(productName, color)" 
+            class="color-circle"
+            :class="{ selected: isSelectedColor(color) }">
           </span>
         </div>
         <!-- vertical line -->
@@ -21,12 +25,16 @@
 
 <script>
 import ProductCard from '@/components/ProductCard.vue';
+import SelectColorLogic from "@/components/SelectColorLogic.vue";
 import { useRoute } from 'vue-router';
 import axios from 'axios';
 
 export default {
+  props: ["colors"],
+  
   components: {
     ProductCard,
+    SelectColorLogic
   },
 
   data() {
@@ -35,7 +43,8 @@ export default {
       displayProduct: null,
       similarProducts: [],
       displayProductColor: null,
-      seasonColorTone: null
+      seasonColorTone: null,
+      image: []
     };
   },
   computed: {
@@ -91,17 +100,62 @@ export default {
       return [];
     },
 
-    showProductCard(productName, color) {
-      if (this.displayProduct && this.displayProduct.productName === productName && this.displayProductColor === color) {
-        this.displayProduct = null;
-        this.displayProductColor = null;
-      } else {
-        this.displayProduct = this.products.find(product => product.productName === productName);
-        this.displayProductColor = color;
+    async handleColorClick(productName, color) {
+    const isSameProduct = this.displayProduct?.productName === productName;
+    this.displayProduct = isSameProduct && this.displayProductColor === color ? null :
+                          this.products.find(product => product.productName === productName);
+    this.displayProductColor = isSameProduct ? null : color;
+
+    if (this.images.length > 0 && color) {
+        const [r, g, b] = color.match(/\d+/g).map(Number);
+        let base64Image = this.images[0].filepath;
+
+        // Add padding if the Base64 string length is not a multiple of 4
+        const padding = '='.repeat((4 - (base64Image.length % 4)) % 4);
+        base64Image += padding;
+
+        // console.log("Sending data to backend:", {
+        //   r,
+        //   g,
+        //   b,
+        //   image: base64Image
+        // });
+
+        try {
+          const response = await axios.post('http://localhost:8000/apply-eyeshadow', {
+            r,
+            g,
+            b,
+            image: base64Image
+          });
+          
+          console.log("Received updated image from backend:", response.data.image);
+          this.$emit('color-clicked', response.data.image);
+        } catch (error) {
+          console.error("Error applying blush color:", error);
+        }
       }
-      console.log('Display product:', this.displayProduct);
     },
 
+    async getImage() {
+        try {
+          // Fetch images, consistent with SeasonLayout.vue
+          const response = await axios.get('http://localhost:8000/user');
+          this.images = response.data;
+
+            // Assuming the first image should be used for the blush application
+          if (this.images.length > 0 && this.images[0].filepath) {
+            this.image = this.images[0].filepath;
+            console.log("Image fetched and set:", this.image);
+          } else {
+            console.error("No valid image found in response data");
+          }
+        } catch (error) {
+          console.error("Error, You didn't connect with the database.", error);
+          this.$router.push({ name: 'DatabaseError' });
+        }
+    },
+    
     isSelectedColor(color) {
       return this.displayProductColor === color;
     }
@@ -112,6 +166,7 @@ export default {
     const route = useRoute();
     this.seasonColorTone = route.params.seasonColorTone;
     this.fetchData();
+    this.getImage();
   }
 };
 </script>

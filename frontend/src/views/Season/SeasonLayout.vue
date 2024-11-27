@@ -1,6 +1,7 @@
 <template>
   <div class="product-container">
     <div class="season-left">
+      <!-- <SelectColorLogic @color-clicked="handleClick" /> -->
       <!-- Left -->
       <button class="change-button josefin-sans-font" @click="changeImage(images.id)">
         <font-awesome-icon :icon="['fas', 'trash']" /> Change Image
@@ -9,17 +10,23 @@
       <div v-for="image in images" :key="image.filename">
         <img :src="`data:image/jpeg;base64,${image.filepath}`" :alt="image.filename" />
       </div>
+
+      <div v-if="showTestMessage" class="test-message">{{ testMessage }}</div>
     </div>
 
     <div class="season-right">
       <h2 class="cardo-regular">Your season color tone is</h2>
       <h1 class="cardo-regular">{{ seasonColorTone }}</h1>
       <div class="season-category">
-        <router-link class="josefin-sans-font season-layout" :to="{ name: 'seasonLips' }" active-class="active">Lips</router-link>
-        <router-link class="josefin-sans-font season-layout" :to="{ name: 'seasonBlush' }" active-class="active">Blush</router-link>
-        <router-link class="josefin-sans-font season-layout" :to="{ name: 'seasonEyeshadow' }" active-class="active">Eyeshadow</router-link>
+        <router-link
+          v-for="category in categories"
+          :key="category.name"
+          class="josefin-sans-font season-layout"
+          :to="{ name: category.route }"
+          active-class="active"
+        >{{ category.name }}</router-link>
       </div>
-      <router-view></router-view>
+      <router-view @color-clicked="updateDisplayedImage"></router-view> <!-- Listen here -->
     </div>
   </div>
 </template>
@@ -27,12 +34,25 @@
 <script>
 import { useRoute } from 'vue-router';
 import axios from 'axios';
+// import SeasonBlush from '@/views/Season/SeasonBlush.vue';
+import SelectColorLogic from '@/components/SelectColorLogic.vue';
 
 export default {
+  components: {
+    SelectColorLogic
+  },
+  
   data() {
     return {
       seasonColorTone: null,
-      images: []
+      images: [],
+      testMessage: "abc",
+      showTestMessage: false,
+      categories: [
+      { name: "Lips", route: "seasonLips" },
+      { name: "Blush", route: "seasonBlush" },
+      { name: "Eyeshadow", route: "seasonEyeshadow" }
+    ]
     };
   },
   
@@ -43,13 +63,26 @@ export default {
       this.$router.replace({ name: 'seasonLips', params: { seasonColorTone: this.seasonColorTone } });
     },
 
+    async handleClick(selectColor) {
+      console.log("layout check");
+      this.showTestMessage = selectColor; // Ensure this is set for displaying the message
+
+      // Fetch message from the backend when a color is clicked
+      try {
+        const response = await axios.post('http://localhost:8000/link_test');
+        this.testMessage = response.data.message; // Update with backend response
+      } catch (error) {
+        console.error("Error fetching test message:", error);
+      }
+    },
+
     async displayImage() {
       try {
         const response = await axios.get('http://localhost:8000/user');
-        console.log(response.data);  // Log ข้อมูลที่ได้มาเพื่อตรวจสอบ
         this.images = response.data;
+        console.log("the image name: ", this.images);
       } catch (error) {
-        console.error(error, "Error, You didn't connect with the database.");
+        console.error(error, "Error, You didn't connect with the database.", error);
         this.$router.push({ name: 'DatabaseError' });
       }
     },

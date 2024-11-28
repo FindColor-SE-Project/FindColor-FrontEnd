@@ -11,7 +11,7 @@
       </label>
       <div class="color_select">
         <span
-          v-for="(product, index) in collectionProductsWithGradients"
+          v-for="(product, index) in productCollectionWithGradients"
           :key="index"
           :style="{ background: product.gradient, borderColor: isSelectedProduct(product) ? 'black' : 'transparent' }"
           class="color-circle"
@@ -59,7 +59,7 @@ export default {
       displayProduct.value = product;
     };
 
-    const collectionProducts = computed(() => {
+    const productCollection = computed(() => {
       if (displayProduct.value) {
         const collectionName = extractCollectionName(displayProduct.value.productName);
         return products.value.filter(product =>
@@ -83,8 +83,8 @@ export default {
       }
     });
 
-    const collectionProductsWithGradients = computed(() => {
-      return collectionProducts.value.map(product => ({
+    const productCollectionWithGradients = computed(() => {
+      return productCollection.value.map(product => ({
         ...product,
         gradient: createGradient(extractColors(product.colorShade))
       }));
@@ -127,7 +127,7 @@ export default {
     return {
       products,
       displayProduct,
-      collectionProductsWithGradients,
+      productCollectionWithGradients,
       seasonColorLabel,
       updateDisplayProduct,
       isSelectedProduct

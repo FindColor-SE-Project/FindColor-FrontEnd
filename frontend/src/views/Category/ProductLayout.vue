@@ -12,13 +12,13 @@
 </template>
 
 <script>
-import ProductCard from '@/components/ProductCard.vue';
+import ProductPreview from '@/components/ProductPreview.vue';
 // import axios from 'axios';
 import { useRoute } from 'vue-router'
 
 export default {
   components: {
-    ProductCard
+    ProductPreview
   },
 
   data() {

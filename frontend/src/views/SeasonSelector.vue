@@ -8,7 +8,7 @@
             </button>
 
             <!-- Image -->
-            <div v-if="croppedImage" class="image-container" :class="getBackgroundColor(selectedSeason)">
+            <div v-if="croppedImage" class="image-container" :class="getBackgroundColor(selectedSeasonColorTone)">
                 <img :src="`data:image/jpeg;base64,${croppedImage}`" alt="Cropped Image" />
             </div>
         </div>
@@ -16,21 +16,21 @@
         <!-- Right -->
         <div class="season-right">
             <div class="card button-group">
-                <button class="cardo-regular" v-for="option in options" :key="option.seasonColorTone"
-                    :class="{ 'active': option.seasonColorTone === selectedSeason }" @click="selectOption(option.seasonColorTone)">
-                    {{ option.name }}
+                <button class="cardo-regular" v-for="seasonColorToneOption in seasonColorToneOptions" :key="seasonColorToneOption.seasonColorTone"
+                    :class="{ 'active': seasonColorToneOption.seasonColorTone === selectedSeasonColorTone }" @click="selectSeasonColorToneOption(seasonColorToneOption.seasonColorTone)">
+                    {{ seasonColorToneOption.name }}
                 </button>
             </div>
-            <div v-if="selectedOption" class="detail cardo-regular">
-                <h2 class="cardo-regular">{{ selectedOption.name }}</h2>
-                <p class="cardo-regular">{{ selectedOption.detail }}</p>
+            <div v-if="selectedSeasonColorToneOption" class="detail cardo-regular">
+                <h2 class="cardo-regular">{{ selectedSeasonColorToneOption.name }}</h2>
+                <p class="cardo-regular">{{ selectedSeasonColorToneOption.description }}</p>
             </div>
             <div v-else class="detail">
                 <h2 class="cardo-regular">Select a season color tone</h2>
                 <p class="cardo-regular">No season selected</p>
             </div>
-            <router-link v-if="selectedOption" :to="{ name: 'seasonLayout', params: { seasonColorTone: selectedOption.seasonColorTone } }">
-                <button class="next-button josefin-sans-font" @click="saveSelectedOption">Next</button>
+            <router-link v-if="selectedSeasonColorToneOption" :to="{ name: 'seasonLayout', params: { seasonColorTone: selectedSeasonColorToneOption.seasonColorTone } }">
+                <button class="next-button josefin-sans-font" @click="saveSelectedSeasonColorToneOption">Next</button>
             </router-link>
         </div>
     </div>
@@ -42,27 +42,27 @@ import axios from 'axios';
 export default {
     data() {
         return {
-            selectedSeason: null,
+            selectedSeasonColorTone: null,
             croppedImage: null, // ตัวแปรเพื่อเก็บภาพที่ถูกครอบ
-            options: [
-                { name: 'Spring', seasonColorTone: 'Spring', detail: 'The makeup tone is Coral, Orange, Milk Tea, Peach-Pink, Salmon-Pink, Salmon, Coral-Pink, and Peach' },
-                { name: 'Summer', seasonColorTone: 'Summer', detail: 'The makeup tone is Pink Nude, Rosy, Pink, Lilac, Medium Pink, Light Rose, Light Pink, and Lavender' },
-                { name: 'Autumn', seasonColorTone: 'Autumn', detail: 'The makeup tone is Orange-Red, Dark Peach, Red, Brown, Red Brick, Brick Orange, Tomato, and Brown Brick' },
-                { name: 'Winter', seasonColorTone: 'Winter', detail: 'The makeup tone is Dark Pink, Burgundy, Berry, True Red, Deep Plum, Fuchsia, Magenta, and Hot Pink' },
+            seasonColorToneOptions: [
+                { name: 'Spring', seasonColorTone: 'Spring', description: 'The makeup tone is Coral, Orange, Milk Tea, Peach-Pink, Salmon-Pink, Salmon, Coral-Pink, and Peach' },
+                { name: 'Summer', seasonColorTone: 'Summer', description: 'The makeup tone is Pink Nude, Rosy, Pink, Lilac, Medium Pink, Light Rose, Light Pink, and Lavender' },
+                { name: 'Autumn', seasonColorTone: 'Autumn', description: 'The makeup tone is Orange-Red, Dark Peach, Red, Brown, Red Brick, Brick Orange, Tomato, and Brown Brick' },
+                { name: 'Winter', seasonColorTone: 'Winter', description: 'The makeup tone is Dark Pink, Burgundy, Berry, True Red, Deep Plum, Fuchsia, Magenta, and Hot Pink' },
             ],
             images: [],
         };
     },
 
     computed: {
-        selectedOption() {
-            return this.options.find(option => option.seasonColorTone === this.selectedSeason) || null;
+        selectedSeasonColorToneOption() {
+            return this.seasonColorToneOptions.find(option => option.seasonColorTone === this.selectedSeasonColorTone) || null;
         }
     },
 
     methods: {
-        async selectOption(seasonColorTone) {
-            this.selectedSeason = seasonColorTone;
+        async selectSeasonColorToneOption(seasonColorTone) {
+            this.selectedSeasonColorTone = seasonColorTone;
         },
 
         dataURLtoBlob(dataURL) {
@@ -76,7 +76,7 @@ export default {
             return new Blob([ab], { type: mimeString });
         },
 
-        async saveSelectedOption() {
+        async saveSelectedSeasonColorToneOption() {
             try {
                 const response = await axios.post('http://localhost:8000/user/seasonColorTone', {
                     seasonColorTone: this.selectedSeason

@@ -17,14 +17,14 @@
       </div>
     </div>
     <div class="product-card-container" v-if="displayProduct">
-      <ProductCard :product="displayProduct" />
+      <ProductPreview :product="displayProduct" />
     </div>
   </div>
   <div v-else class="for-error cardo-regular">Sorry, No color shades available</div>
 </template>
 
 <script>
-import ProductCard from '@/components/ProductCard.vue';
+import ProductPreview from '@/components/ProductPreview.vue';
 import SelectColorLogic from "@/components/SelectColorLogic.vue";
 import { useRoute } from 'vue-router';
 import axios from 'axios';
@@ -33,7 +33,7 @@ export default {
   props: ["colors"],
   
   components: {
-    ProductCard,
+    ProductPreview,
     SelectColorLogic
   },
 
@@ -103,12 +103,12 @@ export default {
     },
 
     async handleColorClick(productName, color) {
-    const isSameProduct = this.displayProduct?.productName === productName;
-    this.displayProduct = isSameProduct && this.displayProductColor === color ? null :
-                          this.products.find(product => product.productName === productName);
-    this.displayProductColor = isSameProduct ? null : color;
+      const isSameProduct = this.displayProduct?.productName === productName;
+      this.displayProduct = isSameProduct && this.displayProductColor === color ? null : 
+          this.products.find(product => product.productName === productName);
+      this.displayProductColor = isSameProduct ? null : color;
 
-    if (this.images.length > 0 && color) {
+      if (this.images.length > 0 && color) {
         const [r, g, b] = color.match(/\d+/g).map(Number);
         let base64Image = this.images[0].filepath;
 
@@ -130,7 +130,7 @@ export default {
             b,
             image: base64Image
           });
-          
+            
           console.log("Received updated image from backend:", response.data.image);
           this.$emit('color-clicked', response.data.image);
         } catch (error) {
@@ -162,8 +162,6 @@ export default {
       return this.displayProductColor === color;
     }
   },
-
-  
 
   mounted() {
     const route = useRoute();

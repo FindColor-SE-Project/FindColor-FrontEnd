@@ -17,14 +17,14 @@
       </div>
     </div>
     <div class="product-card-container" v-if="displayProduct">
-      <ProductCard :product="displayProduct" />
+      <ProductPreview :product="displayProduct" />
     </div>
   </div>
   <div v-else class="for-error cardo-regular">Sorry, No color shades available</div>
 </template>
 
 <script>
-import ProductCard from '@/components/ProductCard.vue';
+import ProductPreview from '@/components/ProductPreview.vue';
 import SelectColorLogic from "@/components/SelectColorLogic.vue";
 import { useRoute } from 'vue-router';
 import axios from 'axios';
@@ -33,7 +33,7 @@ export default {
   props: ["colors"],
   
   components: {
-    ProductCard,
+    ProductPreview,
     SelectColorLogic
   },
 

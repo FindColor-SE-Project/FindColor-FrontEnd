@@ -1,18 +1,18 @@
 <template>
   <div class="product-list">
-    <ProductCard v-for="product in filteredProducts" :key="product.productID" :product="product" />
+    <ProductPreview v-for="product in filteredProducts" :key="product.productID" :product="product" />
   </div>
 </template>
 
 <script>
-import ProductCard from '@/components/ProductCard.vue';
+import ProductPreview from '@/components/ProductPreview.vue';
 import axios from 'axios';
 import { useRoute, useRouter } from 'vue-router'
 
 
 export default {
   components: {
-    ProductCard
+    ProductPreview
   },
  
   data() {

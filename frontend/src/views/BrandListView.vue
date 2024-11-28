@@ -2,19 +2,19 @@
   <div>
     <h1 class="card-title cardo-regular">Brands</h1>
     <div class="card-container">
-      <BrandCard v-for="product in limitedProducts" :key="product.productID" :product="product" />  
+      <BrandPreview v-for="product in limitedProducts" :key="product.productID" :product="product" />  
     </div>
   </div>
 </template>
 
 <script>
-import BrandCard from '@/components/BrandCard.vue';
+import BrandPreview from '@/components/BrandPreview.vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 
 export default {
   components: {
-    BrandCard
+    BrandPreview
   },
 
   data() {

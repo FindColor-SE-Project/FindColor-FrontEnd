@@ -1,19 +1,19 @@
 <template>
   <div class="product-list">
-    <ProductCard v-for="product in filteredBrandAndProductCategory" :key="product.productID" :product="product" />
+    <ProductPreview v-for="product in filteredBrandAndProductCategory" :key="product.productID" :product="product" />
     <div v-if="filteredBrandAndProductCategory.length === 0" class="error-page cardo-regular">Sorry, {{ brandName }} didn't have this product category</div>
   </div>
 
 </template>
 
 <script>
-import ProductCard from '@/components/ProductCard.vue';
+import ProductPreview from '@/components/ProductPreview.vue';
 import axios from 'axios';
 import { useRoute } from 'vue-router'
 
 export default {
   components: {
-    ProductCard
+    ProductPreview
   },
 
   data() {

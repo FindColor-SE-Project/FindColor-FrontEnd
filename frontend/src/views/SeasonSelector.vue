@@ -3,8 +3,8 @@
         <!-- Left -->
         <div class="season-left">
             <!-- Button -->
-            <button class="change-button josefin-sans-font" @click="changeImage(images.id)">
-                <font-awesome-icon :icon="['fas', 'trash']" /> Change Image
+            <button class="change-button josefin-sans-font" @click="removeImage(images.id)">
+                <font-awesome-icon :icon="['fas', 'trash']" /> Remove Image
             </button>
 
             <!-- Image -->
@@ -110,7 +110,7 @@ export default {
             if (this.images.length > 0) {
                 const imageToCrop = this.images[0]; // ใช้ภาพแรกในการครอป
                 const formData = new FormData();
-                const blob = this.dataURLtoBlob(`data:image/jpeg;base64,${imageToCrop.filepath}`);
+                const blob = this.dataURLtoBlob(`data:image/jpeg;base64,${imageToCrop.image_data}`);
                 formData.append('file', blob, imageToCrop.filename);
 
                 try {
@@ -143,7 +143,7 @@ export default {
             }
         },
 
-        async changeImage() {
+        async removeImage() {
             swal({
                 title: "Are you sure?",
                 text: "Once deleted, you will not be able to recover this image!",

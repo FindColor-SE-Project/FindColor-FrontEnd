@@ -3,8 +3,8 @@
     <div class="season-left">
       <!-- <SelectColorLogic @color-clicked="handleClick" /> -->
       <!-- Left -->
-      <button class="change-button josefin-sans-font" @click="changeImage(images.id)">
-        <font-awesome-icon :icon="['fas', 'trash']" /> Change Image
+      <button class="change-button josefin-sans-font" @click="removeImage(images.id)">
+        <font-awesome-icon :icon="['fas', 'trash']" /> Remove Image
       </button>
 
       <div v-for="image in images" :key="image.filename">
@@ -87,7 +87,7 @@ export default {
       }
     },
 
-    async changeImage() {
+    async removeImage() {
       swal({
         title: "Are you sure?",
         text: "Once deleted, you cannot recover this image!",

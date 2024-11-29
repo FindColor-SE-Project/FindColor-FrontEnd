@@ -8,7 +8,7 @@
       </button>
 
       <div v-for="image in images" :key="image.filename">
-        <img :src="`data:image/jpeg;base64,${image.filepath}`" :alt="image.filename" />
+        <img :src="`data:image/jpeg;base64,${image.image_data}`" :alt="image.filename" />
       </div>
 
       <div v-if="showTestMessage" class="test-message">{{ testMessage }}</div>
@@ -87,6 +87,15 @@ export default {
       }
     },
 
+    async fetchSeasonColorTone() {
+      try {
+        const response = await axios.get('http://localhost:8000/user/seasonColorTone');
+        this.seasonColorTone = response.data.seasonColorTone;
+      } catch (error) {
+        console.error("Error fetching season color tone:", error);
+      }
+    },
+
     async removeImage() {
       swal({
         title: "Are you sure?",
@@ -122,6 +131,7 @@ export default {
   mounted() {
     this.setDefaultChild();
     this.displayImage();
+    this.fetchSeasonColorTone();
   }
 }
 </script>

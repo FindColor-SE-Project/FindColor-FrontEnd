@@ -79,7 +79,7 @@ export default {
         async saveSelectedSeasonColorToneOption() {
             try {
                 const response = await axios.post('http://localhost:8000/user/seasonColorTone', {
-                    seasonColorTone: this.selectedSeason
+                    seasonColorTone: this.selectedSeasonColorTone
                 });
                 console.log(response.data.message);
             } catch (error) {

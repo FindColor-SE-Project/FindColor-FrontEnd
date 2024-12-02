@@ -64,6 +64,7 @@ export default {
     methods: {
         async selectSeasonColorToneOption(seasonColorTone) {
             this.selectedSeasonColorTone = seasonColorTone;
+            console.log("Season Color Tone: " + seasonColorTone);
         },
 
         dataURLtoBlob(dataURL) {

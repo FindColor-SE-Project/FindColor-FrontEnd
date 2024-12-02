@@ -76,7 +76,7 @@ export default {
       }
     },
 
-    async displayImage() {
+    async fetchImage() {
       try {
         const response = await axios.get('http://localhost:8000/user');
         this.images = response.data;
@@ -130,7 +130,7 @@ export default {
   
   mounted() {
     this.setDefaultChild();
-    this.displayImage();
+    this.fetchImage();
     this.fetchSeasonColorTone();
   }
 }

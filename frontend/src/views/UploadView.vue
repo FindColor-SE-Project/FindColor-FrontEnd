@@ -234,7 +234,7 @@ export default{
                     }
 
                     fileToUpload = blob;
-                    this.uploadFromDevice(fileToUpload, 'image.jpeg');
+                    this.uploadToDatabase(fileToUpload, 'image.jpeg');
                 }, 'image/jpeg');
             } else if (this.image.length > 0) {
                 // ถ้าผู้ใช้เลือกไฟล์จากอุปกรณ์ ใช้ข้อมูลจาก image array

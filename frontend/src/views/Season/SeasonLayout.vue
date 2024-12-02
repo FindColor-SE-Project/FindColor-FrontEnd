@@ -90,6 +90,7 @@ export default {
     async fetchSeasonColorTone() {
       try {
         const response = await axios.get('http://localhost:8000/user/seasonColorTone');
+        // console.log("Fetched seasonColorTone:", response.data);
         this.seasonColorTone = response.data.seasonColorTone;
       } catch (error) {
         console.error("Error fetching season color tone:", error);
@@ -108,10 +109,9 @@ export default {
           try {
             // เรียกใช้ API เพื่อลบข้อมูลทั้งหมด
             const response = await axios.delete(`http://localhost:8000/user`);
-            console.log(response.data.message);
 
             // แสดง Noti ว่าลบสำเร็จ
-            swal("Deleted!", "Your image has been deleted.", "success");
+            swal("Deleted!", response.data.message, "success");
 
             // หลังจากลบข้อมูลเสร็จสิ้น กลับไปที่หน้า Upload
             this.$router.push('/upload');

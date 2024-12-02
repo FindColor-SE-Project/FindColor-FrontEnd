@@ -8,7 +8,7 @@
             </button>
 
             <!-- Image -->
-            <div v-if="croppedImage" class="image-container" :class="getBackgroundColor(selectedSeasonColorTone)">
+            <div v-if="croppedImage" class="image-container" :class="changeBackgroundColor(selectedSeasonColorTone)">
                 <img :src="`data:image/jpeg;base64,${croppedImage}`" alt="Cropped Image" />
             </div>
         </div>
@@ -21,7 +21,8 @@
                     {{ seasonColorToneOption.name }}
                 </button>
             </div>
-            <div v-if="selectedSeasonColorToneOption" class="detail cardo-regular">
+            <div v-if="selectedSeasonColorToneOption" class="detail cardo-regular" :class="['detail', selectedSeasonColorTone?.toLowerCase()]">
+                <span :class="['season', selectedSeasonColorTone?.toLowerCase()]"></span>
                 <h2 class="cardo-regular">{{ selectedSeasonColorToneOption.name }}</h2>
                 <p class="cardo-regular">{{ selectedSeasonColorToneOption.description }}</p>
             </div>
@@ -88,7 +89,7 @@ export default {
             }
         },
 
-        async displayImage() {
+        async fetchImage() {
             try {
                 const response = await axios.get('http://localhost:8000/user');
                 console.log(response.data);  // Log ข้อมูลที่ได้มาเพื่อตรวจสอบ
@@ -128,7 +129,7 @@ export default {
             }
         },
 
-        getBackgroundColor(season) {
+        changeBackgroundColor(season) {
             switch (season) {
                 case 'Spring':
                     return 'background-spring'; // เปลี่ยนสีพื้นหลัง
@@ -146,37 +147,36 @@ export default {
         async removeImage() {
             swal({
                 title: "Are you sure?",
-                text: "Once deleted, you will not be able to recover this image!",
+                text: "Once deleted, you cannot recover this image!",
                 icon: "warning",
                 buttons: true,
                 dangerMode: true,
             }).then(async (willDelete) => {
                 if (willDelete) {
-                    try {
-                        // เรียกใช้ API เพื่อลบข้อมูลทั้งหมด
-                        const response = await axios.delete(`http://localhost:8000/user`);
-                        console.log(response.data.message);
+                try {
+                    // เรียกใช้ API เพื่อลบข้อมูลทั้งหมด
+                    const response = await axios.delete(`http://localhost:8000/user`);
 
-                        // แสดง Noti ว่าลบสำเร็จ
-                        swal("Deleted!", "Your image has been deleted.", "success");
+                    // แสดง Noti ว่าลบสำเร็จ
+                    swal("Deleted!", response.data.message, "success");
 
-                        // หลังจากลบข้อมูลเสร็จสิ้น กลับไปที่หน้า Upload
-                        this.$router.push('/upload');
-                    } catch (error) {
-                        // หากเกิดข้อผิดพลาด แสดงข้อความเตือน
-                        console.error(error);
-                        swal("Error", "Failed to delete the image. Please try again.", "error");
-                    }
+                    // หลังจากลบข้อมูลเสร็จสิ้น กลับไปที่หน้า Upload
+                    this.$router.push('/upload');
+                } catch (error) {
+                    // หากเกิดข้อผิดพลาด แสดงข้อความเตือน
+                    console.error(error);
+                    swal("Error", "Failed to delete the image. Please try again.", "error");
+                }
                 } else {
-                    // แสดงข้อความเมื่อผู้ใช้ยกเลิกการลบ
-                    swal("Cancelled", "Your image is safe!", "info");
+                // แสดงข้อความเมื่อผู้ใช้ยกเลิกการลบ
+                swal("Cancelled", "Your image is safe!", "info");
                 }
             });
         }
     },
 
     mounted() {
-        this.displayImage();
+        this.fetchImage();
     }
 }
 </script>
@@ -204,7 +204,10 @@ export default {
 
 .detail {
     text-align: center;
-    width: 50%;
+    width: 45%;
+    border-radius: 4px;
+    margin-top: 20px;
+    padding: 10px;
 }
 
 .detail h2 {
@@ -360,4 +363,25 @@ export default {
   background-color: #2E2E2E;
   border: 1px solid #2E2E2E;
 }
+
+.season {
+    border: none;
+}
+
+.season.spring::after {
+  content: url("https://img.icons8.com/color/96/spring.png"); /* Spring */
+}
+
+.season.summer::after {
+  content: url("https://img.icons8.com/color/96/summer--v1.png"); /* Summer */
+}
+
+.season.autumn::after {
+  content: url("https://img.icons8.com/color/96/autumn.png"); /* Autumn */
+}
+
+.season.winter::after {
+  content: url("https://img.icons8.com/color/96/winter--v1.png"); /* Winter */
+}
+
 </style>

@@ -94,11 +94,6 @@ export default{
         onImageSelect(event) {
             const file = event.target.files[0]; // Get Only One Image
             if (!file || file.type.split("/")[0] != "image") return; // Verify that it is an image file
-            
-            // Delete Image File
-            if (this.image.length > 0) {
-                this.image.splice(0, 1);
-            }
 
             this.image.push({
                 name: file.name,
@@ -244,13 +239,13 @@ export default{
             } else if (this.image.length > 0) {
                 // ถ้าผู้ใช้เลือกไฟล์จากอุปกรณ์ ใช้ข้อมูลจาก image array
                 fileToUpload = this.image[0].file;
-                this.uploadFromDevice(fileToUpload, fileToUpload.name); 
+                this.uploadToDatabase(fileToUpload, fileToUpload.name); 
             } else {
                 alert('No file selected');
             }
         },
 
-        uploadFromDevice(file, filename) {
+        uploadToDatabase(file, filename) {
             const formData = new FormData();
             formData.append('file', file, filename);
             axios.post('http://localhost:8000/user', formData, {

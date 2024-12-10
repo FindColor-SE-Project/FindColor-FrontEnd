@@ -7,7 +7,7 @@
         <font-awesome-icon :icon="['fas', 'trash']" /> Remove Image
       </button>
 
-      <div :key="image.filename">
+      <div v-if="image">
         <img :src="`data:image/jpeg;base64,${image.image_data}`" :alt="image.filename" />
       </div>
 

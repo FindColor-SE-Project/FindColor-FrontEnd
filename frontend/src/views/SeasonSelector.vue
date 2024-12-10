@@ -3,7 +3,7 @@
         <!-- Left -->
         <div class="season-left">
             <!-- Button -->
-            <button class="change-button josefin-sans-font" @click="removeImage(images.id)">
+            <button class="change-button josefin-sans-font" @click="removeImage(image)">
                 <font-awesome-icon :icon="['fas', 'trash']" /> Remove Image
             </button>
 
@@ -41,7 +41,7 @@
 import axios from 'axios';
 
 export default {
-    data() {
+        data() {
         return {
             selectedSeasonColorTone: null,
             croppedImage: null, // ตัวแปรเพื่อเก็บภาพที่ถูกครอบ
@@ -51,7 +51,7 @@ export default {
                 { name: 'Autumn', seasonColorTone: 'Autumn', description: 'The makeup tone is Orange-Red, Dark Peach, Red, Brown, Red Brick, Brick Orange, Tomato, and Brown Brick' },
                 { name: 'Winter', seasonColorTone: 'Winter', description: 'The makeup tone is Dark Pink, Burgundy, Berry, True Red, Deep Plum, Fuchsia, Magenta, and Hot Pink' },
             ],
-            images: [],
+            image: null,
         };
     },
 
@@ -93,27 +93,24 @@ export default {
         async fetchImage() {
             try {
                 const response = await axios.get('http://localhost:8000/user');
-                console.log(response.data);  // Log ข้อมูลที่ได้มาเพื่อตรวจสอบ
-                this.images = response.data.map(image => ({
-                    ...image,
-                    id: image.id  // เพิ่ม id ของภาพ เพื่อเชื่อมโยงกับปุ่มลบ
-                }));                
-                
-                // Automatically crop the first image on load
-                this.cropImage();
+                console.log(response.data); // Log ข้อมูลที่ได้มาเพื่อตรวจสอบ
+
+                // เก็บภาพเดียวลงในตัวแปร
+                if (response.data.length > 0) {
+                    this.image = response.data[0]; // ใช้ภาพแรก
+                    this.cropImage(); // ครอปภาพเมื่อโหลดเสร็จ
+                }
             } catch (error) {
                 console.error(error, "Error, You didn't connect with the database.");
                 this.$router.push({ name: 'DatabaseError' });
             }
         },
 
-        async cropImage() {            
-            // ส่งภาพไปยัง API เพื่อทำการครอป
-            if (this.images.length > 0) {
-                const imageToCrop = this.images[0]; // ใช้ภาพแรกในการครอป
+        async cropImage() {
+            if (this.image) {
                 const formData = new FormData();
-                const blob = this.dataURLtoBlob(`data:image/jpeg;base64,${imageToCrop.image_data}`);
-                formData.append('file', blob, imageToCrop.filename);
+                const blob = this.dataURLtoBlob(`data:image/jpeg;base64,${this.image.image_data}`);
+                formData.append('file', blob, this.image.filename);
 
                 try {
                     const response = await axios.post('http://localhost:8000/user/crop_image', formData, {
@@ -121,7 +118,6 @@ export default {
                             'Content-Type': 'multipart/form-data'
                         }
                     });
-                    // นำภาพที่ครอปมาแสดง
                     this.croppedImage = response.data.image; // อัปเดตตัวแปร croppedImage
                 } catch (error) {
                     console.error("Error cropping image:", error.response);

@@ -3,11 +3,11 @@
     <div class="season-left">
       <!-- <SelectColorLogic @color-clicked="handleClick" /> -->
       <!-- Left -->
-      <button class="change-button josefin-sans-font" @click="removeImage(images.id)">
+      <button class="change-button josefin-sans-font" @click="removeImage(image)">
         <font-awesome-icon :icon="['fas', 'trash']" /> Remove Image
       </button>
 
-      <div v-for="image in images" :key="image.filename">
+      <div :key="image.filename">
         <img :src="`data:image/jpeg;base64,${image.image_data}`" :alt="image.filename" />
       </div>
 
@@ -45,7 +45,7 @@ export default {
   data() {
     return {
       seasonColorTone: null,
-      images: [],
+      image: null,
       testMessage: "abc",
       showTestMessage: false,
       categories: [
@@ -79,8 +79,8 @@ export default {
     async fetchImage() {
       try {
         const response = await axios.get('http://localhost:8000/user');
-        this.images = response.data;
-        console.log("the image name: ", this.images);
+        this.image = response.data[0];
+        console.log("the image name: ", this.image);
       } catch (error) {
         console.error(error, "Error, You didn't connect with the database.", error);
         this.$router.push({ name: 'DatabaseError' });

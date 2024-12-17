@@ -1,6 +1,22 @@
 <template>
-  <div class="product-list">
-    <ProductPreview v-for="product in filteredProducts" :key="product.productID" :product="product" />
+  <div>
+    <h1 class="card-title cardo-regular">{{ brandName }}</h1>
+    <div class="category-select">
+      <button class="josefin-sans-font category-selected" 
+        v-bind:class="{active: currentProductCategory === 'All' }" v-on:click="setProductCategory('All')">All</button>
+      <button class="josefin-sans-font category-selected" 
+        v-bind:class="{active: currentProductCategory === 'Lips' }" v-on:click="setProductCategory('Lips')">Lips</button>
+      <button class="josefin-sans-font category-selected"
+        v-bind:class="{active: currentProductCategory === 'Blush' }" v-on:click="setProductCategory('Blush')">Blush</button>
+      <button class="josefin-sans-font category-selected"
+        v-bind:class="{active: currentProductCategory === 'Eyeshadow' }" v-on:click="setProductCategory('Eyeshadow')">Eyeshadow</button>
+    </div>
+    <div class="product-list">
+      <ProductPreview v-for="product in filteredProducts()" :key="product.productID" :product="product" />
+      <div v-if="filteredProducts().length === 0" class="error-page cardo-regular">
+        Sorry, {{ brandName }} didn't have any {{ currentProductCategory }} products
+      </div>
+    </div>
   </div>
 </template>
 
@@ -18,18 +34,8 @@ export default {
   data() {
     return {
       products: [],
-      brandName: null
-    }
-  },
-
-  computed: {
-    filteredProducts() {
-      try {
-        return this.products.filter(product => product.brandName === this.brandName);
-      } catch (error) {
-        console.error('Error filtering products:', error);
-        return [];
-      }
+      brandName: null,
+      currentProductCategory: 'All'
     }
   },
 
@@ -40,9 +46,26 @@ export default {
         const response = await axios.get('http://localhost:8000/data');
         this.products = response.data;
       } catch (error) {
-        console.error(error, "Error, You didn't connect with the database.");
+        // console.error(error, "Error, You didn't connect with the database.");
         router.push({ name: 'DatabaseError' });
       }
+    },
+
+    filteredProducts() {
+      try {
+        return this.products.filter(product => {
+          const brand = product.brandName === this.brandName;
+          const allProductCategory = this.currentProductCategory === 'All' || product.productCategory === this.currentProductCategory;
+          return brand && allProductCategory;
+        });
+      } catch (error) {
+        console.error('Error filtering products:', error);
+        return [];
+      }
+    },
+
+    setProductCategory(productCategory) {
+      this.currentProductCategory = productCategory
     }
   },
 
@@ -59,12 +82,13 @@ export default {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  transition: 0.3s;
 }
 
 .card-title {
   text-align: center;
   margin-top: 5%;
-  margin-bottom: 2%;
+  margin-bottom: 1%;
   font-size: 72px;
   font-style: italic;
   font-weight: bold;
@@ -75,14 +99,29 @@ export default {
   padding: 20px;
 }
 
-.category-layout {
+.category-select {
+  text-align: center;
+  padding: 20px;
+}
+
+.category-selected {
   font-size: 24px;
   font-style: #000;
   margin: 0 10px;
   border: 1px solid #EDC2D8;
-  /* background-color: #EDC2D8; */
-  text-decoration: none;
+  background-color: #fff;
+  text-decoration: none; 
   color: inherit;
   padding: 5px 10px;
+  transition: all 0.35s;
+}
+
+.category-selected.active {
+  background-color: #EDC2D8;
+}
+
+.error-page {
+  font-size: 32px;
+  margin: 20px 0;
 }
 </style>

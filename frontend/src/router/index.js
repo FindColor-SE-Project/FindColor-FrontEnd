@@ -3,10 +3,6 @@ import Homepage from '@/views/Home.vue';
 import BrandListView from '@/views/BrandListView.vue';
 import SeasonSelectorPage from '@/views/SeasonSelector.vue';
 import ProductListView from '@/views/Category/ProductListView.vue';
-import LipsView from '@/views/Category/LipsView.vue';
-import EyeshadowView from '@/views/Category/EyeshadowView.vue';
-import BlushView from '@/views/Category/BlushView.vue';
-import ProductLayout from '@/views/Category/ProductLayout.vue';
 import ProductDetailView from '@/views/Category/ProductDetailView.vue';
 import SeasonLayout from '@/views/Season/SeasonLayout.vue';
 import SeasonLips from '@/views/Season/SeasonLips.vue';
@@ -33,35 +29,9 @@ const routes = [
   },
   {
     path: '/brands/:brandName',
-    name: 'productLayout',
-    component: ProductLayout,
-    props: true,
-    children: [
-      {
-        path: '',
-        name: 'productListView',
-        component: ProductListView,
-        props: true,
-      },
-      {
-        path: 'lips',
-        name: 'lipsView',
-        component: LipsView,
-        props: true
-      },
-      {
-        path: 'blush',
-        name: 'blushView',
-        component: BlushView,
-        props: true
-      },
-      {
-        path: 'eyeshadow',
-        name: 'eyeshadowView',
-        component: EyeshadowView,
-        props: true
-      }
-    ]
+    name: 'productListView',
+    component: ProductListView,
+    props: true
   }, 
   {
     path: '/brands/:brandName/:productName',

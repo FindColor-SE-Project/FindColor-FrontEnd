@@ -46,7 +46,7 @@ export default {
                         this.$router.push({ name: 'seasonSelectorPage' });
                     } else {
                         // ถ้ามี รูปภาพ แต่ไม่มี seasonColorTone ไปหน้า SeasonLayout
-                        this.$router.push({ name: 'seasonLayout', params: { seasonColorTone } });
+                        this.$router.push({ name: 'seasonView', params: { seasonColorTone } });
 
                     }
                 } else {

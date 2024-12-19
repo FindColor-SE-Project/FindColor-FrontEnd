@@ -40,9 +40,9 @@
           Eyeshadow
         </button>
       </div>
-      <div class="color_select" v-if="groupedByProduct.length">
+      <div class="color_select" v-if="groupedByProduct().length">
         <div class="color-group-container">
-          <div v-for="([productName, colorGroups], index) in groupedByProduct" :key="index" class="color-group">
+          <div v-for="([productName, colorGroups], index) in groupedByProduct()" :key="index" class="color-group">
             <div v-for="(colors, subIndex) in colorGroups" :key="subIndex" class="color-subgroup">
               <span v-for="(color, colorIndex) in colors" :key="colorIndex" :style="{ background: color }"
                 @click="handleColorClick(productName, color)" class="color-circle"
@@ -51,11 +51,11 @@
             </div>
 
             <!-- vertical line -->
-            <div v-if="index < groupedByProduct.length - 1" class="vertical-line"></div>
+            <div v-if="index < groupedByProduct().length - 1" class="vertical-line"></div>
           </div>
         </div>
-        <div class="product-card-container" v-if="displayProduct">
-          <ProductPreview :product="displayProduct" />
+        <div class="product-card-container" v-if="currentProduct">
+          <ProductPreview :product="currentProduct" />
         </div>
       </div>
       <div v-else class="for-error cardo-regular">Sorry, No color shades available</div>
@@ -80,42 +80,12 @@ export default {
   data() {
     return {
       products: [],
-      displayProduct: null,
-      similarProducts: [],
-      displayProductColor: null,
+      currentProduct: null,
+      productColor: null,
       seasonColorTone: null,
-      loading: true,
       image: [],
       currentProductCategory: 'Lips'
     };
-  },
-
-  computed: {
-    filteredCategory() {
-      return this.products.filter(
-        (product) =>
-          product.seasonColorTone === this.seasonColorTone &&
-          product.productCategory === this.currentProductCategory
-      );
-    },
-
-    groupedByProduct() {
-      const productMap = new Map();
-
-      this.filteredCategory.forEach((product) => {
-        if (product.colorShade) {
-          const colors = this.extractColors(product.colorShade);
-          const productName = product.productName;
-
-          if (!productMap.has(productName)) {
-            productMap.set(productName, []);
-          }
-          productMap.get(productName).push(colors);
-        }
-      });
-
-      return Array.from(productMap.entries()).sort(([a], [b]) => a.localeCompare(b));
-    },
   },
 
   methods: {
@@ -125,15 +95,13 @@ export default {
         this.products = response.data;
         console.log('Products fetched:', this.products);
 
-        this.displayProduct = this.products.find((p) =>
+        this.currentProduct = this.products.find((p) =>
           p.productName.includes(this.$route.params.productName)
         );
 
-        console.log('Display product:', this.displayProduct);
-        this.loading = false;
+        console.log('Display product:', this.currentProduct);
       } catch (error) {
         console.error('Error fetching data:', error);
-        this.loading = false;
       }
     },
 
@@ -217,10 +185,10 @@ export default {
     },
 
     async handleColorClick(productName, color) {
-      const isSameProduct = this.displayProduct?.productName === productName;
-      this.displayProduct = isSameProduct && this.displayProductColor === color ? null : 
+      const isSameProduct = this.currentProduct?.productName === productName;
+      this.currentProduct = isSameProduct && this.productColor === color ? null : 
           this.products.find(product => product.productName === productName);
-      this.displayProductColor = isSameProduct ? null : color;
+      this.productColor = isSameProduct ? null : color;
 
       if (this.images.length > 0 && color) {
         const [r, g, b] = color.match(/\d+/g).map(Number);
@@ -273,7 +241,33 @@ export default {
     },
 
     isSelectedColor(color) {
-      return this.displayProductColor === color;
+      return this.productColor === color;
+    },
+
+    filteredProductCategory() {
+      return this.products.filter(
+        (product) =>
+          product.seasonColorTone === this.seasonColorTone &&
+          product.productCategory === this.currentProductCategory
+      );
+    },
+
+    groupedByProduct() {
+      const productMap = new Map();
+
+      this.filteredProductCategory().forEach((product) => {
+        if (product.colorShade) {
+          const colors = this.extractColors(product.colorShade);
+          const productName = product.productName;
+
+          if (!productMap.has(productName)) {
+            productMap.set(productName, []);
+          }
+          productMap.get(productName).push(colors);
+        }
+      });
+
+      return Array.from(productMap.entries()).sort(([a], [b]) => a.localeCompare(b));
     }
   },
 

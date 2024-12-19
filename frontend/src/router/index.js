@@ -10,6 +10,7 @@ import SeasonBlush from '@/views/Season/SeasonBlush.vue';
 import SeasonEyeshadow from '@/views/Season/SeasonEyeshadow.vue';
 import DatabaseError from '@/components/DatabaseError.vue';
 import UploadView from '@/views/UploadView.vue';
+import SeasonView from '@/views/Season/SeasonView.vue';
 
 const routes = [
   {
@@ -68,6 +69,12 @@ const routes = [
         props: true
       }
     ]
+  },
+  {    
+    path: '/test',
+    name: 'SeasonView',
+    component: SeasonView,
+    props: true
   },
   {
     path: '/upload',

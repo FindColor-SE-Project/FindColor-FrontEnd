@@ -6,7 +6,7 @@
                 <div>
                     <!-- 1 Choose Image From Device -->
                     <div class="icon__upload"><font-awesome-icon icon="cloud-arrow-up" /></div>
-                    <button class="josefin-sans-font select_button" role="button" @click="selectImage">
+                    <button class="josefin-sans-font select_button" role="button" @click="openImageFolder">
                         Choose Image to Upload
                     </button>
 
@@ -87,7 +87,7 @@ export default{
     },
 
     methods: {
-        selectImage() {
+        openImageFolder() {
             this.$refs.fileInput.click();
         },
 

@@ -18,28 +18,18 @@
       <h2 class="cardo-regular">Your Season Color Tone is</h2>
       <h1 class="cardo-regular">{{ seasonColorTone }}</h1>
       <div class="season-category">
-        <button
-          class="josefin-sans-font category-selected"
-          :class="{ active: currentProductCategory === 'Lips' }"
-          v-on:click="setProductCategory('Lips')"
-        >
-          Lips
+        <button class="josefin-sans-font category-selected" :class="{ active: currentProductCategory === 'Lips' }"
+          v-on:click="setProductCategory('Lips')"> Lips
         </button>
-        <button
-          class="josefin-sans-font category-selected"
-          :class="{ active: currentProductCategory === 'Blush' }"
-          v-on:click="setProductCategory('Blush')"
-        >
-          Blush
+        <button class="josefin-sans-font category-selected" :class="{ active: currentProductCategory === 'Blush' }"
+          v-on:click="setProductCategory('Blush')"> Blush
         </button>
-        <button
-          class="josefin-sans-font category-selected"
-          :class="{ active: currentProductCategory === 'Eyeshadow' }"
-          v-on:click="setProductCategory('Eyeshadow')"
-        >
-          Eyeshadow
+        <button class="josefin-sans-font category-selected" :class="{ active: currentProductCategory === 'Eyeshadow' }"
+          v-on:click="setProductCategory('Eyeshadow')"> Eyeshadow
         </button>
       </div>
+      <router-view @color-clicked="updateDisplayedImage"></router-view> <!-- Listen here -->
+
       <div class="color_select" v-if="groupedByProduct().length">
         <div class="color-group-container">
           <div v-for="([productName, colorGroups], index) in groupedByProduct()" :key="index" class="color-group">
@@ -102,19 +92,6 @@ export default {
         console.log('Display product:', this.currentProduct);
       } catch (error) {
         console.error('Error fetching data:', error);
-      }
-    },
-
-    async handleClick(selectColor) {
-      console.log("layout check");
-      this.showTestMessage = selectColor; // Ensure this is set for displaying the message
-
-      // Fetch message from the backend when a color is clicked
-      try {
-        const response = await axios.post('http://localhost:8000/link_test');
-        this.testMessage = response.data.message; // Update with backend response
-      } catch (error) {
-        console.error("Error fetching test message:", error);
       }
     },
 
@@ -244,7 +221,7 @@ export default {
       return this.productColor === color;
     },
 
-    filteredProductCategory() {
+    fileteredProduct() {
       return this.products.filter(
         (product) =>
           product.seasonColorTone === this.seasonColorTone &&
@@ -255,7 +232,7 @@ export default {
     groupedByProduct() {
       const productMap = new Map();
 
-      this.filteredProductCategory().forEach((product) => {
+      this.fileteredProduct().forEach((product) => {
         if (product.colorShade) {
           const colors = this.extractColors(product.colorShade);
           const productName = product.productName;

@@ -8,7 +8,7 @@
             </button>
 
             <!-- Image -->
-            <div v-if="croppedImage" class="image-container" :class="changeBackgroundColor(selectedSeasonColorTone)">
+            <div v-if="croppedImage" class="image-container" :class="changeBackgroundColor(currentSeasonColorTone)">
                 <img :src="`data:image/jpeg;base64,${croppedImage}`" alt="Cropped Image" />
             </div>
         </div>
@@ -17,12 +17,12 @@
         <div class="season-right">
             <div class="card button-group">
                 <button class="cardo-regular" v-for="seasonColorToneOption in seasonColorToneOptions" :key="seasonColorToneOption.seasonColorTone"
-                    :class="{ 'active': seasonColorToneOption.seasonColorTone === selectedSeasonColorTone }" @click="selectSeasonColorToneOption(seasonColorToneOption.seasonColorTone)">
+                    :class="{ 'active': seasonColorToneOption.seasonColorTone === currentSeasonColorTone }" @click="currentSeasonColorToneOption(seasonColorToneOption.seasonColorTone)">
                     {{ seasonColorToneOption.name }}
                 </button>
             </div>
-            <div v-if="selectedSeasonColorToneOption" class="detail cardo-regular" :class="['detail', selectedSeasonColorTone?.toLowerCase()]">
-                <span :class="['season', selectedSeasonColorTone?.toLowerCase()]"></span>
+            <div v-if="selectedSeasonColorToneOption" class="detail cardo-regular" :class="['detail', currentSeasonColorTone?.toLowerCase()]">
+                <span :class="['season', currentSeasonColorTone?.toLowerCase()]"></span>
                 <h2 class="cardo-regular">{{ selectedSeasonColorToneOption.name }}</h2>
                 <p class="cardo-regular">{{ selectedSeasonColorToneOption.description }}</p>
             </div>
@@ -30,7 +30,7 @@
                 <h2 class="cardo-regular">Select a season color tone</h2>
                 <p class="cardo-regular">No season selected</p>
             </div>
-            <router-link v-if="selectedSeasonColorToneOption" :to="{ name: 'seasonLayout', params: { seasonColorTone: selectedSeasonColorToneOption.seasonColorTone } }">
+            <router-link v-if="selectedSeasonColorToneOption" :to="{ name: 'seasonView', params: { seasonColorTone: selectedSeasonColorToneOption.seasonColorTone } }">
                 <button class="next-button josefin-sans-font" @click="saveSelectedSeasonColorToneOption">Next</button>
             </router-link>
         </div>
@@ -43,7 +43,7 @@ import axios from 'axios';
 export default {
         data() {
         return {
-            selectedSeasonColorTone: null,
+            currentSeasonColorTone: null,
             croppedImage: null, // ตัวแปรเพื่อเก็บภาพที่ถูกครอบ
             seasonColorToneOptions: [
                 { name: 'Spring', seasonColorTone: 'Spring', description: 'The makeup tone is Coral, Orange, Milk Tea, Peach-Pink, Salmon-Pink, Salmon, Coral-Pink, and Peach' },
@@ -57,13 +57,13 @@ export default {
 
     computed: {
         selectedSeasonColorToneOption() {
-            return this.seasonColorToneOptions.find(option => option.seasonColorTone === this.selectedSeasonColorTone) || null;
+            return this.seasonColorToneOptions.find(option => option.seasonColorTone === this.currentSeasonColorTone) || null;
         }
     },
 
     methods: {
-        async selectSeasonColorToneOption(seasonColorTone) {
-            this.selectedSeasonColorTone = seasonColorTone;
+        async currentSeasonColorToneOption(seasonColorTone) {
+            this.currentSeasonColorTone = seasonColorTone;
             console.log("Season Color Tone: " + seasonColorTone);
         },
 
@@ -81,7 +81,7 @@ export default {
         async saveSelectedSeasonColorToneOption() {
             try {
                 const response = await axios.post('http://localhost:8000/user/seasonColorTone', {
-                    seasonColorTone: this.selectedSeasonColorTone
+                    seasonColorTone: this.currentSeasonColorTone
                 });
                 console.log(response.data.message);
             } catch (error) {

@@ -44,7 +44,6 @@ export default {
       similarProducts: [],
       displayProductColor: null,
       seasonColorTone: null,
-      loading: true,
       image: []
     };
   },
@@ -84,10 +83,8 @@ export default {
         );
 
         console.log('Display product:', this.displayProduct);
-        this.loading = false;
       } catch (error) {
         console.error('Error fetching data:', error);
-        this.loading = false;
       }
     },
 

@@ -10,8 +10,6 @@
       <div v-if="image">
         <img :src="`data:image/jpeg;base64,${image.image_data}`" :alt="image.filename" />
       </div>
-
-      <div v-if="showTestMessage" class="test-message">{{ testMessage }}</div>
     </div>
 
     <div class="season-right">
@@ -28,7 +26,7 @@
           v-on:click="setProductCategory('Eyeshadow')"> Eyeshadow
         </button>
       </div>
-      <router-view @color-clicked="updateDisplayedImage"></router-view> <!-- Listen here -->
+      <!-- <router-view @color-clicked="updateDisplayedImage"></router-view> -->
 
       <div class="color_select" v-if="groupedByProduct().length">
         <div class="color-group-container">
@@ -73,7 +71,8 @@ export default {
       currentProduct: null,
       productColor: null,
       seasonColorTone: null,
-      image: [],
+      image: null,
+      savedImage: null,
       currentProductCategory: 'Lips'
     };
   },
@@ -98,7 +97,8 @@ export default {
     async fetchImage() {
       try {
         const response = await axios.get('http://localhost:8000/user');
-        this.image = response.data[0];
+        this.savedImage = response.data[0]; // Store the original image
+        this.image = { ...this.savedImage };
         console.log("the image name: ", this.image);
       } catch (error) {
         console.error(error, "Error, You didn't connect with the database.", error);
@@ -162,38 +162,32 @@ export default {
     },
 
     async handleColorClick(productName, color) {
+      // Update current product and color state
       const isSameProduct = this.currentProduct?.productName === productName;
-      this.currentProduct = isSameProduct && this.productColor === color ? null : 
+      this.currentProduct = isSameProduct && this.productColor === color ? null :
           this.products.find(product => product.productName === productName);
       this.productColor = isSameProduct ? null : color;
 
-      if (this.images.length > 0 && color) {
-        const [r, g, b] = color.match(/\d+/g).map(Number);
-        let base64Image = this.images[0].filepath;
-
-        // Add padding if the Base64 string length is not a multiple of 4
-        const padding = '='.repeat((4 - (base64Image.length % 4)) % 4);
-        base64Image += padding;
-
-        // console.log("Sending data to backend:", {
-        //   r,
-        //   g,
-        //   b,
-        //   image: base64Image
-        // });
+      // Ensure the original image and color are present
+      if (this.image && color) {
+        const [r, g, b] = color.match(/\d+/g).map(Number); // Extract RGB values
 
         try {
-          const response = await axios.post('http://localhost:8000/apply-lips', {
-            r,
-            g,
-            b,
-            image: base64Image
-          });
-            
-          console.log("Received updated image from backend:", response.data.image);
-          this.$emit('color-clicked', response.data.image);
+          // Send original image data (from database) to the backend
+          const response = await axios.post(
+            `http://localhost:8000/apply-${this.currentProductCategory.toLowerCase()}`, 
+            {
+              r,
+              g,
+              b,
+              image: this.savedImage.image_data // Use the original image from database
+            }
+          );
+
+          console.log("Updated image from backend:", response.data.image);
+          this.updateDisplayedImage(response.data.image); // Update displayed image
         } catch (error) {
-          console.error("Error applying blush color:", error);
+          console.error(`Error applying ${this.currentProductCategory} color:`, error);
         }
       }
     },
@@ -245,7 +239,13 @@ export default {
       });
 
       return Array.from(productMap.entries()).sort(([a], [b]) => a.localeCompare(b));
+    },
+
+    updateDisplayedImage(newImage) {
+      console.log(newImage);
+      if (this.image) this.image.image_data = newImage;
     }
+
   },
 
   mounted() {
@@ -254,7 +254,7 @@ export default {
     this.fetchData();
     this.fetchImage();
     this.fetchSeasonColorTone();
-    this.getImage();
+    // this.getImage();
   }
 };
 </script>

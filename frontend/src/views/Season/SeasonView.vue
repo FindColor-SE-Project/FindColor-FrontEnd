@@ -30,16 +30,18 @@
 
       <div class="color_select" v-if="groupedByProduct().length">
         <div class="color-group-container">
-          <div v-for="([productName, colorGroups], index) in groupedByProduct()" :key="index" class="color-group">
-            <div v-for="(colors, subIndex) in colorGroups" :key="subIndex" class="color-subgroup">
-              <span v-for="(color, colorIndex) in colors" :key="colorIndex" :style="{ background: color }"
-                @click="handleColorClick(productName, color)" class="color-circle"
-                :class="{ selected: isSelectedColor(color) }">
-              </span>
-            </div>
+          <div class="color-list bb">
+            <div v-for="([productName, colorGroups], index) in groupedByProduct()" :key="index" class="color-group">
+              <div v-for="(colors, subIndex) in colorGroups" :key="subIndex" class="color-subgroup">
+                <span v-for="(color, colorIndex) in colors" :key="colorIndex" :style="{ background: color }"
+                  @click="handleColorClick(productName, color)" class="color-circle"
+                  :class="{ selected: isSelectedColor(color) }">
+                </span>
+              </div>
 
-            <!-- vertical line -->
-            <div v-if="index < groupedByProduct().length - 1" class="vertical-line"></div>
+              <!-- vertical line -->
+              <div v-if="index < groupedByProduct().length - 1" class="vertical-line"></div>
+            </div>
           </div>
         </div>
         <div class="product-card-container" v-if="currentProduct">
@@ -162,54 +164,44 @@ export default {
     },
 
     async handleColorClick(productName, color) {
-      // Update current product and color state
-      const isSameProduct = this.currentProduct?.productName === productName;
-      this.currentProduct = isSameProduct && this.productColor === color ? null :
-          this.products.find(product => product.productName === productName);
-      this.productColor = isSameProduct ? null : color;
+  // Check if the clicked color is the same as the selected color for the current product
+  if (this.currentProduct?.productName === productName && this.productColor === color) {
+    // Reset the image to the saved image and clear the current product
+    this.image.image_data = this.savedImage.image_data;
+    this.productColor = null;
+    this.currentProduct = null; // Clear current product to update ProductPreview
+    return; // Exit early since no further action is needed
+  }
 
-      // Ensure the original image and color are present
-      if (this.image && color) {
-        const [r, g, b] = color.match(/\d+/g).map(Number); // Extract RGB values
+  // Update the current product and selected color
+  const newProduct = this.products.find(product => product.productName === productName);
+  this.currentProduct = newProduct; // Ensure ProductPreview gets updated
+  this.productColor = color;
 
-        try {
-          // Send original image data (from database) to the backend
-          const response = await axios.post(
-            `http://localhost:8000/apply-${this.currentProductCategory.toLowerCase()}`, 
-            {
-              r,
-              g,
-              b,
-              image: this.savedImage.image_data // Use the original image from database
-            }
-          );
+  // Ensure the original image and color are present
+  if (this.image && color) {
+    const [r, g, b] = color.match(/\d+/g).map(Number); // Extract RGB values
 
-          console.log("Updated image from backend:", response.data.image);
-          this.updateDisplayedImage(response.data.image); // Update displayed image
-        } catch (error) {
-          console.error(`Error applying ${this.currentProductCategory} color:`, error);
+    try {
+      // Send original image data (from database) to the backend
+      const response = await axios.post(
+        `http://localhost:8000/apply-${this.currentProductCategory.toLowerCase()}`, 
+        {
+          r,
+          g,
+          b,
+          image: this.savedImage.image_data // Use the original image from database
         }
-      }
-    },
+      );
 
-    async getImage() {
-        try {
-          // Fetch images, consistent with SeasonLayout.vue
-          const response = await axios.get('http://localhost:8000/user');
-          this.images = response.data;
-
-            // Assuming the first image should be used for the blush application
-          if (this.images.length > 0 && this.images[0].filepath) {
-            this.image = this.images[0].filepath;
-            console.log("Image fetched and set:", this.image);
-          } else {
-            console.error("No valid image found in response data");
-          }
-        } catch (error) {
-          console.error("Error, You didn't connect with the database.", error);
-          this.$router.push({ name: 'DatabaseError' });
-        }
-    },
+      console.log("Updated image from backend:", response.data.image);
+      this.updateDisplayedImage(response.data.image); // Update displayed image
+    } catch (error) {
+      console.error(`Error applying ${this.currentProductCategory} color:`, error);
+    }
+  }
+}
+,
 
     isSelectedColor(color) {
       return this.productColor === color;
@@ -254,7 +246,6 @@ export default {
     this.fetchData();
     this.fetchImage();
     this.fetchSeasonColorTone();
-    // this.getImage();
   }
 };
 </script>
@@ -406,6 +397,38 @@ export default {
 .for-error {
   font-size: 24px;
   margin: 20px 0;
+}
+
+.color-list {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* 5 columns */
+  gap: 30px 30px;
+  max-height: 300px;
+  max-width: 900px;
+  overflow-y: auto; /* Enable vertical scrolling for extra items */
+  overflow-x: hidden;
+  padding: 30px 5px 15px 25px;
+  scrollbar-width: thin; /* Thinner scrollbars for modern browsers */
+}
+
+.color-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.color-list::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 10px;
+}
+
+.color-list::-webkit-scrollbar-thumb:hover {
+  background: #aaa;
+}
+
+.bb{
+  /* just for me to see container area */
+  border: #000;
+  background: #D3D3D3;
+  border-radius: 10px;
 }
 
 </style>

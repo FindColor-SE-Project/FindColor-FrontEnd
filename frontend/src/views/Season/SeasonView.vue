@@ -261,12 +261,13 @@ export default {
 .season-left,
 .season-right {
   width: 50%;
+  height: 70vh;
   display: flex;
   flex-direction: column;
   justify-items: center;
   align-items: center;
   padding: 20px;
-  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   background-color: #fff;
 }

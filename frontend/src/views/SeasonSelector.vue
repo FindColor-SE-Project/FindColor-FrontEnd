@@ -347,12 +347,13 @@ export default {
 }
 
 .change-button {
-  font-size: 20px;
+  font-size: 18px;
   margin: 0 10px;
   border: 1px solid #000;
   padding: 5px 10px;
   border-radius: 5px;
   background-color: #fff;
+  align-self: flex-end;
 }
 
 .change-button:hover {

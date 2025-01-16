@@ -470,6 +470,8 @@ export default{
     height: 600px;
     object-fit: cover;
     clip-path: ellipse(200px 250px at 50% 50%);
+    transform: scaleX(-1);
+
 }
 
 .camera-box {
@@ -501,7 +503,7 @@ export default{
     border-radius: 50%;
     border: 4px solid #EDC2D8;
     pointer-events: none;
-    box-shadow: 0 0 10px #EDC2D8; /* แรเงารอบๆ */
+    box-shadow: 0 0 10px #EDC2D8;
 }
 
 .camera-shoot {

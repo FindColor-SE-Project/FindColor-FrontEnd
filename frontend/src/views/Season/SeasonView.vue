@@ -244,16 +244,19 @@ export default {
         this.seasonColorTone = newSeasonColorTone;
         await this.fetchSeasonColorTone();
       }
+    }
   },
 
   mounted() {
     const route = useRoute();
+    console.log("Check Season Color Tone:", this.$route.params.seasonColorTone);
     this.seasonColorTone = route.params.seasonColorTone;
     this.fetchData();
     this.fetchImage();
     this.fetchSeasonColorTone();
   }
-};
+}
+
 </script>
 
 <style scoped>

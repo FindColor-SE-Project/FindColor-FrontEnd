@@ -471,7 +471,6 @@ export default{
     object-fit: cover;
     clip-path: ellipse(200px 250px at 50% 50%);
     transform: scaleX(-1);
-
 }
 
 .camera-box {

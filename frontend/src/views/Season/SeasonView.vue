@@ -111,7 +111,7 @@ export default {
     async fetchSeasonColorTone() {
       try {
         const response = await axios.get('http://localhost:8000/user/seasonColorTone');
-        this.seasonColorTone = response.data.seasonColorTone; // อัพเดตข้อมูลหลังจากที่ดึงมา
+        this.seasonColorTone = response.data.seasonColorTone;
       } catch (error) {
         console.error("Error fetching season color tone:", error);
       }
@@ -239,10 +239,11 @@ export default {
   },
 
   watch: {
-    '$route.params.seasonColorTone': function(newSeasonColorTone) {
-      this.seasonColorTone = newSeasonColorTone;
-      this.fetchSeasonColorTone(); // เมื่อค่า seasonColorTone เปลี่ยนแปลงให้ดึงข้อมูลใหม่
-    }
+    '$route.params.seasonColorTone': async function(newSeasonColorTone) {
+      if (newSeasonColorTone && newSeasonColorTone !== this.seasonColorTone) {
+        this.seasonColorTone = newSeasonColorTone;
+        await this.fetchSeasonColorTone();
+      }
   },
 
   mounted() {

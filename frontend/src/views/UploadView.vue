@@ -42,7 +42,6 @@
             </div>
             
             <div v-if="isCameraOpen" v-show="!isLoading" class="camera-box" :class="{ 'flash' : isShotPhoto }">
-
                 <div class="camera-shutter" :class="{'flash' : isShotPhoto}"></div>
                 <video v-show="!isPhotoTaken" ref="camera" width="500" height="600" autoplay></video>
                 <canvas v-show="isPhotoTaken" id="photoTaken" ref="canvas" width="500" height="600"></canvas>
@@ -50,7 +49,8 @@
                 <div class="camera-overlay"></div>
             </div>
 
-            
+            <div class="josefin-sans-font camera-message">Please ensure you are brightly lit so the camera can detect your face.</div>
+
             <div v-if="isCameraOpen && !isLoading" class="camera-shoot">
                 <button type="button" class="camera-button" :class="{ taken: isPhotoTaken }" @click="takePhoto"> 
                     <font-awesome-icon :icon="['fas', 'camera']" />                
@@ -501,6 +501,7 @@ export default{
     border-radius: 50%;
     border: 4px solid #EDC2D8;
     pointer-events: none;
+    box-shadow: 0 0 10px #EDC2D8; /* แรเงารอบๆ */
 }
 
 .camera-shoot {
@@ -526,4 +527,12 @@ export default{
     color: #fff;
 }
 
+.camera-message {
+    display: flex;
+    justify-content: center;
+    padding-top: 10px;
+    font-size: 24px;
+    font-style: italic;
+
+}
 </style>

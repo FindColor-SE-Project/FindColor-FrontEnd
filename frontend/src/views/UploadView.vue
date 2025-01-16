@@ -42,14 +42,17 @@
             </div>
             
             <div v-if="isCameraOpen" v-show="!isLoading" class="camera-box" :class="{ 'flash' : isShotPhoto }">
+
                 <div class="camera-shutter" :class="{'flash' : isShotPhoto}"></div>
                 <video v-show="!isPhotoTaken" ref="camera" width="500" height="600" autoplay></video>
                 <canvas v-show="isPhotoTaken" id="photoTaken" ref="canvas" width="500" height="600"></canvas>
+
+                <div class="camera-overlay"></div>
             </div>
 
             
             <div v-if="isCameraOpen && !isLoading" class="camera-shoot">
-                <button type="button" class="camera-button" @click="takePhoto">
+                <button type="button" class="camera-button" :class="{ taken: isPhotoTaken }" @click="takePhoto"> 
                     <font-awesome-icon :icon="['fas', 'camera']" />                
                 </button>
             </div>
@@ -466,11 +469,20 @@ export default{
     width: 500px;
     height: 600px;
     object-fit: cover;
+    clip-path: ellipse(200px 250px at 50% 50%);
 }
 
 .camera-box {
     display: flex;
     justify-content: center;
+    margin: 10px auto;
+    position: relative;
+    background-color: #FCF6F5;
+    width: 500px;
+    height: 600px; 
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
 }
 
 .camera__container {
@@ -479,13 +491,21 @@ export default{
     align-items: center;
 }
 
-.camera-box {
-    margin-top: 10px;
+.camera-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    height: 500px;
+    border-radius: 50%;
+    border: 4px solid #EDC2D8;
+    pointer-events: none;
 }
 
 .camera-shoot {
     display: flex;
-    justify-content: center; /* จัดกลาง */
+    justify-content: center;
     margin-top: 5px;
 }
 
@@ -499,7 +519,8 @@ export default{
     transition: background 0.3s, border 0.3s, color 0.3s;
 }
 
-.camera-button:hover {
+
+.camera-button:hover, .camera-button.taken {
     background: #8ABAD3;
     border: 2px solid #8ABAD3;
     color: #fff;

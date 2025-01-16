@@ -111,8 +111,7 @@ export default {
     async fetchSeasonColorTone() {
       try {
         const response = await axios.get('http://localhost:8000/user/seasonColorTone');
-        // console.log("Fetched seasonColorTone:", response.data);
-        this.seasonColorTone = response.data.seasonColorTone;
+        this.seasonColorTone = response.data.seasonColorTone; // อัพเดตข้อมูลหลังจากที่ดึงมา
       } catch (error) {
         console.error("Error fetching season color tone:", error);
       }
@@ -164,44 +163,43 @@ export default {
     },
 
     async handleColorClick(productName, color) {
-  // Check if the clicked color is the same as the selected color for the current product
-  if (this.currentProduct?.productName === productName && this.productColor === color) {
-    // Reset the image to the saved image and clear the current product
-    this.image.image_data = this.savedImage.image_data;
-    this.productColor = null;
-    this.currentProduct = null; // Clear current product to update ProductPreview
-    return; // Exit early since no further action is needed
-  }
+      // Check if the clicked color is the same as the selected color for the current product
+      if (this.currentProduct?.productName === productName && this.productColor === color) {
+        // Reset the image to the saved image and clear the current product
+        this.image.image_data = this.savedImage.image_data;
+        this.productColor = null;
+        this.currentProduct = null; // Clear current product to update ProductPreview
+        return; // Exit early since no further action is needed
+      }
 
-  // Update the current product and selected color
-  const newProduct = this.products.find(product => product.productName === productName);
-  this.currentProduct = newProduct; // Ensure ProductPreview gets updated
-  this.productColor = color;
+      // Update the current product and selected color
+      const newProduct = this.products.find(product => product.productName === productName);
+      this.currentProduct = newProduct; // Ensure ProductPreview gets updated
+      this.productColor = color;
 
-  // Ensure the original image and color are present
-  if (this.image && color) {
-    const [r, g, b] = color.match(/\d+/g).map(Number); // Extract RGB values
+      // Ensure the original image and color are present
+      if (this.image && color) {
+        const [r, g, b] = color.match(/\d+/g).map(Number); // Extract RGB values
 
-    try {
-      // Send original image data (from database) to the backend
-      const response = await axios.post(
-        `http://localhost:8000/apply-${this.currentProductCategory.toLowerCase()}`, 
-        {
-          r,
-          g,
-          b,
-          image: this.savedImage.image_data // Use the original image from database
+        try {
+          // Send original image data (from database) to the backend
+          const response = await axios.post(
+            `http://localhost:8000/apply-${this.currentProductCategory.toLowerCase()}`, 
+            {
+              r,
+              g,
+              b,
+              image: this.savedImage.image_data // Use the original image from database
+            }
+          );
+
+          console.log("Updated image from backend:", response.data.image);
+          this.updateDisplayedImage(response.data.image); // Update displayed image
+        } catch (error) {
+          console.error(`Error applying ${this.currentProductCategory} color:`, error);
         }
-      );
-
-      console.log("Updated image from backend:", response.data.image);
-      this.updateDisplayedImage(response.data.image); // Update displayed image
-    } catch (error) {
-      console.error(`Error applying ${this.currentProductCategory} color:`, error);
-    }
-  }
-}
-,
+      }
+    },
 
     isSelectedColor(color) {
       return this.productColor === color;
@@ -238,6 +236,13 @@ export default {
       if (this.image) this.image.image_data = newImage;
     }
 
+  },
+
+  watch: {
+    '$route.params.seasonColorTone': function(newSeasonColorTone) {
+      this.seasonColorTone = newSeasonColorTone;
+      this.fetchSeasonColorTone(); // เมื่อค่า seasonColorTone เปลี่ยนแปลงให้ดึงข้อมูลใหม่
+    }
   },
 
   mounted() {

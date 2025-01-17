@@ -57,6 +57,7 @@ export default {
 
     const updateDisplayProduct = (product) => {
       displayProduct.value = product;
+      console.log('Current Product:', product)
     };
 
     const productCollection = computed(() => {

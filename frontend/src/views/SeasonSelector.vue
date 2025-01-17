@@ -1,6 +1,6 @@
 <template>
     <div class="product-container">
-        <!-- Left -->
+        <!-- Left Section -->
         <div class="season-left">
             <!-- Button -->
             <button class="change-button josefin-sans-font" @click="removeImage(image)">
@@ -13,24 +13,37 @@
             </div>
         </div>
 
-        <!-- Right -->
+        <!-- Right Section -->
         <div class="season-right">
             <div class="card button-group">
-                <button class="cardo-regular" v-for="seasonColorToneOption in seasonColorToneOptions" :key="seasonColorToneOption.seasonColorTone"
-                    :class="{ 'active': seasonColorToneOption.seasonColorTone === currentSeasonColorTone }" @click="currentSeasonColorToneOption(seasonColorToneOption.seasonColorTone)">
+                <button
+                    class="cardo-regular"
+                    v-for="seasonColorToneOption in seasonColorToneOptions"
+                    :key="seasonColorToneOption.seasonColorTone"
+                    :class="{ 'active': seasonColorToneOption.seasonColorTone === currentSeasonColorTone }"
+                    @click="currentSeasonColorToneOption(seasonColorToneOption.seasonColorTone)"
+                >
                     {{ seasonColorToneOption.name }}
                 </button>
             </div>
+
+            <!-- Season Details -->
             <div v-if="selectedSeasonColorToneOption" class="detail cardo-regular" :class="['detail', currentSeasonColorTone?.toLowerCase()]">
                 <span :class="['season', currentSeasonColorTone?.toLowerCase()]"></span>
                 <h2 class="cardo-regular">{{ selectedSeasonColorToneOption.name }}</h2>
                 <p class="cardo-regular">{{ selectedSeasonColorToneOption.description }}</p>
             </div>
+
             <div v-else class="detail">
                 <h2 class="cardo-regular">Select a season color tone</h2>
                 <p class="cardo-regular">No season selected</p>
             </div>
-            <router-link v-if="selectedSeasonColorToneOption" :to="{ name: 'seasonView', params: { seasonColorTone: selectedSeasonColorToneOption.seasonColorTone } }">
+
+            <!-- Loading Indicator or Next Button -->
+            <div v-if="isSaving">
+                <p class="loading">Saving season, please wait...</p>
+            </div>
+            <router-link v-else-if="selectedSeasonColorToneOption" :to="{ name: 'seasonView', params: { seasonColorTone: selectedSeasonColorToneOption.seasonColorTone } }">
                 <button class="next-button josefin-sans-font" @click="saveSelectedSeasonColorToneOption">Next</button>
             </router-link>
         </div>
@@ -38,18 +51,19 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 
 export default {
-        data() {
+    data() {
         return {
             currentSeasonColorTone: null,
-            croppedImage: null, // ตัวแปรเพื่อเก็บภาพที่ถูกครอบ
+            croppedImage: null, // Cropped image data
+            isSaving: false, // Loading state for saving season
             seasonColorToneOptions: [
-                { name: 'Spring', seasonColorTone: 'Spring', description: 'The makeup tone is Coral, Orange, Milk Tea, Peach-Pink, Salmon-Pink, Salmon, Coral-Pink, and Peach' },
-                { name: 'Summer', seasonColorTone: 'Summer', description: 'The makeup tone is Pink Nude, Rosy, Pink, Lilac, Medium Pink, Light Rose, Light Pink, and Lavender' },
-                { name: 'Autumn', seasonColorTone: 'Autumn', description: 'The makeup tone is Orange-Red, Dark Peach, Red, Brown, Red Brick, Brick Orange, Tomato, and Brown Brick' },
-                { name: 'Winter', seasonColorTone: 'Winter', description: 'The makeup tone is Dark Pink, Burgundy, Berry, True Red, Deep Plum, Fuchsia, Magenta, and Hot Pink' },
+                { name: "Spring", seasonColorTone: "Spring", description: "The makeup tone is Coral, Orange, Milk Tea, Peach-Pink, Salmon-Pink, Salmon, Coral-Pink, and Peach" },
+                { name: "Summer", seasonColorTone: "Summer", description: "The makeup tone is Pink Nude, Rosy, Pink, Lilac, Medium Pink, Light Rose, Light Pink, and Lavender" },
+                { name: "Autumn", seasonColorTone: "Autumn", description: "The makeup tone is Orange-Red, Dark Peach, Red, Brown, Red Brick, Brick Orange, Tomato, and Brown Brick" },
+                { name: "Winter", seasonColorTone: "Winter", description: "The makeup tone is Dark Pink, Burgundy, Berry, True Red, Deep Plum, Fuchsia, Magenta, and Hot Pink" },
             ],
             image: null,
         };
@@ -58,7 +72,7 @@ export default {
     computed: {
         selectedSeasonColorToneOption() {
             return this.seasonColorToneOptions.find(option => option.seasonColorTone === this.currentSeasonColorTone) || null;
-        }
+        },
     },
 
     methods: {
@@ -68,8 +82,8 @@ export default {
         },
 
         dataURLtoBlob(dataURL) {
-            const byteString = atob(dataURL.split(',')[1]);
-            const mimeString = dataURL.split(',')[0].split(':')[1].split(';')[0];
+            const byteString = atob(dataURL.split(",")[1]);
+            const mimeString = dataURL.split(",")[0].split(":")[1].split(";")[0];
             const ab = new ArrayBuffer(byteString.length);
             const ia = new Uint8Array(ab);
             for (let i = 0; i < byteString.length; i++) {
@@ -79,30 +93,56 @@ export default {
         },
 
         async saveSelectedSeasonColorToneOption() {
-            try {
-                const response = await axios.post('http://localhost:8000/user/seasonColorTone', {
-                    seasonColorTone: this.currentSeasonColorTone
-                });
-                console.log(response.data.message);
-            } catch (error) {
-                console.error("Full error response:", error.response);
-                alert("เกิดข้อผิดพลาดในการบันทึกฤดู: " + (error.response?.data?.message || error.message));
-            }
-        },
+    this.isSaving = true;
+    console.log("Saving season color tone:", this.currentSeasonColorTone);
+
+    try {
+        // Save the seasonColorTone to the backend
+        const response = await axios.post("http://localhost:8000/user/seasonColorTone", {
+            seasonColorTone: this.currentSeasonColorTone,
+        });
+
+        console.log("Backend response:", response);
+
+        if (response.status === 200 && response.data.message === "Season updated successfully.") {
+            console.log("Season saved successfully, waiting for backend update...");
+
+            // Wait for 500ms before navigating to allow the backend to commit the update
+            await new Promise((resolve) => setTimeout(resolve, 500));
+
+            console.log("Navigating to seasonView...");
+            this.$router.push({
+                name: "seasonView",
+                params: { seasonColorTone: this.currentSeasonColorTone },
+            });
+        } else {
+            console.error("Unexpected response:", response);
+            alert("Failed to save season color tone. Please try again.");
+        }
+    } catch (error) {
+        console.error("Error saving season:", error);
+        alert("Error saving season: " + (error.response?.data?.message || error.message));
+    } finally {
+        this.isSaving = false;
+        console.log("Save process complete.");
+    }
+}
+
+,
 
         async fetchImage() {
             try {
-                const response = await axios.get('http://localhost:8000/user');
-                console.log(response.data); // Log ข้อมูลที่ได้มาเพื่อตรวจสอบ
+                const response = await axios.get("http://localhost:8000/user");
+                console.log(response.data);
 
-                // เก็บภาพเดียวลงในตัวแปร
+                // Set the first image as the cropped image
                 if (response.data.length > 0) {
-                    this.image = response.data[0]; // ใช้ภาพแรก
-                    this.cropImage(); // ครอปภาพเมื่อโหลดเสร็จ
+                    this.image = response.data[0];
+                    this.cropImage();
                 }
             } catch (error) {
-                console.error(error, "Error, You didn't connect with the database.");
-                this.$router.push({ name: 'DatabaseError' });
+                console.error("Error fetching image:", error);
+                this.$router.push({ name: "DatabaseError" });
             }
         },
 
@@ -110,34 +150,34 @@ export default {
             if (this.image) {
                 const formData = new FormData();
                 const blob = this.dataURLtoBlob(`data:image/jpeg;base64,${this.image.image_data}`);
-                formData.append('file', blob, this.image.filename);
+                formData.append("file", blob, this.image.filename);
 
                 try {
-                    const response = await axios.post('http://localhost:8000/user/crop_image', formData, {
+                    const response = await axios.post("http://localhost:8000/user/crop_image", formData, {
                         headers: {
-                            'Content-Type': 'multipart/form-data'
-                        }
+                            "Content-Type": "multipart/form-data",
+                        },
                     });
-                    this.croppedImage = response.data.image; // อัปเดตตัวแปร croppedImage
+                    this.croppedImage = response.data.image;
                 } catch (error) {
                     console.error("Error cropping image:", error.response);
-                    alert("เกิดข้อผิดพลาดในการครอปภาพ");
+                    alert("Error cropping image.");
                 }
             }
         },
 
         changeBackgroundColor(season) {
             switch (season) {
-                case 'Spring':
-                    return 'background-spring'; // เปลี่ยนสีพื้นหลัง
-                case 'Summer':
-                    return 'background-summer';
-                case 'Autumn':
-                    return 'background-autumn';
-                case 'Winter':
-                    return 'background-winter';
+                case "Spring":
+                    return "background-spring";
+                case "Summer":
+                    return "background-summer";
+                case "Autumn":
+                    return "background-autumn";
+                case "Winter":
+                    return "background-winter";
                 default:
-                    return 'background-default';
+                    return "background-default";
             }
         },
 
@@ -150,32 +190,25 @@ export default {
                 dangerMode: true,
             }).then(async (willDelete) => {
                 if (willDelete) {
-                try {
-                    // เรียกใช้ API เพื่อลบข้อมูลทั้งหมด
-                    const response = await axios.delete(`http://localhost:8000/user`);
-
-                    // แสดง Noti ว่าลบสำเร็จ
-                    swal("Deleted!", response.data.message, "success");
-
-                    // หลังจากลบข้อมูลเสร็จสิ้น กลับไปที่หน้า Upload
-                    this.$router.push('/upload');
-                } catch (error) {
-                    // หากเกิดข้อผิดพลาด แสดงข้อความเตือน
-                    console.error(error);
-                    swal("Error", "Failed to delete the image. Please try again.", "error");
-                }
+                    try {
+                        const response = await axios.delete("http://localhost:8000/user");
+                        swal("Deleted!", response.data.message, "success");
+                        this.$router.push("/upload");
+                    } catch (error) {
+                        console.error("Error deleting image:", error);
+                        swal("Error", "Failed to delete the image. Please try again.", "error");
+                    }
                 } else {
-                // แสดงข้อความเมื่อผู้ใช้ยกเลิกการลบ
-                swal("Cancelled", "Your image is safe!", "info");
+                    swal("Cancelled", "Your image is safe!", "info");
                 }
             });
-        }
+        },
     },
 
     mounted() {
         this.fetchImage();
-    }
-}
+    },
+};
 </script>
 
 <style scoped>

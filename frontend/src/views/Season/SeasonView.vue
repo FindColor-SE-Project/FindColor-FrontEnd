@@ -1,222 +1,127 @@
 <template>
   <div class="product-container">
+    <!-- Left Section -->
     <div class="season-left">
-      <!-- <SelectColorLogic @color-clicked="handleClick" /> -->
-      <!-- Left -->
       <button class="change-button josefin-sans-font" @click="removeImage(image)">
         <font-awesome-icon :icon="['fas', 'trash']" /> Remove Image
       </button>
 
-      <div v-if="image">
-        <img :src="`data:image/jpeg;base64,${image.image_data}`" :alt="image.filename" />
+      <div v-if="image" class="image-container">
+        <img :src="`data:image/jpeg;base64,${image.image_data}`" alt="Processed Image" />
+
+        <!-- Loading message -->
+        <p v-if="loadingImage" class="loading-message">Loading...</p>
       </div>
     </div>
 
+    <!-- Right Section -->
     <div class="season-right">
       <h2 class="cardo-regular">Your Season Color Tone is</h2>
-      <h1 class="cardo-regular">{{ seasonColorTone }}</h1>
+
+      <!-- Show seasonColorTone or a loading message -->
+      <h1 class="cardo-regular">
+        <span v-if="loading">Loading your season tone...</span>
+        <span v-else>{{ seasonColorTone || "Unknown" }}</span>
+      </h1>
+
+      <!-- Category Buttons -->
       <div class="season-category">
-        <button class="josefin-sans-font category-selected" :class="{ active: currentProductCategory === 'Lips' }"
-          v-on:click="setProductCategory('Lips')"> Lips
-        </button>
-        <button class="josefin-sans-font category-selected" :class="{ active: currentProductCategory === 'Blush' }"
-          v-on:click="setProductCategory('Blush')"> Blush
-        </button>
-        <button class="josefin-sans-font category-selected" :class="{ active: currentProductCategory === 'Eyeshadow' }"
-          v-on:click="setProductCategory('Eyeshadow')"> Eyeshadow
+        <button
+          v-for="category in ['Lips', 'Blush', 'Eyeshadow']"
+          :key="category"
+          class="josefin-sans-font category-selected"
+          :class="{ active: currentProductCategory === category }"
+          @click="setProductCategory(category)"
+        >
+          {{ category }}
         </button>
       </div>
-      <!-- <router-view @color-clicked="updateDisplayedImage"></router-view> -->
 
-      <div class="color_select" v-if="groupedByProduct().length">
+      <!-- Loading Indicator -->
+      <div v-if="loading" class="loading">Loading...</div>
+
+      <!-- Grouped Colors -->
+      <div class="color_select" v-else-if="groupedByProduct.length">
         <div class="color-group-container">
           <div class="color-list bb">
-            <div v-for="([productName, colorGroups], index) in groupedByProduct()" :key="index" class="color-group">
-              <div v-for="(colors, subIndex) in colorGroups" :key="subIndex" class="color-subgroup">
-                <span v-for="(color, colorIndex) in colors" :key="colorIndex" :style="{ background: color }"
-                  @click="handleColorClick(productName, color)" class="color-circle"
-                  :class="{ selected: isSelectedColor(color) }">
-                </span>
+            <div
+              v-for="([productName, colorGroups], index) in groupedByProduct"
+              :key="index"
+              class="color-group"
+            >
+              <div
+                v-for="(colors, subIndex) in colorGroups"
+                :key="subIndex"
+                class="color-subgroup"
+              >
+                <span
+                  v-for="(color, colorIndex) in colors"
+                  :key="colorIndex"
+                  :style="{ background: color }"
+                  @click="handleColorClick(productName, color)"
+                  class="color-circle"
+                  :class="{ selected: isSelectedColor(color) }"
+                ></span>
               </div>
 
-              <!-- vertical line -->
-              <div v-if="index < groupedByProduct().length - 1" class="vertical-line"></div>
+              <!-- Vertical Line -->
+              <div v-if="index < groupedByProduct.length - 1" class="vertical-line"></div>
             </div>
           </div>
         </div>
+
+        <!-- Product Preview -->
         <div class="product-card-container" v-if="currentProduct">
           <ProductPreview :product="currentProduct" />
         </div>
       </div>
+
+      <!-- Null seasonColorTone Message -->
+      <div v-else-if="seasonColorTone === null" class="for-error cardo-regular">
+        Please refresh the webpage to load your season color tone.
+      </div>
+
+      <!-- Error Message -->
       <div v-else class="for-error cardo-regular">Sorry, No color shades available</div>
     </div>
   </div>
 </template>
 
 <script>
-import ProductPreview from '@/components/ProductPreview.vue';
+import ProductPreview from "@/components/ProductPreview.vue";
 import SelectColorLogic from "@/components/SelectColorLogic.vue";
-import { useRoute } from 'vue-router';
-import axios from 'axios';
+import { useRoute } from "vue-router";
+import axios from "axios";
 
 export default {
   props: ["colors"],
-  
+
   components: {
     ProductPreview,
-    SelectColorLogic
+    SelectColorLogic,
   },
 
   data() {
     return {
+      loading: true, // Loading state
+      loadingImage: false,
       products: [],
       currentProduct: null,
       productColor: null,
       seasonColorTone: null,
       image: null,
       savedImage: null,
-      currentProductCategory: 'Lips'
+      currentProductCategory: "Lips",
     };
   },
 
-  methods: {
-    async fetchData() {
-      try {
-        const response = await axios.get('http://localhost:8000/data');
-        this.products = response.data;
-        console.log('Products fetched:', this.products);
-
-        this.currentProduct = this.products.find((p) =>
-          p.productName.includes(this.$route.params.productName)
-        );
-
-        console.log('Display product:', this.currentProduct);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    },
-
-    async fetchImage() {
-      try {
-        const response = await axios.get('http://localhost:8000/user');
-        this.savedImage = response.data[0]; // Store the original image
-        this.image = { ...this.savedImage };
-        console.log("the image name: ", this.image);
-      } catch (error) {
-        console.error(error, "Error, You didn't connect with the database.", error);
-        this.$router.push({ name: 'DatabaseError' });
-      }
-    },
-
-    async fetchSeasonColorTone() {
-      try {
-        const response = await axios.get('http://localhost:8000/user/seasonColorTone');
-        this.seasonColorTone = response.data.seasonColorTone;
-      } catch (error) {
-        console.error("Error fetching season color tone:", error);
-      }
-    },
-
-    async removeImage() {
-      swal({
-        title: "Are you sure?",
-        text: "Once deleted, you cannot recover this image!",
-        icon: "warning",
-        buttons: true,
-        dangerMode: true,
-      }).then(async (willDelete) => {
-        if (willDelete) {
-          try {
-            // เรียกใช้ API เพื่อลบข้อมูลทั้งหมด
-            const response = await axios.delete(`http://localhost:8000/user`);
-
-            // แสดง Noti ว่าลบสำเร็จ
-            swal("Deleted!", response.data.message, "success");
-
-            // หลังจากลบข้อมูลเสร็จสิ้น กลับไปที่หน้า Upload
-            this.$router.push('/upload');
-          } catch (error) {
-            // หากเกิดข้อผิดพลาด แสดงข้อความเตือน
-            console.error(error);
-            swal("Error", "Failed to delete the image. Please try again.", "error");
-          }
-        } else {
-          // แสดงข้อความเมื่อผู้ใช้ยกเลิกการลบ
-          swal("Cancelled", "Your image is safe!", "info");
-          }
-      });
-    },
-
-    setProductCategory(productCategory) {
-      this.currentProductCategory = productCategory
-    },
-
-    extractColors(colorShade) {
-      const matches = colorShade.match(/\((\d+),\s*(\d+),\s*(\d+)\)/g);
-      if (matches) {
-        return matches.map((match) => {
-          const [_, r, g, b] = match.match(/\((\d+),\s*(\d+),\s*(\d+)\)/).map(Number);
-          return `rgb(${r}, ${g}, ${b})`;
-        });
-      }
-      return [];
-    },
-
-    async handleColorClick(productName, color) {
-      // Check if the clicked color is the same as the selected color for the current product
-      if (this.currentProduct?.productName === productName && this.productColor === color) {
-        // Reset the image to the saved image and clear the current product
-        this.image.image_data = this.savedImage.image_data;
-        this.productColor = null;
-        this.currentProduct = null; // Clear current product to update ProductPreview
-        return; // Exit early since no further action is needed
-      }
-
-      // Update the current product and selected color
-      const newProduct = this.products.find(product => product.productName === productName);
-      this.currentProduct = newProduct; // Ensure ProductPreview gets updated
-      this.productColor = color;
-
-      // Ensure the original image and color are present
-      if (this.image && color) {
-        const [r, g, b] = color.match(/\d+/g).map(Number); // Extract RGB values
-
-        try {
-          // Send original image data (from database) to the backend
-          const response = await axios.post(
-            `http://localhost:8000/apply-${this.currentProductCategory.toLowerCase()}`, 
-            {
-              r,
-              g,
-              b,
-              image: this.savedImage.image_data // Use the original image from database
-            }
-          );
-
-          console.log("Updated image from backend:", response.data.image);
-          this.updateDisplayedImage(response.data.image); // Update displayed image
-        } catch (error) {
-          console.error(`Error applying ${this.currentProductCategory} color:`, error);
-        }
-      }
-    },
-
-    isSelectedColor(color) {
-      return this.productColor === color;
-    },
-
-    fileteredProduct() {
-      return this.products.filter(
-        (product) =>
-          product.seasonColorTone === this.seasonColorTone &&
-          product.productCategory === this.currentProductCategory
-      );
-    },
-
+  computed: {
     groupedByProduct() {
+      if (!this.products.length || !this.seasonColorTone) return []; // Defensive check
+
       const productMap = new Map();
 
-      this.fileteredProduct().forEach((product) => {
+      this.filteredProduct().forEach((product) => {
         if (product.colorShade) {
           const colors = this.extractColors(product.colorShade);
           const productName = product.productName;
@@ -230,33 +135,167 @@ export default {
 
       return Array.from(productMap.entries()).sort(([a], [b]) => a.localeCompare(b));
     },
+  },
+
+  methods: {
+    async fetchData() {
+      try {
+        const response = await axios.get("http://localhost:8000/data");
+        this.products = response.data;
+        console.log("Products fetched:", this.products);
+
+        this.currentProduct = this.products.find((p) =>
+          p.productName.includes(this.$route.params.productName)
+        );
+
+        // console.log("Display product:", this.currentProduct);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    },
+
+    async fetchImage() {
+      try {
+        const response = await axios.get("http://localhost:8000/user");
+        this.savedImage = response.data[0];
+        this.image = { ...this.savedImage };
+        console.log("Image fetched:", this.image);
+      } catch (error) {
+        console.error("Error fetching image:", error);
+        this.$router.push({ name: "DatabaseError" });
+      }
+    },
+
+    async fetchSeasonColorTone() {
+      try {
+        const response = await axios.get("http://localhost:8000/user/seasonColorTone");
+        this.seasonColorTone = response.data.seasonColorTone;
+        console.log("Season color tone fetched:", this.seasonColorTone);
+      } catch (error) {
+        console.error("Error fetching season color tone:", error);
+      }
+    },
+
+    async initializePage() {
+      try {
+        await Promise.all([
+          this.fetchData(),
+          this.fetchImage(),
+          this.fetchSeasonColorTone(),
+        ]);
+      } catch (error) {
+        console.error("Error during initialization:", error);
+      } finally {
+        this.loading = false; // Ensure loading is false regardless of success or failure
+      }
+    },
+
+    filteredProduct() {
+      return this.products.filter(
+        (product) =>
+          product.seasonColorTone === this.seasonColorTone &&
+          product.productCategory === this.currentProductCategory
+      );
+    },
+
+    extractColors(colorShade) {
+      const matches = colorShade.match(/\((\d+),\s*(\d+),\s*(\d+)\)/g);
+      if (!matches) return []; // Return empty array if no matches
+
+      return matches.map((match) => {
+        const [r, g, b] = match.match(/\d+/g).map(Number);
+        return `rgb(${r}, ${g}, ${b})`;
+      });
+    },
+
+    setProductCategory(category) {
+      this.currentProductCategory = category;
+      console.log("Category changed to:", category);
+    },
+
+    async handleColorClick(productName, color) {
+      if (this.currentProduct?.productName === productName && this.productColor === color) {
+        this.image.image_data = this.savedImage?.image_data || "";
+        this.productColor = null;
+        this.currentProduct = null;
+        return;
+      }
+
+      this.currentProduct = this.products.find((p) => p.productName === productName);
+      this.productColor = color;
+
+      if (this.image && color) {
+        const [r, g, b] = color.match(/\d+/g).map(Number);
+
+        // Set loadingColor to true while processing
+        this.loadingImage = true;
+
+        try {
+          const response = await axios.post(
+            `http://localhost:8000/apply-${this.currentProductCategory.toLowerCase()}`,
+            { r, g, b, image: this.savedImage.image_data }
+          );
+          this.updateDisplayedImage(response.data.image);
+        } catch (error) {
+          console.error(`Error applying ${this.currentProductCategory} color:`, error);
+        } finally {
+          // Set loadingColor to false after processing is complete
+          this.loadingImage = false;
+        }
+      }
+    },
+
+    isSelectedColor(color) {
+      return this.productColor === color;
+    },
+
+    async removeImage(image) {
+      swal({
+        title: "Are you sure?",
+        text: "Once deleted, you cannot recover this image!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      }).then(async (willDelete) => {
+        if (willDelete) {
+          try {
+            const response = await axios.delete(`http://localhost:8000/user`);
+            swal("Deleted!", response.data.message, "success");
+            this.$router.push("/upload");
+          } catch (error) {
+            console.error("Error deleting image:", error);
+            swal("Error", "Failed to delete the image. Please try again.", "error");
+          }
+        } else {
+          swal("Cancelled", "Your image is safe!", "info");
+        }
+      });
+    },
 
     updateDisplayedImage(newImage) {
-      console.log(newImage);
-      if (this.image) this.image.image_data = newImage;
-    }
-
+      if (this.image) this.image.image_data = newImage || "";
+    },
   },
 
   watch: {
-    '$route.params.seasonColorTone': async function(newSeasonColorTone) {
+    "$route.params.seasonColorTone": async function (newSeasonColorTone) {
       if (newSeasonColorTone && newSeasonColorTone !== this.seasonColorTone) {
+        this.loading = true; // Show loading state during data fetch
         this.seasonColorTone = newSeasonColorTone;
-        await this.fetchSeasonColorTone();
+
+        try {
+          await this.fetchSeasonColorTone();
+        } finally {
+          this.loading = false;
+        }
       }
-    }
+    },
   },
 
-  mounted() {
-    const route = useRoute();
-    console.log("Check Season Color Tone:", this.$route.params.seasonColorTone);
-    this.seasonColorTone = route.params.seasonColorTone;
-    this.fetchData();
-    this.fetchImage();
-    this.fetchSeasonColorTone();
-  }
-}
-
+  async mounted() {
+    await this.initializePage();
+  },
+};
 </script>
 
 <style scoped>
@@ -439,6 +478,13 @@ export default {
   border: #000;
   background: #D3D3D3;
   border-radius: 10px;
+}
+
+.loading-message {
+  font-size: 14px;
+  color: #555;
+  text-align: center;
+  margin-top: 8px;
 }
 
 </style>

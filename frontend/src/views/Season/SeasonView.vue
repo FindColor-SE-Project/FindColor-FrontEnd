@@ -43,32 +43,28 @@
       <!-- Grouped Colors -->
       <div class="color_select" v-else-if="groupedByProduct.length">
         <div class="color-group-container">
-          <div class="color-list bb">
-            <div
-              v-for="([productName, colorGroups], index) in groupedByProduct"
-              :key="index"
-              class="color-group"
-            >
-              <div
-                v-for="(colors, subIndex) in colorGroups"
-                :key="subIndex"
-                class="color-subgroup"
-              >
-                <span
-                  v-for="(color, colorIndex) in colors"
-                  :key="colorIndex"
-                  :style="{ background: color }"
-                  @click="handleColorClick(productName, color)"
-                  class="color-circle"
-                  :class="{ selected: isSelectedColor(color) }"
-                ></span>
-              </div>
+  <div class="color-list bb">
+    <!-- Loop through flattened colors grouped by product -->
+    <template v-for="([productName, colors], index) in flattenedGroupedColors">
+      <!-- Render each color for the current product -->
+      <span
+        v-for="(color, colorIndex) in colors"
+        :key="`${productName}-${colorIndex}`"
+        :style="{ background: color }"
+        class="color-circle"
+        @click="handleColorClick(productName, color)"
+        :class="{ selected: isSelectedColor(color) }"
+      ></span>
 
-              <!-- Vertical Line -->
-              <div v-if="index < groupedByProduct.length - 1" class="vertical-line"></div>
-            </div>
-          </div>
-        </div>
+      <!-- Vertical Line After Each Product -->
+      <div
+        v-if="index < flattenedGroupedColors.length - 1"
+        class="vertical-line"
+      ></div>
+    </template>
+  </div>
+</div>
+
 
         <!-- Product Preview -->
         <div class="product-card-container" v-if="currentProduct">
@@ -89,7 +85,6 @@
 
 <script>
 import ProductPreview from "@/components/ProductPreview.vue";
-import SelectColorLogic from "@/components/SelectColorLogic.vue";
 import { useRoute } from "vue-router";
 import axios from "axios";
 
@@ -98,74 +93,81 @@ export default {
 
   components: {
     ProductPreview,
-    SelectColorLogic,
   },
 
   data() {
     return {
-      loading: true, // Loading state
-      loadingImage: false,
-      products: [],
-      currentProduct: null,
-      productColor: null,
-      seasonColorTone: null,
-      image: null,
-      savedImage: null,
-      currentProductCategory: "Lips",
+      loading: true, // Loading state for the page
+      loadingImage: false, // Loading state for image processing
+      products: [], // Product data fetched from the backend
+      currentProduct: null, // Currently selected product
+      productColor: null, // Currently selected color
+      seasonColorTone: null, // User's season color tone
+      image: null, // Processed image
+      savedImage: null, // Original uploaded image
+      currentProductCategory: "Lips", // Default product category
     };
   },
 
   computed: {
+    // Groups products by name and organizes colors into color groups
     groupedByProduct() {
-      if (!this.products.length || !this.seasonColorTone) return []; // Defensive check
+      if (!this.products.length || !this.seasonColorTone) return []; // Handle empty or uninitialized data
 
       const productMap = new Map();
 
+      // Filter products by season tone and current category
       this.filteredProduct().forEach((product) => {
         if (product.colorShade) {
-          const colors = this.extractColors(product.colorShade);
+          const colors = this.extractColors(product.colorShade); // Extract colors
           const productName = product.productName;
 
           if (!productMap.has(productName)) {
             productMap.set(productName, []);
           }
-          productMap.get(productName).push(colors);
+          productMap.get(productName).push(colors); // Add color groups
         }
       });
 
+      // Convert Map to sorted array and return
       return Array.from(productMap.entries()).sort(([a], [b]) => a.localeCompare(b));
+    },
+
+    // Flatten grouped products and their colors
+    flattenedGroupedColors() {
+      // Flatten the grouped colors while keeping their product association
+      return this.groupedByProduct.map(([productName, colorGroups]) => {
+        const flattenedColors = colorGroups.flat(); // Flatten nested color groups
+        return [productName, flattenedColors]; // Return product name with flattened colors
+      });
     },
   },
 
   methods: {
+    // Fetch all product data from the backend
     async fetchData() {
       try {
         const response = await axios.get("http://localhost:8000/data");
         this.products = response.data;
         console.log("Products fetched:", this.products);
-
-        this.currentProduct = this.products.find((p) =>
-          p.productName.includes(this.$route.params.productName)
-        );
-
-        // console.log("Display product:", this.currentProduct);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching product data:", error);
       }
     },
 
+    // Fetch the uploaded image
     async fetchImage() {
       try {
         const response = await axios.get("http://localhost:8000/user");
-        this.savedImage = response.data[0];
-        this.image = { ...this.savedImage };
+        this.savedImage = response.data[0]; // Original image
+        this.image = { ...this.savedImage }; // Processed image
         console.log("Image fetched:", this.image);
       } catch (error) {
         console.error("Error fetching image:", error);
-        this.$router.push({ name: "DatabaseError" });
       }
     },
 
+    // Fetch the user's season color tone
     async fetchSeasonColorTone() {
       try {
         const response = await axios.get("http://localhost:8000/user/seasonColorTone");
@@ -176,6 +178,7 @@ export default {
       }
     },
 
+    // Initialize the page by fetching all required data
     async initializePage() {
       try {
         await Promise.all([
@@ -186,10 +189,11 @@ export default {
       } catch (error) {
         console.error("Error during initialization:", error);
       } finally {
-        this.loading = false; // Ensure loading is false regardless of success or failure
+        this.loading = false; // Disable loading state
       }
     },
 
+    // Filter products based on the current season color tone and category
     filteredProduct() {
       return this.products.filter(
         (product) =>
@@ -198,9 +202,10 @@ export default {
       );
     },
 
+    // Extract RGB colors from a colorShade string
     extractColors(colorShade) {
       const matches = colorShade.match(/\((\d+),\s*(\d+),\s*(\d+)\)/g);
-      if (!matches) return []; // Return empty array if no matches
+      if (!matches) return []; // Return empty array if no matches found
 
       return matches.map((match) => {
         const [r, g, b] = match.match(/\d+/g).map(Number);
@@ -208,47 +213,50 @@ export default {
       });
     },
 
+    // Set the selected product category
     setProductCategory(category) {
       this.currentProductCategory = category;
       console.log("Category changed to:", category);
     },
 
+    // Handle a color click event
     async handleColorClick(productName, color) {
+      // Check if the clicked color is already selected
       if (this.currentProduct?.productName === productName && this.productColor === color) {
-        this.image.image_data = this.savedImage?.image_data || "";
+        this.image.image_data = this.savedImage?.image_data || ""; // Reset to original image
         this.productColor = null;
         this.currentProduct = null;
         return;
       }
 
+      // Update the current product and selected color
       this.currentProduct = this.products.find((p) => p.productName === productName);
       this.productColor = color;
 
       if (this.image && color) {
-        const [r, g, b] = color.match(/\d+/g).map(Number);
-
-        // Set loadingColor to true while processing
-        this.loadingImage = true;
+        const [r, g, b] = color.match(/\d+/g).map(Number); // Extract RGB values
+        this.loadingImage = true; // Start loading indicator for image processing
 
         try {
           const response = await axios.post(
             `http://localhost:8000/apply-${this.currentProductCategory.toLowerCase()}`,
             { r, g, b, image: this.savedImage.image_data }
           );
-          this.updateDisplayedImage(response.data.image);
+          this.updateDisplayedImage(response.data.image); // Update the processed image
         } catch (error) {
           console.error(`Error applying ${this.currentProductCategory} color:`, error);
         } finally {
-          // Set loadingColor to false after processing is complete
-          this.loadingImage = false;
+          this.loadingImage = false; // Stop loading indicator
         }
       }
     },
 
+    // Check if a color is selected
     isSelectedColor(color) {
       return this.productColor === color;
     },
 
+    // Remove the uploaded image
     async removeImage(image) {
       swal({
         title: "Are you sure?",
@@ -261,7 +269,7 @@ export default {
           try {
             const response = await axios.delete(`http://localhost:8000/user`);
             swal("Deleted!", response.data.message, "success");
-            this.$router.push("/upload");
+            this.$router.push("/upload"); // Redirect to the upload page
           } catch (error) {
             console.error("Error deleting image:", error);
             swal("Error", "Failed to delete the image. Please try again.", "error");
@@ -272,15 +280,17 @@ export default {
       });
     },
 
+    // Update the displayed processed image
     updateDisplayedImage(newImage) {
       if (this.image) this.image.image_data = newImage || "";
     },
   },
 
   watch: {
+    // Watch for changes in the route's season color tone parameter
     "$route.params.seasonColorTone": async function (newSeasonColorTone) {
       if (newSeasonColorTone && newSeasonColorTone !== this.seasonColorTone) {
-        this.loading = true; // Show loading state during data fetch
+        this.loading = true; // Show loading indicator during data fetch
         this.seasonColorTone = newSeasonColorTone;
 
         try {
@@ -293,7 +303,7 @@ export default {
   },
 
   async mounted() {
-    await this.initializePage();
+    await this.initializePage(); // Fetch all necessary data on mount
   },
 };
 </script>
@@ -409,22 +419,13 @@ export default {
   margin-right: 10px;
 }
 
-.color-circle  {
-  width: 50px;
-  height: 50px; 
-  border-radius: 50%;
-  margin-right: 5px;
-  border: 2px solid transparent;
-  transition: border-color 0.3s; 
-}
-
 .vertical-line {
-  width: 0.75px;
-  background-color: #000;
-  height: 25px;
-  align-self: stretch;
-  margin-left: 5px;
-  margin-top: 15px;
+  width: 1px;
+  background-color: #000; /* Black vertical line */
+  height: 50%; /* Stretch line to match row height */
+  align-self: center;
+  margin: 0 auto; /* Center the line horizontally */
+  grid-column: span 1; /* Ensure it takes up a single column in the grid */
 }
 
 .product-card-container {
@@ -432,6 +433,15 @@ export default {
   width: 100%;
   display: flex;
   justify-content: center;
+}
+
+.color-circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  transition: border-color 0.3s;
+  cursor: pointer;
 }
 
 .color-circle:hover {
@@ -450,14 +460,14 @@ export default {
 
 .color-list {
   display: grid;
-  grid-template-columns: repeat(5, 1fr); /* 5 columns */
-  gap: 30px 30px;
-  max-height: 300px;
-  max-width: 900px;
-  overflow-y: auto; /* Enable vertical scrolling for extra items */
-  overflow-x: hidden;
-  padding: 30px 5px 15px 25px;
-  scrollbar-width: thin; /* Thinner scrollbars for modern browsers */
+  grid-template-columns: repeat(auto-fit, minmax(50px, 1fr)); /* Auto-adjust columns */
+  gap: 40px 20px; /* Space between items */
+  max-width: 800px; /* Restrict the width of the container */
+  max-height: 300px; /* Fixed height */
+  overflow-y: auto; /* Enable scrolling for vertical overflow */
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+  padding: 30px 20px 30px 25px;
+  scrollbar-width: thin; /* Thin scrollbar for modern browsers */
 }
 
 .color-list::-webkit-scrollbar {
@@ -474,7 +484,6 @@ export default {
 }
 
 .bb{
-  /* just for me to see container area */
   border: #000;
   background: #D3D3D3;
   border-radius: 10px;
